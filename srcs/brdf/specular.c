@@ -52,8 +52,6 @@ t_vec3	specular_color(const t_specular *s)
 Vect3 specular_sample_f(const Specular *s, const Material *mat, const Hitinfo *hitinfo, const Vect3 *wo)
 {
     (void)s; (void)mat; (void)wo;
-    /* reflection R = D - 2*(D·N)*N
-       assuming hitinfo->direction is incident direction D and hitinfo->normal is N */
     double dot = v_dot(&hitinfo->direction, &hitinfo->normal);
     Vect3 scaledN = v_scale(&hitinfo->normal, 2.0 * dot);
     return v_sub(&hitinfo->direction, &scaledN);
