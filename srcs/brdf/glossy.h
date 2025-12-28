@@ -34,6 +34,13 @@ t_glossy	*glossy_new(double ks, double e, t_vec3 cs, const t_sampler *sampler);
 t_glossy	*glossy_copy(const t_glossy *src);
 void		glossy_free(t_glossy *g);
 
+// BRDF interface
+t_vec3		glossy_f(t_glossy *g, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+t_vec3		glossy_sample_f(t_glossy *g, const t_hit_info *hitinfo, const t_vec3 *wo);
+double		glossy_pdf(t_glossy *g, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+t_vec3		glossy_eval(t_glossy *g, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+t_vec3		glossy_color(t_glossy *g);
+
 /* implementations (inline for header convenience) */
 
 static inline t_vec3 glossy_f_impl(void *mat, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo)

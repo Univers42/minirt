@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "normal.h"
+#include <math.h>
+#include <stdio.h>
 
 t_normal	normal_new(void)
 {

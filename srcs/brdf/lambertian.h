@@ -36,6 +36,13 @@ t_lambertian *lambertian_new(double kd, t_vec3 cd, const t_sampler *sampler);
 t_lambertian *lambertian_copy(const t_lambertian *src);
 void		lambertian_free(t_lambertian *l);
 
+// BRDF interface
+t_vec3		lambertian_f(t_lambertian *l, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+t_vec3		lambertian_sample_f(t_lambertian *l, const t_hit_info *hitinfo, const t_vec3 *wo);
+double		lambertian_pdf(t_lambertian *l, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+t_vec3		lambertian_eval(t_lambertian *l, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+t_vec3		lambertian_color(t_lambertian *l);
+
 /* implementations */
 
 static inline t_vec3 lambertian_f_impl(void *mat, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo)

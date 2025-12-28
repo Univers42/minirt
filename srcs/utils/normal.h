@@ -13,6 +13,9 @@
 #ifndef NORMAL_H
 # define NORMAL_H
 
+# include "point3.h"
+# include "vec3.h"
+
 typedef struct s_normal
 {
 	double x;

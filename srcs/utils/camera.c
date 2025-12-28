@@ -18,18 +18,18 @@
 # define M_PI 3.14159265358979323846
 #endif
 
-static void camera_build(const t_point3 eye, const t_vec3 lookat, double fovy, t_camera *cam)
+static void camera_build(t_camera *cam, const t_point3 *eye, const t_vec3 *lookat, double fovy)
 {
     /* camera geometry */
     cam->distance = 1.0;
-    cam->eye = eye;
-    cam->look_at = lookat;
-    cam->direction = vec3_normalize(vec3_init(lookat.x - eye.x, lookat.y - eye.y, lookat.z - eye.z));
+    cam->eye = *eye;
+    cam->look_at = *lookat;
+    cam->direction = vec3_normalize(vec3_init(lookat->x - eye->x, lookat->y - eye->y, lookat->z - eye->z));
     cam->aspect = (double)CAMERA_WIDTH / (double)CAMERA_HEIGHT;
     cam->fov = fovy;
 
     /* camera axis: n = normalize(eye - look_at) ; u = normalize(cross(up, n)) ; v = cross(n, u) */
-    cam->n = vec3_normalize(vec3_init(eye.x - lookat.x, eye.y - lookat.y, eye.z - lookat.z));
+    cam->n = vec3_normalize(vec3_init(eye->x - lookat->x, eye->y - lookat->y, eye->z - lookat->z));
     /* default up if zero */
     if (cam->up.x == 0.0 && cam->up.y == 0.0 && cam->up.z == 0.0)
         cam->up = vec3_init(0.0, 1.0, 0.0);
@@ -56,35 +56,35 @@ static void camera_build(const t_point3 eye, const t_vec3 lookat, double fovy, t
     cam->vertical   = vec3_scale(cam->v, 2.0 * half_height);
 }
 
-t_camera *camera_new(t_point3 lookfrom, t_vec3 lookat, double fov)
+t_camera *camera_new(const t_point3 *lookfrom, const t_vec3 *lookat, double fov)
 {
-	t_camera *cam = (t_camera *)malloc(sizeof(*cam));
-	if (!cam)
-		return NULL;
-	cam->up = vec3_init(0.0, 1.0, 0.0);
-	camera_build(lookfrom, lookat, fov, cam);
-	return cam;
+    t_camera *cam = (t_camera *)malloc(sizeof(*cam));
+    if (!cam)
+        return NULL;
+    cam->up = vec3_init(0.0, 1.0, 0.0);
+    camera_build(cam, lookfrom, lookat, fov);
+    return cam;
 }
 
-void camera_init(t_camera *cam, t_point3 lookfrom, t_vec3 lookat, double fov)
+void camera_init(t_camera *cam, const t_point3 *lookfrom, const t_vec3 *lookat, double fov)
 {
-	if (!cam) return;
-	cam->up = vec3_init(0.0, 1.0, 0.0);
-	camera_build(lookfrom, lookat, fov, cam);
+    if (!cam) return;
+    cam->up = vec3_init(0.0, 1.0, 0.0);
+    camera_build(cam, lookfrom, lookat, fov);
 }
 
 t_camera *camera_copy(const t_camera *src)
 {
-	if (!src) return NULL;
-	t_camera *dst = (t_camera *)malloc(sizeof(*dst));
-	if (!dst) return NULL;
-	*dst = *src;
-	return dst;
+    if (!src) return NULL;
+    t_camera *dst = (t_camera *)malloc(sizeof(*dst));
+    if (!dst) return NULL;
+    *dst = *src;
+    return dst;
 }
 
 void camera_free(t_camera *cam)
 {
-	if (cam) free(cam);
+    if (cam) free(cam);
 }
 
 t_ray camera_construct_ray(const t_camera *cam, int i, int j)

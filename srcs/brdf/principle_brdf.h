@@ -45,8 +45,8 @@ t_principled_brdf *principled_new(const t_sampler *sampler);
 void	principled_free(t_principled_brdf *p);
 
 /* BRDF functional interface (match brdf function pointer signatures) */
-t_vec3	principled_eval(void *mat, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
-double	principled_pdf(void *mat, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
-t_vec3	principled_sample_f(void *mat, const t_hit_info *hitinfo, const t_vec3 *wo);
+t_vec3	principled_eval(t_principled_brdf *p, t_disney *mat, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+double	principled_pdf(t_principled_brdf *p, t_disney *mat, const t_hit_info *hitinfo, const t_vec3 *wi, const t_vec3 *wo);
+t_vec3	principled_sample_f(t_principled_brdf *p, t_disney *mat, const t_hit_info *hitinfo, const t_vec3 *wo);
 
 #endif

@@ -46,8 +46,8 @@ typedef struct s_camera
 }	t_camera;
 
 /* constructors / lifecycle */
-t_camera	*camera_new(t_point3 lookfrom, t_vec3 lookat, double fov);
-void		camera_init(t_camera *cam, t_point3 lookfrom, t_vec3 lookat, double fov);
+t_camera	*camera_new(const t_point3 *lookfrom, const t_vec3 *lookat, double fov);
+void		camera_init(t_camera *cam, const t_point3 *lookfrom, const t_vec3 *lookat, double fov);
 t_camera	*camera_copy(const t_camera *src);
 void		camera_free(t_camera *cam);
 
