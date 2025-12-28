@@ -5,12 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/27 16:47:58 by marvin            #+#    #+#             */
-/*   Updated: 2025/12/27 16:47:58 by marvin           ###   ########.fr       */
+/*   Created: 2025/12/28 14:54:09 by marvin            #+#    #+#             */
+/*   Updated: 2025/12/28 14:54:09 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BRDF_H
 # define BRDF_H
 
-# endif
+# include "../utils/vec3.h"
+# include "../utils/hit_info.h"
+# include "../"
+#endif

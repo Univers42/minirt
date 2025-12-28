@@ -13,17 +13,17 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-# include "ft_math.h"
-# include "vec3.h"
-# include "global_tracer.h"
-# include "hitinfo.h"
-# include "matrix.h"
-# include "normal.h"
-# include "point3.h"
-# include "ray.h"
-# include "tracer.h"
-# include "vector.h"
-# include "point3.h"
-
+# include "../srcs/utils/ft_math.h"
+# include "../srcs/utils/vec3.h"
+# include "../srcs/utils/global_tracer.h"
+# include "../srcs/utils/hitinfo.h"
+# include "../srcs/utils/matrix.h"
+# include "../srcs/utils/normal.h"
+# include "../srcs/utils/point3.h"
+# include "../srcs/utils/ray.h"
+# include "../srcs/utils/tracer.h"
+# include "../srcs/utils/vector.h"
+# include "../srcs/utils/point3.h"
+# include "../srcs/utils/camera.h"
 
 #endif
