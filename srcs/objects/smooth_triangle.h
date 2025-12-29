@@ -10,3 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+# ifndef SMOOTH_TRIANGLE_H
+# define SMOOTH_TRIANGLE_H
+# endif
