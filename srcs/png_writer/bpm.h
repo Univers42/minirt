@@ -12,6 +12,12 @@
 
 #ifndef BPM_H
 # define BPM_H
+
+/**
+ * BPM: boundary package merge, it's a fast and space economical algorithm for
+ * length-limited coding" -- Jyrki Katajainen, Alistair Moffat,
+ * Andrew Turpin, 1995
+ */
 typedef struct s_bpm_node
 {
 	int					weight;
