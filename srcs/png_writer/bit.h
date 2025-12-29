@@ -37,5 +37,43 @@ static inline void lodepng_add32bitInt(ucvector* buffer, unsigned value) {
   lodepng_set32bitInt(&buffer->data[buffer->size - 4], value);
 }
 
+static inline void addBitToStream(ucvector* bitstream, size_t* bitpointer, unsigned bit)
+{
+    if(((*bitpointer) & 7) == 0)
+        ucvector_push_back(bitstream, (unsigned char)0);
+
+    bitstream->data[bitstream->size - 1] |= (bit << ((*bitpointer) & 0x7));
+    ++(*bitpointer);
+}
+
+static void addBitsToStream(size_t* bitpointer, ucvector* bitstream, unsigned value, size_t nbits) {
+  size_t i;
+  for(i = 0; i != nbits; ++i) addBitToStream(bitpointer, bitstream, (unsigned char)((value >> i) & 1));
+}
+
+static void addBitsToStreamReversed(size_t* bitpointer, ucvector* bitstream, unsigned value, size_t nbits) {
+  size_t i;
+  for(i = 0; i != nbits; ++i) addBitToStream(bitpointer, bitstream, (unsigned char)((value >> (nbits - 1 - i)) & 1));
+}
+
+static inline unsigned char readBit(size_t bitpointer, const unsigned char* bitstream)
+{
+    return (bitstream[bitpointer >> 3] >> (bitpointer & 0x7)) & (unsigned char)1;
+}
+
+static unsigned char readBitFromStream(size_t* bitpointer, const unsigned char* bitstream) {
+  unsigned char result = (unsigned char)(READBIT(*bitpointer, bitstream));
+  ++(*bitpointer);
+  return result;
+}
+
+static unsigned readBitsFromStream(size_t* bitpointer, const unsigned char* bitstream, size_t nbits) {
+  unsigned result = 0, i;
+  for(i = 0; i != nbits; ++i) {
+    result += ((unsigned)READBIT(*bitpointer, bitstream)) << i;
+    ++(*bitpointer);
+  }
+  return result;
+}
 
 #endif
