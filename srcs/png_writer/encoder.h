@@ -202,4 +202,278 @@ static void writeLZ77data(size_t* bp, ucvector* out, const uivector* lz77_encode
 }
 
 
+unsigned lodepng_encode(unsigned char** out, size_t* outsize,
+                        const unsigned char* image, unsigned w, unsigned h,
+                        LodePNGState* state) {
+  unsigned char* data = 0; 
+  size_t datasize = 0;
+  ucvector outv;
+  LodePNGInfo info;
+
+  ucvector_init(&outv);
+  lodepng_info_init(&info);
+
+  
+  *out = 0;
+  *outsize = 0;
+  state->error = 0;
+
+  
+  if((state->info_png.color.colortype == LCT_PALETTE || state->encoder.force_palette)
+      && (state->info_png.color.palettesize == 0 || state->info_png.color.palettesize > 256)) {
+    state->error = 68; 
+    goto cleanup;
+  }
+  if(state->encoder.zlibsettings.btype > 2) {
+    state->error = 61; 
+    goto cleanup;
+  }
+  if(state->info_png.interlace_method > 1) {
+    state->error = 71; 
+    goto cleanup;
+  }
+  state->error = checkColorValidity(state->info_png.color.colortype, state->info_png.color.bitdepth);
+  if(state->error) goto cleanup; 
+  state->error = checkColorValidity(state->info_raw.colortype, state->info_raw.bitdepth);
+  if(state->error) goto cleanup; 
+
+  
+  lodepng_info_copy(&info, &state->info_png);
+  if(state->encoder.auto_convert) {
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+    if(state->info_png.background_defined) {
+      unsigned bg_r = state->info_png.background_r;
+      unsigned bg_g = state->info_png.background_g;
+      unsigned bg_b = state->info_png.background_b;
+      unsigned r = 0, g = 0, b = 0;
+      LodePNGColorProfile prof;
+      LodePNGColorMode mode16 = lodepng_color_mode_make(LCT_RGB, 16);
+      lodepng_convert_rgb(&r, &g, &b, bg_r, bg_g, bg_b, &mode16, &state->info_png.color);
+      lodepng_color_profile_init(&prof);
+      state->error = lodepng_get_color_profile(&prof, image, w, h, &state->info_raw);
+      if(state->error) goto cleanup;
+      lodepng_color_profile_add(&prof, r, g, b, 65535);
+      state->error = auto_choose_color_from_profile(&info.color, &state->info_raw, &prof);
+      if(state->error) goto cleanup;
+      if(lodepng_convert_rgb(&info.background_r, &info.background_g, &info.background_b,
+          bg_r, bg_g, bg_b, &info.color, &state->info_png.color)) {
+        state->error = 104;
+        goto cleanup;
+      }
+    }
+    else
+#endif 
+    {
+      state->error = lodepng_auto_choose_color(&info.color, image, w, h, &state->info_raw);
+      if(state->error) goto cleanup;
+    }
+  }
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+  if(state->info_png.iccp_defined) {
+    unsigned gray_icc = isGrayICCProfile(state->info_png.iccp_profile, state->info_png.iccp_profile_size);
+    unsigned gray_png = info.color.colortype == LCT_GREY || info.color.colortype == LCT_GREY_ALPHA;
+    /* TODO: perhaps instead of giving errors or less optimal compression, we can automatically modify
+    the ICC profile here to say "GRAY" or "RGB " to match the PNG color type, unless this will require
+    non trivial changes to the rest of the ICC profile */
+    if(!gray_icc && !isRGBICCProfile(state->info_png.iccp_profile, state->info_png.iccp_profile_size)) {
+      state->error = 100; 
+      goto cleanup;
+    }
+    if(!state->encoder.auto_convert && gray_icc != gray_png) {
+      /* Non recoverable: encoder not allowed to convert color type, and requested color type not
+      compatible with ICC color type */
+      state->error = 101;
+      goto cleanup;
+    }
+    if(gray_icc && !gray_png) {
+      
+      state->error = 102;
+      goto cleanup;
+      
+    }
+    if(!gray_icc && gray_png) {
+      /* Recoverable but an unfortunate loss in compression density: We have grayscale pixels but
+      are forced to store them in more expensive RGB format that will repeat each value 3 times
+      because the PNG spec does not allow an RGB ICC profile with internal grayscale color data */
+      if(info.color.colortype == LCT_GREY) info.color.colortype = LCT_RGB;
+      if(info.color.colortype == LCT_GREY_ALPHA) info.color.colortype = LCT_RGBA;
+      if(info.color.bitdepth < 8) info.color.bitdepth = 8;
+    }
+  }
+#endif 
+  if(!lodepng_color_mode_equal(&state->info_raw, &info.color)) {
+    unsigned char* converted;
+    size_t size = ((size_t)w * (size_t)h * (size_t)lodepng_get_bpp(&info.color) + 7) / 8;
+
+    converted = (unsigned char*)lodepng_malloc(size);
+    if(!converted && size) state->error = 83; 
+    if(!state->error) {
+      state->error = lodepng_convert(converted, image, &info.color, &state->info_raw, w, h);
+    }
+    if(!state->error) preProcessScanlines(&data, &datasize, converted, w, h, &info, &state->encoder);
+    lodepng_free(converted);
+    if(state->error) goto cleanup;
+  }
+  else preProcessScanlines(&data, &datasize, image, w, h, &info, &state->encoder);
+
+   {
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+    size_t i;
+#endif 
+    
+    writeSignature(&outv);
+    
+    addChunk_IHDR(&outv, w, h, info.color.colortype, info.color.bitdepth, info.interlace_method);
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+    
+    if(info.unknown_chunks_data[0]) {
+      state->error = addUnknownChunks(&outv, info.unknown_chunks_data[0], info.unknown_chunks_size[0]);
+      if(state->error) goto cleanup;
+    }
+    
+    if(info.iccp_defined) addChunk_iCCP(&outv, &info, &state->encoder.zlibsettings);
+    if(info.srgb_defined) addChunk_sRGB(&outv, &info);
+    if(info.gama_defined) addChunk_gAMA(&outv, &info);
+    if(info.chrm_defined) addChunk_cHRM(&outv, &info);
+#endif 
+    
+    if(info.color.colortype == LCT_PALETTE) {
+      addChunk_PLTE(&outv, &info.color);
+    }
+    if(state->encoder.force_palette && (info.color.colortype == LCT_RGB || info.color.colortype == LCT_RGBA)) {
+      addChunk_PLTE(&outv, &info.color);
+    }
+    
+    if(info.color.colortype == LCT_PALETTE && getPaletteTranslucency(info.color.palette, info.color.palettesize) != 0) {
+      addChunk_tRNS(&outv, &info.color);
+    }
+    if((info.color.colortype == LCT_GREY || info.color.colortype == LCT_RGB) && info.color.key_defined) {
+      addChunk_tRNS(&outv, &info.color);
+    }
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+    
+    if(info.background_defined) {
+      state->error = addChunk_bKGD(&outv, &info);
+      if(state->error) goto cleanup;
+    }
+    
+    if(info.phys_defined) addChunk_pHYs(&outv, &info);
+
+    
+    if(info.unknown_chunks_data[1]) {
+      state->error = addUnknownChunks(&outv, info.unknown_chunks_data[1], info.unknown_chunks_size[1]);
+      if(state->error) goto cleanup;
+    }
+#endif 
+    
+    state->error = addChunk_IDAT(&outv, data, datasize, &state->encoder.zlibsettings);
+    if(state->error) goto cleanup;
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+    
+    if(info.time_defined) addChunk_tIME(&outv, &info.time);
+    
+    for(i = 0; i != info.text_num; ++i) {
+      if(strlen(info.text_keys[i]) > 79) {
+        state->error = 66; 
+        goto cleanup;
+      }
+      if(strlen(info.text_keys[i]) < 1) {
+        state->error = 67; 
+        goto cleanup;
+      }
+      if(state->encoder.text_compression) {
+        addChunk_zTXt(&outv, info.text_keys[i], info.text_strings[i], &state->encoder.zlibsettings);
+      } else {
+        addChunk_tEXt(&outv, info.text_keys[i], info.text_strings[i]);
+      }
+    }
+    
+    if(state->encoder.add_id) {
+      unsigned already_added_id_text = 0;
+      for(i = 0; i != info.text_num; ++i) {
+        if(!strcmp(info.text_keys[i], "LodePNG")) {
+          already_added_id_text = 1;
+          break;
+        }
+      }
+      if(already_added_id_text == 0) {
+        addChunk_tEXt(&outv, "LodePNG", LODEPNG_VERSION_STRING); 
+      }
+    }
+    
+    for(i = 0; i != info.itext_num; ++i) {
+      if(strlen(info.itext_keys[i]) > 79) {
+        state->error = 66; 
+        goto cleanup;
+      }
+      if(strlen(info.itext_keys[i]) < 1) {
+        state->error = 67; 
+        goto cleanup;
+      }
+      addChunk_iTXt(&outv, state->encoder.text_compression,
+                    info.itext_keys[i], info.itext_langtags[i], info.itext_transkeys[i], info.itext_strings[i],
+                    &state->encoder.zlibsettings);
+    }
+
+    
+    if(info.unknown_chunks_data[2]) {
+      state->error = addUnknownChunks(&outv, info.unknown_chunks_data[2], info.unknown_chunks_size[2]);
+      if(state->error) goto cleanup;
+    }
+#endif 
+    addChunk_IEND(&outv);
+  }
+
+cleanup:
+  lodepng_info_cleanup(&info);
+  lodepng_free(data);
+
+  
+  *out = outv.data;
+  *outsize = outv.size;
+
+  return state->error;
+}
+
+unsigned lodepng_encode_memory(unsigned char** out, size_t* outsize, const unsigned char* image,
+                               unsigned w, unsigned h, LodePNGColorType colortype, unsigned bitdepth) {
+  unsigned error;
+  LodePNGState state;
+  lodepng_state_init(&state);
+  state.info_raw.colortype = colortype;
+  state.info_raw.bitdepth = bitdepth;
+  state.info_png.color.colortype = colortype;
+  state.info_png.color.bitdepth = bitdepth;
+  lodepng_encode(out, outsize, image, w, h, &state);
+  error = state.error;
+  lodepng_state_cleanup(&state);
+  return error;
+}
+
+unsigned lodepng_encode32(unsigned char** out, size_t* outsize, const unsigned char* image, unsigned w, unsigned h) {
+  return lodepng_encode_memory(out, outsize, image, w, h, LCT_RGBA, 8);
+}
+
+unsigned lodepng_encode24(unsigned char** out, size_t* outsize, const unsigned char* image, unsigned w, unsigned h) {
+  return lodepng_encode_memory(out, outsize, image, w, h, LCT_RGB, 8);
+}
+
+#ifdef LODEPNG_COMPILE_DISK
+unsigned lodepng_encode_file(const char* filename, const unsigned char* image, unsigned w, unsigned h,
+                             LodePNGColorType colortype, unsigned bitdepth) {
+  unsigned char* buffer;
+  size_t buffersize;
+  unsigned error = lodepng_encode_memory(&buffer, &buffersize, image, w, h, colortype, bitdepth);
+  if(!error) error = lodepng_save_file(buffer, buffersize, filename);
+  lodepng_free(buffer);
+  return error;
+}
+
+unsigned lodepng_encode32_file(const char* filename, const unsigned char* image, unsigned w, unsigned h) {
+  return lodepng_encode_file(filename, image, w, h, LCT_RGBA, 8);
+}
+
+unsigned lodepng_encode24_file(const char* filename, const unsigned char* image, unsigned w, unsigned h) {
+  return lodepng_encode_file(filename, image, w, h, LCT_RGB, 8);
+}
 # endif
