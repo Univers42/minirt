@@ -18,6 +18,21 @@
 # include <stdio.h>
 # include <stdlib.h>
 
+# define FIRST_LENGTH_CODE_INDEX	287
+# define LAST_LENGTH_CODE_INDEX		285
+# define NUM_DEFLATE_CODE_SYMBOLS	288
+# define NUM_DISTANCE_SYMBOLS		32
+# define NUM_CODE_LENGTH_CODES		19
+# define LODEPNG_VERSION_STRING		"20190210"
+
+
+typedef struct s_ui_vector
+{
+	unsigned	*data;
+	size_t		size;
+	size_t		allocsize;
+}	t_ui_vector;
+
 typedef struct s_huffman_tree
 {
 	unsigned *tree2d;
@@ -33,11 +48,6 @@ typedef struct s_vector
 	size_t			size;
 	size_t			allocsize;
 }	t_vector;
-# define FIRST_LENGTH_CODE_INDEX	287
-# define LAST_LENGTH_CODE_INDEX		285
-# define NUM_DEFLATE_CODE_SYMBOLS	288
-# define NUM_DISTANCE_SYMBOLS		32
-# define NUM_CODE_LENGTH_CODES		19
 
 typedef enum e_png_color_type
 {
