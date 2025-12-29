@@ -227,4 +227,56 @@ typedef struct s_png_state
 	t_encoder_settings	encoder;
 	t_png_color_type
 }t_png_state;
+
+void lodepng_state_init(LodePNGState* state);
+void lodepng_state_cleanup(LodePNGState* state);
+void lodepng_state_copy(LodePNGState* dest, const LodePNGState* source);
+unsigned lodepng_decode(unsigned char** out, unsigned* w, unsigned* h,
+                        LodePNGState* state,
+                        const unsigned char* in, size_t insize);
+unsigned lodepng_inspect(unsigned* w, unsigned* h,
+                         LodePNGState* state,
+                         const unsigned char* in, size_t insize);
+unsigned lodepng_inspect_chunk(LodePNGState* state, size_t pos,
+                               const unsigned char* in, size_t insize)
+unsigned lodepng_encode(unsigned char** out, size_t* outsize,
+                        const unsigned char* image, unsigned w, unsigned h,
+                        LodePNGState* state);
+unsigned lodepng_chunk_length(const unsigned char* chunk);
+void lodepng_chunk_type(char type[5], const unsigned char* chunk);
+unsigned char lodepng_chunk_type_equals(const unsigned char* chunk, const char* type);
+unsigned char lodepng_chunk_ancillary(const unsigned char* chunk);
+unsigned char lodepng_chunk_private(const unsigned char* chunk);
+unsigned char lodepng_chunk_safetocopy(const unsigned char* chunk);
+unsigned char* lodepng_chunk_data(unsigned char* chunk);
+const unsigned char* lodepng_chunk_data_const(const unsigned char* chunk)
+unsigned lodepng_chunk_check_crc(const unsigned char* chunk);
+void lodepng_chunk_generate_crc(unsigned char* chunk);
+unsigned char* lodepng_chunk_next(unsigned char* chunk);
+const unsigned char* lodepng_chunk_next_const(const unsigned char* chunk);
+unsigned char* lodepng_chunk_find(unsigned char* chunk, const unsigned char* end, const char type[5]);
+const unsigned char* lodepng_chunk_find_const(const unsigned char* chunk, const unsigned char* end, const char type[5]);
+unsigned lodepng_chunk_append(unsigned char** out, size_t* outlength, const unsigned char* chunk);
+unsigned lodepng_chunk_create(unsigned char** out, size_t* outlength, unsigned length,
+                              const char* type, const unsigned char* data);
+unsigned lodepng_crc32(const unsigned char* buf, size_t len);
+unsigned lodepng_inflate(unsigned char** out, size_t* outsize,
+                         const unsigned char* in, size_t insize,
+                         const LodePNGDecompressSettings* settings);
+unsigned lodepng_zlib_decompress(unsigned char** out, size_t* outsize,
+                                 const unsigned char* in, size_t insize,
+                                 const LodePNGDecompressSettings* settings);
+unsigned lodepng_zlib_compress(unsigned char** out, size_t* outsize,
+                               const unsigned char* in, size_t insize,
+                               const LodePNGCompressSettings* settings);
+unsigned lodepng_huffman_code_lengths(unsigned* lengths, const unsigned* frequencies,
+                                      size_t numcodes, unsigned maxbitlen);
+unsigned lodepng_deflate(unsigned char** out, size_t* outsize,
+                         const unsigned char* in, size_t insize,
+                         const LodePNGCompressSettings* settings);
+unsigned lodepng_load_file(unsigned char** out, size_t* outsize, const char* filename);
+unsigned lodepng_save_file(const unsigned char* buffer, size_t buffersize, const char* filename);
+
+
+
 # endif
