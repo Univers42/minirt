@@ -26,4 +26,11 @@
 # include "../srcs/utils/point3.h"
 # include "../srcs/utils/camera.h"
 
+typedef struct s_posnorm
+{
+	t_point3	position;
+	t_normal	normal;
+}t_posnorm;
+
+
 #endif
