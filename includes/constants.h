@@ -17,5 +17,6 @@
 # define KEPSILON 0.001
 # define NUM_SAMPLES 50
 # define MAX_BOUNCE 2
+// # define INFINITY
 
 # endif	// CONSTANTS_H
