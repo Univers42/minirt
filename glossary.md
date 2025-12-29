@@ -1,0 +1,21 @@
+- RGB – Red, Green, Blue (color model)
+- RGBA – Red, Green, Blue, Alpha (color model with transparency)
+- FOV – Field of View
+- AA – Anti-Aliasing
+- BRDF – Bidirectional Reflectance Distribution Function
+- BVH – Bounding Volume Hierarchy
+- CPU – Central Processing Unit
+- GPU – Graphics Processing Unit
+- HDR – High Dynamic Range
+- IO – Input/Output
+- OBJ – Object file format (for 3D models)
+- UV – Texture coordinates (U and V axes)
+- XYZ – Cartesian coordinates
+- PDF – Probability Density Function (in sampling)
+- PT – Path Tracing
+- RT – Ray Tracing
+- SSAO – Screen Space Ambient Occlusion
+- TBN – Tangent, Bitangent, Normal (basis for normal mapping)
+- BSDF – Bidirectional Scattering Distribution Function
+- BTDF – Bidirectional Scattering Surface reflectance Distribution
+BSSRDF – Bidirectional Scattering Surface Reflectance Distribution
