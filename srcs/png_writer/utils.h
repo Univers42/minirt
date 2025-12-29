@@ -194,4 +194,38 @@ static inline unsigned getTreeInflateDynamic(HuffmanTree* tree_ll, HuffmanTree* 
 }
 
 
+/*search the index in the array, that has the largest value smaller than or equal to the given value,
+given array must be sorted (if no value is smaller, it returns the size of the given array)*/
+static size_t searchCodeIndex(const unsigned* array, size_t array_size, size_t value) {
+  
+  size_t left = 1;
+  size_t right = array_size - 1;
+
+  while(left <= right) {
+    size_t mid = (left + right) >> 1;
+    if (array[mid] >= value) right = mid - 1;
+    else left = mid + 1;
+  }
+  if(left >= array_size || array[left] > value) left--;
+  return left;
+}
+
+static void addLengthDistance(uivector* values, size_t length, size_t distance) {
+  /*values in encoded vector are those used by deflate:
+  0-255: literal bytes
+  256: end
+  257-285: length/distance pair (length code, followed by extra length bits, distance code, extra distance bits)
+  286-287: invalid*/
+
+  unsigned length_code = (unsigned)searchCodeIndex(LENGTHBASE, 29, length);
+  unsigned extra_length = (unsigned)(length - LENGTHBASE[length_code]);
+  unsigned dist_code = (unsigned)searchCodeIndex(DISTANCEBASE, 30, distance);
+  unsigned extra_distance = (unsigned)(distance - DISTANCEBASE[dist_code]);
+
+  uivector_push_back(values, length_code + FIRST_LENGTH_CODE_INDEX);
+  uivector_push_back(values, extra_length);
+  uivector_push_back(values, dist_code);
+  uivector_push_back(values, extra_distance);
+}
+
 #endif

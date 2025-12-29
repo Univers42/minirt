@@ -349,4 +349,8 @@ static inline unsigned inflateHuffmanBlock(ucvector* out, const unsigned char* i
   return error;
 }
 
+static void addHuffmanSymbol(size_t* bp, ucvector* compressed, unsigned code, unsigned bitlen) {
+  addBitsToStreamReversed(bp, compressed, code, bitlen);
+}
+
 #endif

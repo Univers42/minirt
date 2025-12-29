@@ -24,6 +24,12 @@
 # define NUM_DISTANCE_SYMBOLS		32
 # define NUM_CODE_LENGTH_CODES		19
 # define LODEPNG_VERSION_STRING		"20190210"
+# define MAX_SUPPORTED_DEFLATE_LENGTH 258
+// 3 bytes of data get encoded intot two bytes, The hash
+// cannot use more than 3 bytes as input because 3 is t
+// the minimum match length for deflate
+# define HASH_NUM_VALUES				65536
+# define HASH_BIT_MASK					65535
 
 typedef struct magic_arrays
 {
