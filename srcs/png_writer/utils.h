@@ -228,4 +228,17 @@ static void addLengthDistance(uivector* values, size_t length, size_t distance) 
   uivector_push_back(values, extra_distance);
 }
 
+
+
+/*in an idat chunk, each scanline is a multiple of 8 bits, unlike the lodepng output buffer,
+and in addition has one extra byte per line: the filter byte. So this gives a larger
+result than lodepng_get_raw_size. */
+static size_t lodepng_get_raw_size_idat(unsigned w, unsigned h, const LodePNGColorMode* color) {
+  size_t bpp = lodepng_get_bpp(color);
+  
+  size_t line = ((size_t)(w / 8) * bpp) + 1 + ((w & 7) * bpp + 7) / 8;
+  return (size_t)h * line;
+}
+
+
 #endif

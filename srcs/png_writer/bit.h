@@ -76,4 +76,47 @@ static unsigned readBitsFromStream(size_t* bitpointer, const unsigned char* bits
   return result;
 }
 
+static unsigned char readBitFromReversedStream(size_t* bitpointer, const unsigned char* bitstream) {
+  unsigned char result = (unsigned char)((bitstream[(*bitpointer) >> 3] >> (7 - ((*bitpointer) & 0x7))) & 1);
+  ++(*bitpointer);
+  return result;
+}
+
+static inline unsigned readBitsFromReversedStream(size_t* bitpointer, const unsigned char* bitstream, size_t nbits) {
+  unsigned result = 0;
+  size_t i;
+  for(i = 0 ; i < nbits; ++i) {
+    result <<= 1;
+    result |= (unsigned)readBitFromReversedStream(bitpointer, bitstream);
+  }
+  return result;
+}
+
+static inline void setBitOfReversedStream0(size_t* bitpointer, unsigned char* bitstream, unsigned char bit) {
+  
+  if(bit) {
+    
+    bitstream[(*bitpointer) >> 3] |= (bit << (7 - ((*bitpointer) & 0x7)));
+  }
+  ++(*bitpointer);
+}
+
+static inline void setBitOfReversedStream(size_t* bitpointer, unsigned char* bitstream, unsigned char bit) {
+  
+  if(bit == 0) bitstream[(*bitpointer) >> 3] &=  (unsigned char)(~(1 << (7 - ((*bitpointer) & 0x7))));
+  else         bitstream[(*bitpointer) >> 3] |=  (1 << (7 - ((*bitpointer) & 0x7)));
+  ++(*bitpointer);
+}
+
+unsigned lodepng_chunk_length(const unsigned char* chunk) {
+  return lodepng_read32bitInt(&chunk[0]);
+}
+
+static unsigned getValueRequiredBits(unsigned char value) {
+  if(value == 0 || value == 255) return 1;
+  
+  if(value % 17 == 0) return value % 85 == 0 ? 2 : 4;
+  return 8;
+}
+
 #endif
