@@ -176,5 +176,296 @@ static unsigned LodePNGUnknownChunks_copy(LodePNGInfo* dest, const LodePNGInfo* 
   return 0;
 }
 
+static unsigned addChunk(ucvector* out, const char* chunkName, const unsigned char* data, size_t length) {
+  CERROR_TRY_RETURN(lodepng_chunk_create(&out->data, &out->size, (unsigned)length, chunkName, data));
+  out->allocsize = out->size; 
+  return 0;
+}
+
+static unsigned addChunk_IHDR(ucvector* out, unsigned w, unsigned h,
+                              LodePNGColorType colortype, unsigned bitdepth, unsigned interlace_method) {
+  unsigned error = 0;
+  ucvector header;
+  ucvector_init(&header);
+
+  lodepng_add32bitInt(&header, w); 
+  lodepng_add32bitInt(&header, h); 
+  ucvector_push_back(&header, (unsigned char)bitdepth); 
+  ucvector_push_back(&header, (unsigned char)colortype); 
+  ucvector_push_back(&header, 0); 
+  ucvector_push_back(&header, 0); 
+  ucvector_push_back(&header, interlace_method); 
+
+  error = addChunk(out, "IHDR", header.data, header.size);
+  ucvector_cleanup(&header);
+
+  return error;
+}
+
+static unsigned addChunk_PLTE(ucvector* out, const LodePNGColorMode* info) {
+  unsigned error = 0;
+  size_t i;
+  ucvector PLTE;
+  ucvector_init(&PLTE);
+  for(i = 0; i != info->palettesize * 4; ++i) {
+    
+    if(i % 4 != 3) ucvector_push_back(&PLTE, info->palette[i]);
+  }
+  error = addChunk(out, "PLTE", PLTE.data, PLTE.size);
+  ucvector_cleanup(&PLTE);
+
+  return error;
+}
+
+static unsigned addChunk_tRNS(ucvector* out, const LodePNGColorMode* info) {
+  unsigned error = 0;
+  size_t i;
+  ucvector tRNS;
+  ucvector_init(&tRNS);
+  if(info->colortype == LCT_PALETTE) {
+    size_t amount = info->palettesize;
+    
+    for(i = info->palettesize; i != 0; --i) {
+      if(info->palette[4 * (i - 1) + 3] == 255) --amount;
+      else break;
+    }
+    
+    for(i = 0; i != amount; ++i) ucvector_push_back(&tRNS, info->palette[4 * i + 3]);
+  } else if(info->colortype == LCT_GREY) {
+    if(info->key_defined) {
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_r >> 8));
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_r & 255));
+    }
+  } else if(info->colortype == LCT_RGB) {
+    if(info->key_defined) {
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_r >> 8));
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_r & 255));
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_g >> 8));
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_g & 255));
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_b >> 8));
+      ucvector_push_back(&tRNS, (unsigned char)(info->key_b & 255));
+    }
+  }
+
+  error = addChunk(out, "tRNS", tRNS.data, tRNS.size);
+  ucvector_cleanup(&tRNS);
+
+  return error;
+}
+
+static unsigned addChunk_IDAT(ucvector* out, const unsigned char* data, size_t datasize,
+                              LodePNGCompressSettings* zlibsettings) {
+  ucvector zlibdata;
+  unsigned error = 0;
+
+  
+  ucvector_init(&zlibdata);
+  error = zlib_compress(&zlibdata.data, &zlibdata.size, data, datasize, zlibsettings);
+  if(!error) error = addChunk(out, "IDAT", zlibdata.data, zlibdata.size);
+  ucvector_cleanup(&zlibdata);
+
+  return error;
+}
+
+static unsigned addChunk_IEND(ucvector* out) {
+  unsigned error = 0;
+  error = addChunk(out, "IEND", 0, 0);
+  return error;
+}
+
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+
+static unsigned addChunk_tEXt(ucvector* out, const char* keyword, const char* textstring) {
+  unsigned error = 0;
+  size_t i;
+  ucvector text;
+  ucvector_init(&text);
+  for(i = 0; keyword[i] != 0; ++i) ucvector_push_back(&text, (unsigned char)keyword[i]);
+  if(i < 1 || i > 79) return 89; 
+  ucvector_push_back(&text, 0); 
+  for(i = 0; textstring[i] != 0; ++i) ucvector_push_back(&text, (unsigned char)textstring[i]);
+  error = addChunk(out, "tEXt", text.data, text.size);
+  ucvector_cleanup(&text);
+
+  return error;
+}
+
+static unsigned addChunk_zTXt(ucvector* out, const char* keyword, const char* textstring,
+                              LodePNGCompressSettings* zlibsettings) {
+  unsigned error = 0;
+  ucvector data, compressed;
+  size_t i, textsize = strlen(textstring);
+
+  ucvector_init(&data);
+  ucvector_init(&compressed);
+  for(i = 0; keyword[i] != 0; ++i) ucvector_push_back(&data, (unsigned char)keyword[i]);
+  if(i < 1 || i > 79) return 89; 
+  ucvector_push_back(&data, 0); 
+  ucvector_push_back(&data, 0); 
+
+  error = zlib_compress(&compressed.data, &compressed.size,
+                        (unsigned char*)textstring, textsize, zlibsettings);
+  if(!error) {
+    for(i = 0; i != compressed.size; ++i) ucvector_push_back(&data, compressed.data[i]);
+    error = addChunk(out, "zTXt", data.data, data.size);
+  }
+
+  ucvector_cleanup(&compressed);
+  ucvector_cleanup(&data);
+  return error;
+}
+
+static unsigned addChunk_iTXt(ucvector* out, unsigned compressed, const char* keyword, const char* langtag,
+                              const char* transkey, const char* textstring, LodePNGCompressSettings* zlibsettings) {
+  unsigned error = 0;
+  ucvector data;
+  size_t i, textsize = strlen(textstring);
+
+  ucvector_init(&data);
+
+  for(i = 0; keyword[i] != 0; ++i) ucvector_push_back(&data, (unsigned char)keyword[i]);
+  if(i < 1 || i > 79) return 89; 
+  ucvector_push_back(&data, 0); 
+  ucvector_push_back(&data, compressed ? 1 : 0); 
+  ucvector_push_back(&data, 0); 
+  for(i = 0; langtag[i] != 0; ++i) ucvector_push_back(&data, (unsigned char)langtag[i]);
+  ucvector_push_back(&data, 0); 
+  for(i = 0; transkey[i] != 0; ++i) ucvector_push_back(&data, (unsigned char)transkey[i]);
+  ucvector_push_back(&data, 0); 
+
+  if(compressed) {
+    ucvector compressed_data;
+    ucvector_init(&compressed_data);
+    error = zlib_compress(&compressed_data.data, &compressed_data.size,
+                          (unsigned char*)textstring, textsize, zlibsettings);
+    if(!error) {
+      for(i = 0; i != compressed_data.size; ++i) ucvector_push_back(&data, compressed_data.data[i]);
+    }
+    ucvector_cleanup(&compressed_data);
+  } else  {
+    for(i = 0; textstring[i] != 0; ++i) ucvector_push_back(&data, (unsigned char)textstring[i]);
+  }
+
+  if(!error) error = addChunk(out, "iTXt", data.data, data.size);
+  ucvector_cleanup(&data);
+  return error;
+}
+
+static unsigned addChunk_bKGD(ucvector* out, const LodePNGInfo* info) {
+  unsigned error = 0;
+  ucvector bKGD;
+  ucvector_init(&bKGD);
+  if(info->color.colortype == LCT_GREY || info->color.colortype == LCT_GREY_ALPHA) {
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_r >> 8));
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_r & 255));
+  } else if(info->color.colortype == LCT_RGB || info->color.colortype == LCT_RGBA) {
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_r >> 8));
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_r & 255));
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_g >> 8));
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_g & 255));
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_b >> 8));
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_b & 255));
+  } else if(info->color.colortype == LCT_PALETTE) {
+    ucvector_push_back(&bKGD, (unsigned char)(info->background_r & 255)); 
+  }
+
+  error = addChunk(out, "bKGD", bKGD.data, bKGD.size);
+  ucvector_cleanup(&bKGD);
+
+  return error;
+}
+
+static unsigned addChunk_tIME(ucvector* out, const LodePNGTime* time) {
+  unsigned error = 0;
+  unsigned char* data = (unsigned char*)lodepng_malloc(7);
+  if(!data) return 83; 
+  data[0] = (unsigned char)(time->year >> 8);
+  data[1] = (unsigned char)(time->year & 255);
+  data[2] = (unsigned char)time->month;
+  data[3] = (unsigned char)time->day;
+  data[4] = (unsigned char)time->hour;
+  data[5] = (unsigned char)time->minute;
+  data[6] = (unsigned char)time->second;
+  error = addChunk(out, "tIME", data, 7);
+  lodepng_free(data);
+  return error;
+}
+
+static unsigned addChunk_pHYs(ucvector* out, const LodePNGInfo* info) {
+  unsigned error = 0;
+  ucvector data;
+  ucvector_init(&data);
+
+  lodepng_add32bitInt(&data, info->phys_x);
+  lodepng_add32bitInt(&data, info->phys_y);
+  ucvector_push_back(&data, info->phys_unit);
+
+  error = addChunk(out, "pHYs", data.data, data.size);
+  ucvector_cleanup(&data);
+
+  return error;
+}
+
+static unsigned addChunk_gAMA(ucvector* out, const LodePNGInfo* info) {
+  unsigned error = 0;
+  ucvector data;
+  ucvector_init(&data);
+
+  lodepng_add32bitInt(&data, info->gama_gamma);
+
+  error = addChunk(out, "gAMA", data.data, data.size);
+  ucvector_cleanup(&data);
+
+  return error;
+}
+
+static unsigned addChunk_cHRM(ucvector* out, const LodePNGInfo* info) {
+  unsigned error = 0;
+  ucvector data;
+  ucvector_init(&data);
+
+  lodepng_add32bitInt(&data, info->chrm_white_x);
+  lodepng_add32bitInt(&data, info->chrm_white_y);
+  lodepng_add32bitInt(&data, info->chrm_red_x);
+  lodepng_add32bitInt(&data, info->chrm_red_y);
+  lodepng_add32bitInt(&data, info->chrm_green_x);
+  lodepng_add32bitInt(&data, info->chrm_green_y);
+  lodepng_add32bitInt(&data, info->chrm_blue_x);
+  lodepng_add32bitInt(&data, info->chrm_blue_y);
+
+  error = addChunk(out, "cHRM", data.data, data.size);
+  ucvector_cleanup(&data);
+
+  return error;
+}
+
+static unsigned addChunk_sRGB(ucvector* out, const LodePNGInfo* info) {
+  unsigned char data = info->srgb_intent;
+  return addChunk(out, "sRGB", &data, 1);
+}
+
+static unsigned addChunk_iCCP(ucvector* out, const LodePNGInfo* info, LodePNGCompressSettings* zlibsettings) {
+  unsigned error = 0;
+  ucvector data, compressed;
+  size_t i;
+
+  ucvector_init(&data);
+  ucvector_init(&compressed);
+  for(i = 0; info->iccp_name[i] != 0; ++i) ucvector_push_back(&data, (unsigned char)info->iccp_name[i]);
+  if(i < 1 || i > 79) return 89; 
+  ucvector_push_back(&data, 0); 
+  ucvector_push_back(&data, 0); 
+
+  error = zlib_compress(&compressed.data, &compressed.size,
+                        info->iccp_profile, info->iccp_profile_size, zlibsettings);
+  if(!error) {
+    for(i = 0; i != compressed.size; ++i) ucvector_push_back(&data, compressed.data[i]);
+    error = addChunk(out, "iCCP", data.data, data.size);
+  }
+
+  ucvector_cleanup(&compressed);
+  ucvector_cleanup(&data);
+  return error;
+}
 
 #endif
