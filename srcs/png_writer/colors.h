@@ -248,4 +248,5 @@ static unsigned char paethPredictor(short a, short b, short c) {
   else if(pb < pa) return (unsigned char)b;
   else return (unsigned char)a;
 }
+
 #endif

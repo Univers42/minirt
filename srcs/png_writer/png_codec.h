@@ -39,7 +39,11 @@ typedef struct magic_arrays
 	const unsigned distance_base[30];
 	const unsigned distance_extra[30];
 	const unsigned clcl_order[NUM_CODE_LENGTH_CODES];
-	unsigned		lodepng_crc32_table[256];
+	const unsigned		lodepng_crc32_table[256];
+	const unsigned		adamix[7];
+	const unsigned		adam7iy[7];
+	const unsigned		adam7dx[7];
+	const unsigned		adam7dy[7];
 }t_magic_arrays;
 
 t_magic_arrays magic;
@@ -96,6 +100,11 @@ magic.lodepng_crc32_table[256] = {
   3009837614u, 3294710456u, 1567103746u,  711928724u, 3020668471u, 3272380065u, 1510334235u,  755167117u
 };
 
+
+magic.adam7ix[7] = { 0, 4, 0, 2, 0, 1, 0 }; 
+magic.ADAM7_IY[7] = { 0, 0, 4, 0, 2, 0, 1 }; 
+magic.ADAM7_DX[7] = { 8, 8, 4, 4, 2, 2, 1 }; 
+magic.ADAM7_DY[7] = { 8, 8, 8, 4, 4, 2, 2 }; 
 
 typedef struct s_ui_vector
 {
