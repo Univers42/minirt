@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+example_rt/
 # Object files
 *.o
 *.ko
