@@ -1,0 +1,3 @@
+[submodule "example_rt"]
+	path = example_rt
+	url = https://github.com/ttcpavle/Raytracer-in-c.git
