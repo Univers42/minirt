@@ -4,3 +4,7 @@ miniRT is though as the mvp version of the engine algorithm RAY-TRACING develope
 
 # Ressource of effects obj to parse
 https://casual-effects.com/data/
+https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-generating-camera-rays/generating-camera-rays.html
+
+https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@14.0/manual/Ray-Traced-Shadows.html
+https://graphicscodex.com/

@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 example_rt/
+rt_in_one_week/raytracing.github.io-release/
 # Object files
 *.o
 *.ko
