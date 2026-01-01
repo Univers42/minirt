@@ -38,6 +38,11 @@ int main(int argc, char **argv)
     fprintf(out, "P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
     for (j = 0; j < IMAGE_HEIGHT; ++j)
     {
+        int remaining = IMAGE_HEIGHT - j - 1;
+        if (remaining < 0)
+            remaining = 0;
+        fprintf(stderr, "\rScanlines remaining: %d ", remaining);
+        fflush(stderr);
         for (i = 0; i < IMAGE_WIDTH; ++i)
         {
             double r = (double)i / (IMAGE_WIDTH - 1);
@@ -49,6 +54,7 @@ int main(int argc, char **argv)
             fprintf(out, "%d %d %d\n", ir, ig, ib);
         }
     }
+    fprintf(stderr, "\nDone.\n");
     fclose(out);
     return 0;
 }
