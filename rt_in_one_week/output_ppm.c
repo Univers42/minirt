@@ -1,15 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   output_ppm.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/01 16:48:43 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/01/01 17:06:43 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include <stdint.h>
-
-#define IMAGE_WIDTH 256
-#define IMAGE_HEIGHT 256
-
-typedef struct s_color
-{
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-} t_color;
+#include <math.h>
+#include "settings.h"
+#include "types.h"
+#include "Color.h"
 
 /**
  * the pixels are written out in rows
@@ -24,37 +30,31 @@ typedef struct s_color
  */
 int main(int argc, char **argv)
 {
-    int i;
-    int j;
-    const char *out_path = (argc > 1) ? argv[1] : "output.ppm";
-    FILE *out = fopen(out_path, "w");
-    if (!out)
-    {
-        perror("fopen");
-        return 1;
-    }
+	int i;
+	int j;
+	const char *out_path = (argc > 1) ? argv[1] : "output.ppm";
+	FILE *out = fopen(out_path, "w");
 
-    /* P3 = ASCII color PPM */
-    fprintf(out, "P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
-    for (j = 0; j < IMAGE_HEIGHT; ++j)
-    {
-        int remaining = IMAGE_HEIGHT - j - 1;
-        if (remaining < 0)
-            remaining = 0;
-        fprintf(stderr, "\rScanlines remaining: %d ", remaining);
-        fflush(stderr);
-        for (i = 0; i < IMAGE_WIDTH; ++i)
-        {
-            double r = (double)i / (IMAGE_WIDTH - 1);
-            double g = (double)j / (IMAGE_HEIGHT - 1);
-            double b = 0.0;
-            int ir = (int)(255.999 * r);
-            int ig = (int)(255.999 * g);
-            int ib = (int)(255.999 * b);
-            fprintf(out, "%d %d %d\n", ir, ig, ib);
-        }
-    }
-    fprintf(stderr, "\nDone.\n");
-    fclose(out);
-    return 0;
+	if (!out)
+	{
+		perror("fopen");
+		return 1;
+	}
+	fprintf(out, "P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+	for (j = 0; j < IMAGE_HEIGHT; ++j)
+	{
+		fprintf(stderr, "\rScanlines remaining: %d ", (IMAGE_HEIGHT - j));
+		fflush(stderr);
+		for (i = 0; i < IMAGE_WIDTH; ++i)
+		{
+			t_vec3 pixel_color = vec3_create(
+				(real_t)((double)i / (IMAGE_WIDTH - 1)),
+				(real_t)((double)j / (IMAGE_HEIGHT - 1)),
+				(real_t)0);
+			write_color(out, &pixel_color);
+		}
+	}
+	fprintf(stderr, "\rDone.\n");
+	fclose(out);
+	return 0;
 }
