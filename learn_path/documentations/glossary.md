@@ -14,3 +14,4 @@ A ray hits the circle -> the hit point is where the ray meets the circle.
 - quandary: 
 - Surface:
 - hittable: emphaszie the member function that unites them.
+- aliasing/ jaggies: Those terms refers to the step stepping that is commonly found in graphic computation, when a camera takes a picture, there is no jaggies along the picture because the edge pixels are a blend of some foreground and background. In harvard they have made this as example how to blur for isntace it's teh same method, the color have to be average around a periphre of a pixel.
