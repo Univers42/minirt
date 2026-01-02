@@ -19,6 +19,7 @@
 #include "types.h"	/* defines real_t */
 #include "ray.h"	/* Need t_ray for ray_color */
 #include "object.h"
+
 /* Convert a component in [0,1] to an integer byte 0..255 (clamped). */
 static inline int component_to_byte(real_t v)
 {
@@ -42,19 +43,31 @@ static inline void write_color(FILE *out, const t_vec3 *pixel)
 	fprintf(out, "%d %d %d\n", r, g, b);
 }
 
+/* return color seen along ray r */
 static inline t_vec3 ray_color(const t_ray *r)
 {
-	/* check sphere hit: create local point and pass its address */
+	/* sphere at (0,0,-1) */
 	t_vec3 center = vec3_create((real_t)0, (real_t)0, (real_t)-1);
-	if (hit_sphere(&center, (real_t)0.5, r))
-		return vec3_create((real_t)1, (real_t)0, (real_t)0);
+	double t = hit_sphere(&center, (real_t)0.5, r);
+	if (t > 0.0)
+	{
+		/* p = r.at(t) */
+		t_vec3 p = ray_at((t_ray *)r, (real_t)t);
+		/* normal = unit_vector(p - center) */
+		t_vec3 diff = vec3_sub(&p, &center);
+		t_vec3 n = unit_vector(&diff);
+		/* return 0.5*(n + (1,1,1)) */
+		t_vec3 one = vec3_create((real_t)1, (real_t)1, (real_t)1);
+		t_vec3 n_plus = vec3_add(&n, &one);
+		return vec3_mul_scalar(&n_plus, (real_t)0.5);
+	}
 
-	/* simple background gradient based on ray direction */
+	/* background gradient */
 	t_vec3 unit_dir = unit_vector(&r->dir);
-	real_t t = 0.5 * (unit_dir.e[Y] + (real_t)1.0); /* map [-1,1] to [0,1] */
+	real_t tt = 0.5 * (unit_dir.e[Y] + (real_t)1.0); /* map [-1,1] to [0,1] */
 	t_vec3 white = vec3_create(1.0, 1.0, 1.0);
 	t_vec3 blue = vec3_create(0.5, 0.7, 1.0);
-	/* lerp: (1-t)*white + t*blue */
-	return vec3_lerp(&white, &blue, t);
+	return vec3_lerp(&white, &blue, tt);
 }
+
 #endif

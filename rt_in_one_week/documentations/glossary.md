@@ -9,4 +9,8 @@
 A lerp is alwasy fo the form:
 	blendedValue = (1 - a) * startValue + a * endValue
 	Where `a` going from zero to one
-
+-hit point: means the exact point where something touched, interesects, or makes contact with something else. When a line, ray, or curve hits another line, curve, or shape the hit point is the point of intersection.
+A ray hits the circle -> the hit point is where the ray meets the circle.
+- quandary: 
+- Surface:
+- hittable: emphaszie the member function that unites them.

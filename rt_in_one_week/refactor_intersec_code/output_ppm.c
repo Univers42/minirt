@@ -1,0 +1,60 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   output_ppm.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/01 16:48:43 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/01/01 17:06:43 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include <stdint.h>
+#include <math.h>
+#include "settings.h"
+#include "types.h"
+#include "Color.h"
+
+/**
+ * the pixels are written out in rows
+ * every rows of pixels are wirtten out from top to bottom
+ * These rows are written out from top to bottom
+ * by convention, each of the red/green/blue components are represented internally by real valued
+ * variables that range from 0.0 to 1.0. These must be scaled to integer values between
+ * 0 to 255 before we print them out.
+ * Red goes from fully off (black) to fully on (bright red) from left to right
+ * and green goes from fylly off at the top (black) on at the bottom (bright green). Addign red
+ * and green light together yellow so we should expect the bottom right corner to be yellow
+ */
+int main(int argc, char **argv)
+{
+	int i;
+	int j;
+	const char *out_path = (argc > 1) ? argv[1] : "output.ppm";
+	FILE *out = fopen(out_path, "w");
+
+	if (!out)
+	{
+		perror("fopen");
+		return 1;
+	}
+	fprintf(out, "P3\n%d %d\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT);
+	for (j = 0; j < IMAGE_HEIGHT; ++j)
+	{
+		fprintf(stderr, "\rScanlines remaining: %d ", (IMAGE_HEIGHT - j));
+		fflush(stderr);
+		for (i = 0; i < IMAGE_WIDTH; ++i)
+		{
+			t_vec3 pixel_color = vec3_create(
+				(real_t)((double)i / (IMAGE_WIDTH - 1)),
+				(real_t)((double)j / (IMAGE_HEIGHT - 1)),
+				(real_t)0);
+			write_color(out, &pixel_color);
+		}
+	}
+	fprintf(stderr, "\rDone.\n");
+	fclose(out);
+	return 0;
+}

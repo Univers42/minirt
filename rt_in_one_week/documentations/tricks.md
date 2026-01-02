@@ -1,0 +1,1 @@
+- A common trick used for visualizing normals is to assume n is a unit length vector - so each composnent is between -1 and 1. the trick is to map each component to the interval from 0,1 and then map(x,y,z) -to-> (reg,green,blue). 
