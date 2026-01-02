@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 17:09:23 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/01 17:23:07 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/02 01:15:57 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,18 @@ static inline t_ray ray_create(t_vec3 origin, t_vec3 direction)
 }
 
 /* Accessors (return pointers to avoid copying) */
-static inline const t_vec3 *ray_origin(const t_ray *ray)
+static inline const t_vec3 *ray_origin(t_ray *ray)
 {
 	return (&ray->orig);
 }
 
-static inline const t_vec3 *ray_direction(const t_ray *ray)
+static inline const t_vec3 *ray_direction(t_ray *ray)
 {
 	return (&ray->dir);
 }
 
 /* Compute point along ray: P(t) = origin + t * direction */
-static inline t_vec3 ray_at(const t_ray *ray, real_t t)
+static inline t_vec3 ray_at(t_ray *ray, real_t t)
 {
 	t_vec3 scaled;
 
