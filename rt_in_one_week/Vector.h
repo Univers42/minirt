@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 16:44:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/02 01:23:12 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/02 17:48:20 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,4 +134,11 @@ static inline t_vec3 unit_vector(const t_vec3 *v)
 	return vec3_div_scalar(v, len);
 }
 
+/* Linear interpolation between two vectors: (1-t)*a + t*b */
+static inline t_vec3 vec3_lerp(const t_vec3 *a, const t_vec3 *b, real_t t)
+{
+	t_vec3 one_minus_t_a = vec3_mul_scalar(a, (real_t)(1.0 - t));
+	t_vec3 t_b = vec3_mul_scalar(b, t);
+	return vec3_add(&one_minus_t_a, &t_b);
+}
 #endif
