@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 01:21:08 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 03:05:14 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 03:15:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ int main(void)
 	}
 	fprintf(stderr, "\rRendering complete.                      \n");
 
-	/* Reflectance for each vertical stripe: use non-zero values so objects remain visible */
-	static const real_t reflectances[] = {0.1, 0.3, 0.5, 0.7, 1.0};
+	/* Reflectance for each vertical stripe: stronger contrast for visual clarity */
+	static const real_t reflectances[] = {0.05, 0.25, 0.5, 0.75, 1.0};
 
 	/* Write output PPM with same dimensions, applying stripe-based reflectance only to object pixels */
 	FILE *out = fopen("out_gamut.ppm", "w");

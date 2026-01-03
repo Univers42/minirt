@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 16:52:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 03:05:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 03:11:03 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,32 @@ static inline real_t linear_to_gamma(real_t v)
 	return (real_t)0.0;
 }
 
-/* Convert a component in [0,1] to an integer byte 0..255 (clamped) with gamma correction */
-static inline int component_to_byte(real_t v, const t_interval *interval)
+/* Convert a [0,1] component to byte [0,255] with clamping (no gamma here) */
+static inline int component_to_byte(real_t v, const t_interval *intensity)
 {
-	/* apply linear->gamma then clamp to interval and convert */
-	real_t g = linear_to_gamma(v);
-	g = clamp(g, interval->min, interval->max);
-	return (int)(256.0 * g);
+	v = clamp(v, intensity->min, intensity->max);
+	return (int)(256.0 * v);
 }
 
-/* Write pixel color to the given FILE stream as "R G B\n". */
+/* Write pixel color: apply gamma, then clamp, then convert to byte */
 static inline void write_color(FILE *out, const t_vec3 *pixel)
 {
-	t_interval intensity = interval(0.000, 0.999);
-	int r = component_to_byte(pixel->x, &intensity);
-	int g = component_to_byte(pixel->y, &intensity);
-	int b = component_to_byte(pixel->z, &intensity);
-	fprintf(out, "%d %d %d\n", r, g, b);
+	real_t r = pixel->x;
+	real_t g = pixel->y;
+	real_t b = pixel->z;
+
+	/* Apply linear->gamma transform (gamma=2) */
+	r = linear_to_gamma(r);
+	g = linear_to_gamma(g);
+	b = linear_to_gamma(b);
+
+	/* Clamp and convert to byte range [0,255] */
+	static const t_interval intensity = {0.000, 0.999, true};
+	int rbyte = component_to_byte(r, &intensity);
+	int gbyte = component_to_byte(g, &intensity);
+	int bbyte = component_to_byte(b, &intensity);
+
+	fprintf(out, "%d %d %d\n", rbyte, gbyte, bbyte);
 }
 
 /* simple ray_color that uses hit_sphere for legacy tests (kept) */
