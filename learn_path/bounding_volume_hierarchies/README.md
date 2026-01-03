@@ -1,0 +1,4 @@
+This part is about refactorizing the code and make the run-time more efficient. Ray-object intersection is the main time-bottleneck in a ray tracer. and the run time is lineara with the number of objects. But it's a repeated search on the same scene, so we ought to be able to make it a logarithmic serarch in the spirit  o fbinary search because we are sending millions to billions off rays into the same scen, we can sort teh object in the sceme, and then each ray intersection can be a sublinear search. 
+
+The two most common method of sorting are 1) subdivide the space
+2) subdivide the objects. the latter is usually much easier to code up

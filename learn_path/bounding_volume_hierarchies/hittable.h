@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:37:39 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 14:29:07 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:37:03 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "types.h"
 #include "vector.h"
 #include "ray.h"
+#include "aabb.h"
 #include <stdbool.h>
 
 /* Forward declaration of material to avoid circular dependency */

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 14:30:52 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 15:57:33 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:40:07 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "point.h"
 #include "hittable.h"
 #include "interval.h"
+#include "aabb.h"
 #include <math.h>
 #include <stdbool.h>
 
@@ -32,12 +33,13 @@ typedef struct s_moving_sphere
 	t_vec3 center_velocity; /* center2 - center1 */
 } t_moving_sphere;
 
-/* Sphere type: moving center, radius, albedo, and material pointer */
+/* Sphere type: moving center, radius, albedo, material pointer, and bounding box */
 typedef struct s_sphere
 {
 	t_moving_sphere center;
 	real_t radius;
 	t_vec3 albedo;
+	t_aabb bbox;
 	t_material *mat; /* pointer to material that determines scattering */
 } t_sphere;
 
@@ -57,6 +59,13 @@ static inline t_sphere create_sphere(const t_point3 *center, real_t radius, t_ve
 	s.radius = (radius > 0.0) ? radius : 0.0;
 	s.albedo = albedo;
 	s.mat = mat;
+
+	/* Compute bounding box for stationary sphere */
+	t_vec3 rvec = vec3_create(s.radius, s.radius, s.radius);
+	t_point3 center_low = point3_create(center->x - s.radius, center->y - s.radius, center->z - s.radius);
+	t_point3 center_high = point3_create(center->x + s.radius, center->y + s.radius, center->z + s.radius);
+	s.bbox = aabb_from_points(&center_low, &center_high);
+
 	return s;
 }
 
@@ -71,6 +80,18 @@ static inline t_sphere create_sphere_moving(const t_point3 *center1, const t_poi
 	s.radius = (radius > 0.0) ? radius : 0.0;
 	s.albedo = albedo;
 	s.mat = mat;
+
+	/* Compute bounding boxes at t=0 and t=1, then merge them */
+	t_point3 c0_low = point3_create(center1->x - s.radius, center1->y - s.radius, center1->z - s.radius);
+	t_point3 c0_high = point3_create(center1->x + s.radius, center1->y + s.radius, center1->z + s.radius);
+	t_aabb box0 = aabb_from_points(&c0_low, &c0_high);
+
+	t_point3 c1_low = point3_create(center2->x - s.radius, center2->y - s.radius, center2->z - s.radius);
+	t_point3 c1_high = point3_create(center2->x + s.radius, center2->y + s.radius, center2->z + s.radius);
+	t_aabb box1 = aabb_from_points(&c1_low, &c1_high);
+
+	s.bbox = aabb_merge(&box0, &box1);
+
 	return s;
 }
 
@@ -83,6 +104,12 @@ static inline t_sphere create_sphere_default(const t_point3 *center, real_t radi
 	s.radius = (radius > 0.0) ? radius : 0.0;
 	s.albedo = vec3_create(1.0, 1.0, 1.0);
 	s.mat = NULL;
+
+	/* Compute bounding box for stationary sphere */
+	t_point3 center_low = point3_create(center->x - s.radius, center->y - s.radius, center->z - s.radius);
+	t_point3 center_high = point3_create(center->x + s.radius, center->y + s.radius, center->z + s.radius);
+	s.bbox = aabb_from_points(&center_low, &center_high);
+
 	return s;
 }
 

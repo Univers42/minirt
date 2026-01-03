@@ -6,12 +6,13 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 01:21:08 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 15:58:37 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:45:39 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "common.h"
 #include "material.h"
+#include "bvh.h"
 
 /* simple helper to free all allocated materials */
 static void cleanup_materials(t_material **arr, int count)
@@ -226,6 +227,29 @@ int main(void)
 		return 1;
 	}
 
+	/* Build BVH tree from world */
+	t_bvh_node *bvh_root = bvh_node_create(&world);
+	if (!bvh_root)
+	{
+		fprintf(stderr, "Error: failed to create BVH tree\n");
+		hittable_list_clear(&world);
+		cleanup_materials(materials, mat_count);
+		return 1;
+	}
+
+	/* Wrap BVH root in a hittable list for rendering */
+	t_hittable_list world_bvh;
+	hittable_list_init(&world_bvh);
+	t_aabb bvh_bbox = bvh_root->bbox;
+	if (!hittable_list_add_nonowned(&world_bvh, bvh_root, set_current_bvh, bvh_node_hit, &bvh_bbox))
+	{
+		fprintf(stderr, "Error: failed to wrap BVH root\n");
+		bvh_node_destroy(bvh_root);
+		hittable_list_clear(&world);
+		cleanup_materials(materials, mat_count);
+		return 1;
+	}
+
 	/* camera setup */
 	t_camera cam;
 	cam.aspect_ratio = 16.0 / 9.0;
@@ -247,20 +271,24 @@ int main(void)
 	cam.defocus_disk_u = vec3_zero();
 	cam.defocus_disk_v = vec3_zero();
 
+	/* Render using BVH-accelerated world */
 	camera_init(&cam, cam.aspect_ratio, cam.image_width);
-
 	FILE *out = fopen("output.ppm", "w");
 	if (!out)
 	{
 		fprintf(stderr, "Error: failed to open output file\n");
+		bvh_node_destroy(bvh_root);
+		hittable_list_clear(&world_bvh);
 		hittable_list_clear(&world);
 		cleanup_materials(materials, mat_count);
 		return 1;
 	}
 
-	camera_render(&cam, out, &world);
+	camera_render(&cam, out, &world_bvh);
 	fclose(out);
 
+	bvh_node_destroy(bvh_root);
+	hittable_list_clear(&world_bvh);
 	hittable_list_clear(&world);
 	cleanup_materials(materials, mat_count);
 	return 0;
