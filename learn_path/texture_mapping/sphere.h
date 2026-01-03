@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 14:30:52 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 16:40:07 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 17:22:49 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,31 @@ static inline t_vec3 sphere_center_at(const t_sphere *s, real_t time)
 {
 	t_vec3 scaled = vec3_mul_scalar(&s->center.center_velocity, time);
 	return vec3_add(&s->center.center1, &scaled);
+}
+
+/* Get UV coordinates for a point on a unit sphere centered at origin.
+   p: a point on the sphere (assumed normalized or at least on the sphere surface).
+   u: returned value [0,1] of angle around Y axis from X=-1.
+   v: returned value [0,1] of angle from Y=-1 to Y=+1.
+
+   Examples:
+   <1, 0, 0> yields <0.50, 0.50>       <-1, 0, 0> yields <0.00, 0.50>
+   <0, 1, 0> yields <0.50, 1.00>       < 0,-1, 0> yields <0.50, 0.00>
+   <0, 0, 1> yields <0.25, 0.50>       < 0, 0,-1> yields <0.75, 0.50>
+*/
+static inline void sphere_get_uv(const t_vec3 *p, real_t *u, real_t *v)
+{
+	/* theta = acos(-p.y): angle from Y=-1 to Y=+1 */
+	real_t theta = (real_t)acos((double)(-p->y));
+
+	/* phi = atan2(-p.z, p.x) + pi: angle around Y axis */
+	real_t phi = (real_t)atan2((double)(-p->z), (double)(p->x)) + (real_t)PI;
+
+	/* u in [0, 1] from phi in [0, 2*pi] */
+	*u = phi / ((real_t)2.0 * (real_t)PI);
+
+	/* v in [0, 1] from theta in [0, pi] */
+	*v = theta / (real_t)PI;
 }
 
 /* create_sphere: stationary sphere (center2 = center1, velocity = 0) */
@@ -131,7 +156,7 @@ static inline real_t hit_sphere(const t_vec3 *center, real_t radius, const t_ray
 static const t_sphere *g_current_sphere = NULL;
 static inline void set_current_sphere(const void *obj) { g_current_sphere = (const t_sphere *)obj; }
 
-/* 4-arg sphere hit: now uses time-dependent center and assigns material to rec->mat */
+/* 4-arg sphere hit: now uses time-dependent center, computes UV, and assigns material to rec->mat */
 static inline bool sphere_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 {
 	const t_sphere *s = g_current_sphere;
@@ -162,6 +187,10 @@ static inline bool sphere_hit_noobj(const t_ray *r, t_interval rayt, t_hit_recor
 	t_vec3 tmp = vec3_sub(&rec->p, &current_center);
 	t_vec3 outward_normal = unit_vector(&tmp);
 	set_face_normal(rec, r, &outward_normal);
+
+	/* Compute UV coordinates from the outward normal */
+	sphere_get_uv(&outward_normal, &rec->u, &rec->v);
+
 	/* set per-hit albedo and material from sphere */
 	rec->albedo = s->albedo;
 	rec->mat = s->mat;
