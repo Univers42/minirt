@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 17:05:38 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 20:05:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 20:08:43 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,14 @@ typedef struct s_image_texture
 static inline real_t srgb_to_linear(unsigned char c)
 {
 	double v = (double)c / 255.0;
+	/* More accurate sRGB to linear conversion per IEC 61966-2-1 standard */
 	return (real_t)((v <= 0.04045) ? (v / 12.92) : pow((v + 0.055) / 1.055, 2.4));
+}
+
+static inline real_t linear_to_srgb(real_t linear)
+{
+	/* Linear to sRGB conversion for tone mapping */
+	return (linear <= 0.0031308) ? (12.92 * linear) : (1.055 * pow(linear, 1.0 / 2.4) - 0.055);
 }
 
 static inline t_color image_texture_value(const t_texture *tex, real_t u, real_t v, const t_point3 *p)
@@ -156,10 +163,12 @@ static inline t_color image_texture_value(const t_texture *tex, real_t u, real_t
 	if (!it || it->image.w == 0 || it->image.h == 0)
 		return vec3_create(0.0, 1.0, 1.0); /* cyan debug */
 
+	/* Wrap UVs for seamless tiling */
 	u = u - floor(u);
 	v = v - floor(v);
 	v = 1.0 - v;
 
+	/* High-quality bilinear filtering with proper wrapping */
 	real_t x = u * (real_t)it->image.w;
 	real_t y = v * (real_t)it->image.h;
 
@@ -171,25 +180,29 @@ static inline t_color image_texture_value(const t_texture *tex, real_t u, real_t
 	real_t fx = x - floor(x);
 	real_t fy = y - floor(y);
 
+	/* Fetch 4 corner pixels */
 	const unsigned char *p00 = lode_image_pixel_rgb(&it->image, x0, y0);
 	const unsigned char *p10 = lode_image_pixel_rgb(&it->image, x1, y0);
 	const unsigned char *p01 = lode_image_pixel_rgb(&it->image, x0, y1);
 	const unsigned char *p11 = lode_image_pixel_rgb(&it->image, x1, y1);
 
+	/* Convert to linear space for proper blending */
 	t_color c00 = vec3_create(srgb_to_linear(p00[0]), srgb_to_linear(p00[1]), srgb_to_linear(p00[2]));
 	t_color c10 = vec3_create(srgb_to_linear(p10[0]), srgb_to_linear(p10[1]), srgb_to_linear(p10[2]));
 	t_color c01 = vec3_create(srgb_to_linear(p01[0]), srgb_to_linear(p01[1]), srgb_to_linear(p01[2]));
 	t_color c11 = vec3_create(srgb_to_linear(p11[0]), srgb_to_linear(p11[1]), srgb_to_linear(p11[2]));
 
+	/* Bilinear interpolation in linear space */
 	t_color dx0 = vec3_sub(&c10, &c00);
 	t_color dx1 = vec3_sub(&c11, &c01);
-	t_color scalar_dx0 = vec3_mul_scalar(&dx0, fx);
-	t_color scalar_dx1 = vec3_mul_scalar(&dx1, fx);
-	t_color c0 = vec3_add(&c00, &scalar_dx0);
-	t_color c1 = vec3_add(&c01, &scalar_dx1);
+	t_color c0_scalar = vec3_mul_scalar(&dx0, fx);
+	t_color c1_scalar = vec3_mul_scalar(&dx1, fx);
+	t_color c0 = vec3_add(&c00, &c0_scalar);
+	t_color c1 = vec3_add(&c01, &c1_scalar);
 	t_color dy = vec3_sub(&c1, &c0);
-	t_color scalar_dy = vec3_mul_scalar(&dy, fy);
-	return vec3_add(&c0, &scalar_dy);
+	t_color dy_scalar = vec3_mul_scalar(&dy, fy);
+
+	return vec3_add(&c0, &dy_scalar);
 }
 
 static inline void image_texture_destroy(t_texture *tex)

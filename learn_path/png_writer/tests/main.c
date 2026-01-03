@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 01:21:08 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 19:58:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 20:33:18 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,17 @@ static int earth(const char *tex_path)
 
 	t_camera cam;
 	cam.aspect_ratio = 16.0 / 9.0;
-	cam.image_width = 400;
-	cam.samples_per_pixel = 100;
-	cam.max_depth = 50;
+	cam.image_width = 600;		 /* Increased from 400 for better detail */
+	cam.samples_per_pixel = 500; /* Increased from 100 for less noise */
+	cam.max_depth = 200;		 /* Increased from 50 for better light bounces */
 
-	cam.vfov = 20.0;
-	cam.lookfrom = point3_create(0.0, 0.0, 12.0);
+	cam.vfov = 80.0;
+	cam.lookfrom = point3_create(0.0, 0.0, 0.0);
 	cam.lookat = point3_create(0.0, 0.0, 0.0);
 	cam.vup = vec3_create(0.0, 1.0, 0.0);
 
-	cam.defocus_angle = 0.0;
-	cam.focus_dist = 10.0;
+	cam.defocus_angle = 0.0; /* Sharp focus on earth */
+	cam.focus_dist = 12.0;
 
 	cam.u = vec3_zero();
 	cam.v = vec3_zero();
@@ -101,8 +101,15 @@ static int earth(const char *tex_path)
 		return 1;
 	}
 
+	printf("Rendering earth with high quality settings...\n");
+	printf("Resolution: %dx%d, Samples: %d, Max depth: %d\n",
+		   cam.image_width, (int)(cam.image_width / cam.aspect_ratio),
+		   (int)cam.samples_per_pixel, cam.max_depth);
+
 	camera_render(&cam, out, &world);
 	fclose(out);
+
+	printf("Render complete! Output saved to earth.ppm\n");
 
 	hittable_list_clear(&world);
 	earth_surface->destroy(earth_surface);
