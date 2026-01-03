@@ -36,6 +36,19 @@ static inline void lodepng_decompress_settings_init(LodePNGDecompressSettings *s
 	s->custom_context = NULL;
 }
 
+static inline void lodepng_decoder_settings_init(LodePNGDecoderSettings *settings)
+{
+	settings->color_convert = 1;
+#ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
+	settings->read_text_chunks = 1;
+	settings->remember_unknown_chunks = 0;
+#endif
+	settings->ignore_crc = 0;
+	settings->ignore_critical = 0;
+	settings->ignore_end = 0;
+	lodepng_decompress_settings_init(&settings->zlibsettings);
+}
+
 static inline void lodepng_color_profile_init(LodePNGColorProfile *p)
 {
 	p->colored = 0;

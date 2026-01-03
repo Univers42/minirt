@@ -26,19 +26,6 @@ static const unsigned DISTANCEBASE[30] = {1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 4
 static const unsigned DISTANCEEXTRA[30] = {0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13};
 #endif
 
-/* Forward declarations */
-static inline void getTreeInflateFixed(HuffmanTree *tree_ll, HuffmanTree *tree_d);
-static inline unsigned getTreeInflateDynamic(HuffmanTree *tree_ll, HuffmanTree *tree_d,
-											 const unsigned char *in, size_t *bp, size_t inlength)
-{
-	(void)tree_ll;
-	(void)tree_d;
-	(void)in;
-	(void)bp;
-	(void)inlength;
-	return 0;
-}
-
 #ifndef HUFFMAN_TREE_DEFINED
 typedef struct s_huffman_tree
 {
@@ -49,6 +36,109 @@ typedef struct s_huffman_tree
 	unsigned num_codes;
 } HuffmanTree;
 #endif
+
+/* Forward declarations needed by getTreeInflateDynamic (avoid implicit decls) */
+static inline void HuffmanTree_init(HuffmanTree *tree);
+static inline void HuffmanTree_cleanup(HuffmanTree *tree);
+static inline unsigned HuffmanTree_makeFromLengths(HuffmanTree *tree, const unsigned *bitlen,
+												   size_t numcodes, unsigned maxbitlen);
+static inline unsigned huffmanDecodeSymbol(const unsigned char *in, size_t *bp,
+										   const HuffmanTree *codetree, size_t inbitlength);
+
+/* Forward declarations */
+static inline void getTreeInflateFixed(HuffmanTree *tree_ll, HuffmanTree *tree_d);
+
+static inline unsigned getTreeInflateDynamic(HuffmanTree *tree_ll, HuffmanTree *tree_d,
+											 const unsigned char *in, size_t *bp, size_t inlength)
+{
+	/* dynamic tree parsing per RFC1951 */
+	static const unsigned CLCL_ORDER[NUM_CODE_LENGTH_CODES] = {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
+	unsigned HLIT, HDIST, HCLEN;
+	unsigned bitlen_cl[NUM_CODE_LENGTH_CODES];
+	unsigned bitlen_ll[286], bitlen_d[30];
+	unsigned error = 0, i;
+
+	if ((*bp + 14) > inlength * 8)
+		return 49;
+
+	HLIT = readBitsFromStream(bp, in, 5) + 257; /* # of literal/length codes */
+	HDIST = readBitsFromStream(bp, in, 5) + 1;	/* # of distance codes */
+	HCLEN = readBitsFromStream(bp, in, 4) + 4;	/* # of code-length codes */
+
+	for (i = 0; i < NUM_CODE_LENGTH_CODES; ++i)
+		bitlen_cl[i] = 0;
+	for (i = 0; i < HCLEN; ++i)
+		bitlen_cl[CLCL_ORDER[i]] = readBitsFromStream(bp, in, 3);
+
+	HuffmanTree tree_cl;
+	HuffmanTree_init(&tree_cl);
+	error = HuffmanTree_makeFromLengths(&tree_cl, bitlen_cl, NUM_CODE_LENGTH_CODES, 7);
+	if (error)
+	{
+		HuffmanTree_cleanup(&tree_cl);
+		return error;
+	}
+
+	/* read code lengths for ll and d trees */
+	{
+		unsigned temp[286 + 30];
+		unsigned num = HLIT + HDIST, idx = 0;
+		while (idx < num)
+		{
+			unsigned code = huffmanDecodeSymbol(in, bp, &tree_cl, inlength * 8);
+			if (code <= 15)
+			{
+				temp[idx++] = code;
+			}
+			else if (code == 16)
+			{
+				if (idx == 0)
+				{
+					error = 54;
+					break;
+				}
+				unsigned repeat = readBitsFromStream(bp, in, 2) + 3;
+				unsigned prev = temp[idx - 1];
+				while (repeat-- && idx < num)
+					temp[idx++] = prev;
+			}
+			else if (code == 17)
+			{
+				unsigned repeat = readBitsFromStream(bp, in, 3) + 3;
+				while (repeat-- && idx < num)
+					temp[idx++] = 0;
+			}
+			else if (code == 18)
+			{
+				unsigned repeat = readBitsFromStream(bp, in, 7) + 11;
+				while (repeat-- && idx < num)
+					temp[idx++] = 0;
+			}
+			else
+			{
+				error = 16;
+				break;
+			}
+		}
+
+		if (!error)
+		{
+			for (i = 0; i < HLIT; ++i)
+				bitlen_ll[i] = temp[i];
+			for (i = 0; i < HDIST; ++i)
+				bitlen_d[i] = temp[HLIT + i];
+		}
+	}
+
+	HuffmanTree_cleanup(&tree_cl);
+	if (error)
+		return error;
+
+	error = HuffmanTree_makeFromLengths(tree_ll, bitlen_ll, HLIT, 15);
+	if (error)
+		return error;
+	return HuffmanTree_makeFromLengths(tree_d, bitlen_d, HDIST, 15);
+}
 
 static inline void HuffmanTree_init(HuffmanTree *tree)
 {

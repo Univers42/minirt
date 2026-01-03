@@ -33,6 +33,7 @@
 #include "icc.h"
 #include "api_state_utils.h"
 #include "chunk.h"
+#include "img_file.h"
 #include "encoder.h"
 #include "deflate.h"
 #include "zlib.h"
@@ -41,6 +42,5 @@
 #include "scan.h"
 #include "inflate.h"
 #include "decoder.h"
-#include "img_file.h"
 
 #endif
