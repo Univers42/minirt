@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:38:12 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 16:49:07 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:55:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,13 @@ static inline t_bvh_node *bvh_node_build(t_hittable_wrapper *objects, size_t sta
 
 	size_t object_span = end - start;
 
-	/* Choose random axis for splitting */
-	int axis = random_int(0, 2);
+	/* Build bounding box of the span of objects */
+	t_aabb span_bbox = aabb_empty();
+	for (size_t i = start; i < end; ++i)
+		span_bbox = aabb_merge(&span_bbox, &objects[i].bbox);
+
+	/* Choose axis with longest extent */
+	int axis = aabb_longest_axis(&span_bbox);
 	t_comparator_fn comparator;
 	if (axis == 0)
 		comparator = bvh_box_x_compare;

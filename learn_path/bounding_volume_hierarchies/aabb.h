@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:17:15 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 16:37:02 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 16:55:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,19 @@ static inline const t_interval *aabb_axis_interval(const t_aabb *box, int axis)
 	if (axis == 2)
 		return &box->z;
 	return &box->x;
+}
+
+/* Return the index of the longest axis (0=x, 1=y, 2=z) */
+static inline int aabb_longest_axis(const t_aabb *box)
+{
+	real_t x_size = interval_size(&box->x);
+	real_t y_size = interval_size(&box->y);
+	real_t z_size = interval_size(&box->z);
+
+	if (x_size > y_size)
+		return (x_size > z_size) ? 0 : 2;
+	else
+		return (y_size > z_size) ? 1 : 2;
 }
 
 /* Ray-AABB intersection test */
