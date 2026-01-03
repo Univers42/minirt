@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 17:49:10 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 00:53:07 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 02:18:12 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,25 @@ typedef struct s_sphere
 {
 	t_vec3 center;
 	real_t radius;
+	t_vec3 albedo; /* new: sphere color */
 } t_sphere;
 
-static inline t_sphere create_sphere(const t_point3 *center, real_t radius)
+/* create_sphere now accepts an albedo */
+static inline t_sphere create_sphere(const t_point3 *center, real_t radius, t_vec3 albedo)
 {
 	t_sphere s;
 	s.center = vec3_create(center->x, center->y, center->z);
 	s.radius = radius;
+	s.albedo = albedo;
+	return s;
+}
+
+static inline t_sphere create_sphere_default(const t_point3 *center, real_t radius)
+{
+	t_sphere s;
+	s.center = vec3_create(center->x, center->y, center->z);
+	s.radius = radius;
+	s.albedo = vec3_create(1.0, 1.0, 1.0); // default to white color
 	return s;
 }
 
@@ -82,6 +94,8 @@ static inline bool sphere_hit_noobj(const t_ray *r, t_interval rayt, t_hit_recor
 	t_vec3 tmp = vec3_sub(&rec->p, &s->center);
 	t_vec3 outward_normal = unit_vector(&tmp);
 	set_face_normal(rec, r, &outward_normal);
+	/* set per-hit albedo from sphere */
+	rec->albedo = s->albedo;
 	return true;
 }
 

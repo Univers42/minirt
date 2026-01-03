@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:37:39 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 00:09:26 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 02:18:11 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@
 #include "types.h"
 #include "vector.h"
 #include "ray.h"
-# include <stdbool.h>
-# include "common.h"
+#include <stdbool.h>
 
 /* Hit record: store intersection point, normal and t. */
 typedef struct s_hit_record
 {
-	t_vec3	p;
-	t_vec3	normal;
-	real_t	t;
-	bool	front_face;
-}	t_hit_record;
+	t_vec3 p;
+	t_vec3 normal;
+	real_t t;
+	bool front_face;
+	t_vec3 albedo; /* new: per-hit surface color */
+} t_hit_record;
 
 /* set_face_normal: outward_normal is assumed unit length. */
 static inline void set_face_normal(t_hit_record *hit, const t_ray *r, const t_vec3 *outward_normal)

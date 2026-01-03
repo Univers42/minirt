@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 23:53:07 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 01:24:44 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 02:18:11 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_camera
 	real_t pixel_samples_scale;
 	int image_width;
 	int image_height;
+	int max_depth; /* new: maximum path depth */
 	t_point3 center;
 	t_point3 pixel00_loc;
 	t_vec3 pixel_delta_u;
@@ -74,8 +75,16 @@ static inline void camera_init(t_camera *camera, real_t aspect_ratio, int image_
 	t_vec3 half_v = vec3_div_scalar(&viewport_v, (real_t)2.0);
 	viewport_upper_left = vec3_sub(&viewport_upper_left, &half_u);
 	viewport_upper_left = vec3_sub(&viewport_upper_left, &half_v);
-	/* ensure pixel_samples_scale is computed after samples_per_pixel is known */
-	camera->pixel_samples_scale = 1.0 / camera->samples_per_pixel;
+
+	/* ensure samples_per_pixel is sane and compute pixel_samples_scale last */
+	if (camera->samples_per_pixel <= (real_t)0.0)
+		camera->samples_per_pixel = (real_t)1.0;
+	camera->pixel_samples_scale = (real_t)1.0 / camera->samples_per_pixel;
+
+	/* default max depth if not initialized by caller */
+	if (camera->max_depth <= 0)
+		camera->max_depth = 50;
+
 	/* pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v) */
 	t_vec3 sum = vec3_add(&camera->pixel_delta_u, &camera->pixel_delta_v);
 	t_vec3 half_sum = vec3_mul_scalar(&sum, (real_t)0.5);
@@ -102,7 +111,8 @@ static inline t_ray get_ray(const t_camera *cam, int i, int j)
 	t_vec3 tmp = vec3_add(&cam->pixel00_loc, &tmp_u);
 	t_vec3 pixel_sample = vec3_add(&tmp, &tmp_v);
 
-	t_vec3 ray_direction = vec3_sub(&pixel_sample, (t_vec3 *)&cam->center);
+	/* subtract camera center (no cast) */
+	t_vec3 ray_direction = vec3_sub(&pixel_sample, &cam->center);
 	return ray_create(cam->center, ray_direction);
 }
 
@@ -124,10 +134,19 @@ static inline void camera_render(const t_camera *camera, FILE *out, const t_hitt
 			for (int sample = 0; sample < (int)camera->samples_per_pixel; ++sample)
 			{
 				t_ray r = get_ray(camera, i, j);
-				t_vec3 sample_color = ray_color_world(&r, world);
+				/* use camera-controlled max depth */
+				t_vec3 sample_color = ray_color_depth(&r, world, camera->max_depth);
 				pixel_color = vec3_add(&pixel_color, &sample_color);
 			}
 			t_vec3 scaled = vec3_mul_scalar(&pixel_color, camera->pixel_samples_scale);
+			/* debug: print central pixel computed color once */
+			if (i == camera->image_width / 2 && j == camera->image_height / 2)
+			{
+				fprintf(stderr, "\nDEBUG: central pixel (i=%d,j=%d) accumulated = (%f,%f,%f) scaled = (%f,%f,%f)\n",
+						i, j,
+						pixel_color.x, pixel_color.y, pixel_color.z,
+						scaled.x, scaled.y, scaled.z);
+			}
 			write_color(out, &scaled);
 		}
 	}
