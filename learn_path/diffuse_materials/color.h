@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 16:52:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 02:46:08 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 03:05:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,21 @@ static inline real_t vec3_max_component(const t_vec3 *v)
 	return m;
 }
 
+/* linear -> gamma (gamma = 2.0) with safe handling of negative inputs */
+static inline real_t linear_to_gamma(real_t v)
+{
+	if (v > (real_t)0.0)
+		return (real_t)sqrt((double)v);
+	return (real_t)0.0;
+}
+
 /* Convert a component in [0,1] to an integer byte 0..255 (clamped) with gamma correction */
 static inline int component_to_byte(real_t v, const t_interval *interval)
 {
-	/* clamp */
-	v = clamp(v, interval->min, interval->max);
-	/* gamma-2.0 correction */
-	v = (real_t)sqrt((double)v);
-	return (int)(256.0 * v);
+	/* apply linear->gamma then clamp to interval and convert */
+	real_t g = linear_to_gamma(v);
+	g = clamp(g, interval->min, interval->max);
+	return (int)(256.0 * g);
 }
 
 /* Write pixel color to the given FILE stream as "R G B\n". */
@@ -107,8 +114,9 @@ static inline t_vec3 ray_color_depth(const t_ray *r, const t_hittable_list *worl
 	/* Miss (background) */
 	t_vec3 unit_dir = unit_vector(&r->dir);
 	real_t a = (real_t)0.5 * (unit_dir.y + (real_t)1.0);
-	t_vec3 white = vec3_create(1.0, 1.0, 1.0);
-	t_vec3 blue = vec3_create(0.5, 0.7, 1.0);
+	/* use a proper blue gradient: white at top (a=0), bright blue at horizon (a=1) */
+	t_vec3 white = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
+	t_vec3 blue = vec3_create((real_t)0.3, (real_t)0.5, (real_t)1.0);
 	return vec3_lerp(&white, &blue, a);
 }
 
