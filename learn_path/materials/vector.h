@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 16:44:21 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 02:18:11 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 14:47:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,46 @@ static inline t_vec3 unit_vector(const t_vec3 *v)
 	if (len == (real_t)0)
 		return vec3_zero();
 	return vec3_div_scalar(v, len);
+}
+
+/* Reflection: r - 2*dot(r,n)*n */
+static inline t_vec3 vec3_reflect(const t_vec3 *v, const t_vec3 *n)
+{
+	real_t two_dot = (real_t)(2.0 * dot(v, n));
+	t_vec3 scaled = vec3_mul_scalar(n, two_dot);
+	return vec3_sub(v, &scaled);
+}
+
+/* Refraction using Snell's law:
+   cos_theta = min(dot(-uv, n), 1.0)
+   r_out_perp = etai_over_etat * (uv + cos_theta*n)
+   r_out_parallel = -sqrt(|1.0 - r_out_perp²|) * n */
+static inline t_vec3 vec3_refract(const t_vec3 *uv, const t_vec3 *n, real_t etai_over_etat)
+{
+	t_vec3 neg_uv = vec3_neg(uv);
+	real_t cos_theta = dot(&neg_uv, n);
+	if (cos_theta > 1.0)
+		cos_theta = 1.0;
+
+	t_vec3 scaled_n = vec3_mul_scalar(n, cos_theta);
+	t_vec3 uv_plus = vec3_add(uv, &scaled_n);
+	t_vec3 r_out_perp = vec3_mul_scalar(&uv_plus, etai_over_etat);
+
+	real_t perp_len_sq = vec3_length_squared(&r_out_perp);
+	real_t discriminant = 1.0 - (real_t)perp_len_sq;
+	if (discriminant < 0.0)
+		discriminant = 0.0;
+	real_t sqrt_disc = (real_t)sqrt((double)discriminant);
+	t_vec3 r_out_parallel = vec3_mul_scalar(n, -sqrt_disc);
+
+	return vec3_add(&r_out_perp, &r_out_parallel);
+}
+
+/* Check if vector is close to zero in all dimensions */
+static inline bool vec3_near_zero(const t_vec3 *v)
+{
+	real_t s = (real_t)1e-8;
+	return (fabs(v->x) < s) && (fabs(v->y) < s) && (fabs(v->z) < s);
 }
 
 /* Linear interpolation between two vectors: (1-t)*a + t*b

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:34:04 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 00:53:05 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 14:33:37 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <string.h>
 #include "interval.h" /* <-- added so t_interval is available here */
 #include "hittable.h"
-#include "object.h"
+#include "sphere.h"
 
 /* Wrapper stores object pointer, ownership and two per-type callbacks */
 typedef void (*t_set_current_fn)(const void *obj);

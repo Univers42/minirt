@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:37:39 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 02:18:11 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 14:29:07 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,18 @@
 #include "ray.h"
 #include <stdbool.h>
 
-/* Hit record: store intersection point, normal and t. */
+/* Forward declaration of material to avoid circular dependency */
+typedef struct s_material t_material;
+
+/* Hit record: store intersection point, normal, material and t. */
 typedef struct s_hit_record
 {
 	t_vec3 p;
 	t_vec3 normal;
 	real_t t;
 	bool front_face;
-	t_vec3 albedo; /* new: per-hit surface color */
+	t_vec3 albedo;	 /* per-hit surface color */
+	t_material *mat; /* pointer to material that determines scattering behavior */
 } t_hit_record;
 
 /* set_face_normal: outward_normal is assumed unit length. */

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 16:52:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 03:11:03 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 14:44:50 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 #include "types.h"
 #include "vector.h"
 #include "ray.h"
-#include "object.h"
+#include "sphere.h"
 #include "hittable_list.h"
 #include "interval.h"
+#include "material.h"
 
 /* Return a color (t_vec3) by value, not a pointer */
 static inline t_vec3 color_create(real_t x, real_t y, real_t z)
@@ -95,35 +96,33 @@ static inline t_vec3 ray_color_legacy(const t_ray *r)
 	return vec3_lerp(&white, &blue, tt);
 }
 
-/* depth-limited ray-color implemented recursively for true Lambertian scattering.
-   On hit: scatter direction = normal + random_unit_vector(); recurse with depth-1.
-   Uses per-hit albedo stored in rec.albedo. */
+/* depth-limited ray-color implemented recursively.
+   If material exists and scatters, use it; otherwise return black. */
 static inline t_vec3 ray_color_depth(const t_ray *r, const t_hittable_list *world, int depth)
 {
-	/* termination */
 	if (depth <= 0)
 		return vec3_zero();
 
 	t_hit_record rec;
-	/* use small t_min to avoid self intersections */
 	if (hittable_list_hit(world, r, interval((real_t)1e-4, INFINITY), &rec))
 	{
-		/* Lambertian scatter: target = rec.p + rec.normal + random_unit_vector() */
-		t_vec3 rnd = random_unit_vector();
-		t_vec3 n_plus_rnd = vec3_add(&rec.normal, &rnd);
-		t_vec3 target = vec3_add(&rec.p, &n_plus_rnd);
-		t_vec3 direction = vec3_sub(&target, &rec.p);
-		t_ray scattered = ray_create(rec.p, direction);
+		t_ray scattered;
+		t_color attenuation;
 
-		/* attenuation by per-hit albedo */
-		t_vec3 scattered_col = ray_color_depth(&scattered, world, depth - 1);
-		return vec3_mul_elem(&rec.albedo, &scattered_col);
+		/* if material exists and scatters, use it */
+		if (rec.mat && rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered))
+		{
+			t_vec3 scattered_col = ray_color_depth(&scattered, world, depth - 1);
+			return vec3_mul_elem(&attenuation, &scattered_col);
+		}
+
+		/* fallback: if no material or scatter returns false, return black */
+		return vec3_zero();
 	}
 
-	/* Miss (background) */
+	/* Miss (background gradient) */
 	t_vec3 unit_dir = unit_vector(&r->dir);
 	real_t a = (real_t)0.5 * (unit_dir.y + (real_t)1.0);
-	/* use a proper blue gradient: white at top (a=0), bright blue at horizon (a=1) */
 	t_vec3 white = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
 	t_vec3 blue = vec3_create((real_t)0.3, (real_t)0.5, (real_t)1.0);
 	return vec3_lerp(&white, &blue, a);

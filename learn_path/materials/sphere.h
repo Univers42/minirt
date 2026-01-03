@@ -1,42 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   object.h                                           :+:      :+:    :+:   */
+/*   sphere.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/02 17:49:10 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 02:18:12 by dlesieur         ###   ########.fr       */
+/*   Created: 2026/01/03 14:30:52 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/01/03 14:41:18 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef SPHERE_H
+#define SPHERE_H
 
 #include "types.h"
 #include "vector.h"
 #include "ray.h"
 #include "point.h"
 #include "hittable.h"
-#include "interval.h" /* <-- added so t_interval is defined */
+#include "interval.h"
 #include <math.h>
 #include <stdbool.h>
 
-/* Sphere type uses t_vec3 center so vector ops work uniformly. */
+/* Forward declaration to avoid circular dependency */
+typedef struct s_material t_material;
+
+/* Sphere type: center, radius, albedo, and material pointer */
 typedef struct s_sphere
 {
 	t_vec3 center;
 	real_t radius;
-	t_vec3 albedo; /* new: sphere color */
+	t_vec3 albedo;
+	t_material *mat; /* pointer to material that determines scattering */
 } t_sphere;
 
-/* create_sphere now accepts an albedo */
-static inline t_sphere create_sphere(const t_point3 *center, real_t radius, t_vec3 albedo)
+/* create_sphere: with albedo and material */
+static inline t_sphere create_sphere(const t_point3 *center, real_t radius, t_vec3 albedo, t_material *mat)
 {
 	t_sphere s;
 	s.center = vec3_create(center->x, center->y, center->z);
-	s.radius = radius;
+	s.radius = (radius > 0.0) ? radius : 0.0;
 	s.albedo = albedo;
+	s.mat = mat;
 	return s;
 }
 
@@ -44,8 +49,9 @@ static inline t_sphere create_sphere_default(const t_point3 *center, real_t radi
 {
 	t_sphere s;
 	s.center = vec3_create(center->x, center->y, center->z);
-	s.radius = radius;
+	s.radius = (radius > 0.0) ? radius : 0.0;
 	s.albedo = vec3_create(1.0, 1.0, 1.0); // default to white color
+	s.mat = NULL;
 	return s;
 }
 
@@ -67,7 +73,7 @@ static inline real_t hit_sphere(const t_vec3 *center, real_t radius, const t_ray
 static const t_sphere *g_current_sphere = NULL;
 static inline void set_current_sphere(const void *obj) { g_current_sphere = (const t_sphere *)obj; }
 
-/* 4-arg sphere hit using the currently-bound sphere */
+/* 4-arg sphere hit: now assigns material to rec->mat */
 static inline bool sphere_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 {
 	const t_sphere *s = g_current_sphere;
@@ -94,9 +100,9 @@ static inline bool sphere_hit_noobj(const t_ray *r, t_interval rayt, t_hit_recor
 	t_vec3 tmp = vec3_sub(&rec->p, &s->center);
 	t_vec3 outward_normal = unit_vector(&tmp);
 	set_face_normal(rec, r, &outward_normal);
-	/* set per-hit albedo from sphere */
+	/* set per-hit albedo and material from sphere */
 	rec->albedo = s->albedo;
+	rec->mat = s->mat;
 	return true;
 }
-
 #endif

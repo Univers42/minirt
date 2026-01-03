@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 00:59:57 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 01:24:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 14:50:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ static inline real_t random_real(void)
 static inline real_t random_real_interval(real_t min, real_t max)
 {
 	return (min + (max - min) * random_real());
+}
+
+/* Alias for random_real() */
+static inline real_t random_double(void)
+{
+	return random_real();
 }
 
 #endif

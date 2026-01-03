@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 20:00:51 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 01:20:25 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/03 14:43:05 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <math.h>
 #include <stdint.h>
 # include "random.h"
+# include "sphere.h"
 
 /* Include interval early so objects/hittable_list can use t_interval */
 #include "interval.h"
@@ -30,7 +31,6 @@
 #include "vector.h"
 #include "point.h"
 #include "ray.h"
-#include "object.h"
 #include "hittable.h"
 #include "hittable_list.h"
 
