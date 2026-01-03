@@ -50,6 +50,11 @@ static inline void camera_init(t_camera *camera, real_t aspect_ratio, int image_
 
 	if (!camera)
 		return;
+
+	/* Ensure max_depth has a safe default to avoid reading uninitialized memory
+	   (caller may or may not have initialized camera->max_depth). */
+	camera->max_depth = 50;
+
 	camera->aspect_ratio = (aspect_ratio > 0) ? aspect_ratio : (real_t)1.0;
 	camera->image_width = (image_width > 0) ? image_width : 100;
 	camera->image_height = (int)((real_t)camera->image_width / camera->aspect_ratio);
@@ -80,10 +85,6 @@ static inline void camera_init(t_camera *camera, real_t aspect_ratio, int image_
 	if (camera->samples_per_pixel <= (real_t)0.0)
 		camera->samples_per_pixel = (real_t)1.0;
 	camera->pixel_samples_scale = (real_t)1.0 / camera->samples_per_pixel;
-
-	/* default max depth if not initialized by caller */
-	if (camera->max_depth <= 0)
-		camera->max_depth = 50;
 
 	/* pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v) */
 	t_vec3 sum = vec3_add(&camera->pixel_delta_u, &camera->pixel_delta_v);
