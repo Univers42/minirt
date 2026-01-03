@@ -10,30 +10,35 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef PNGWRITER_SETTINGS_H
+#define PNGWRITER_SETTINGS_H
 
-#include "types.h"
+#include "types.h" /* for LodePNG*Settings structs */
+
+/* Avoid redefinition if you already have these elsewhere */
+#ifndef LODEPNG_SETTINGS_INIT_FUNCS_DEFINED
+#define LODEPNG_SETTINGS_INIT_FUNCS_DEFINED
 
 static inline void lodepng_compress_settings_init(LodePNGCompressSettings *s)
 {
+	/* keep defaults conservative; encoder can override */
 	s->btype = 2;
 	s->use_lz77 = 1;
 	s->windowsize = 2048;
 	s->minmatch = 3;
 	s->nicematch = 128;
 	s->lazymatching = 1;
-	s->custom_zlib = NULL;
-	s->custom_deflate = NULL;
-	s->custom_context = NULL;
+	s->custom_zlib = 0;
+	s->custom_deflate = 0;
+	s->custom_context = 0;
 }
 
 static inline void lodepng_decompress_settings_init(LodePNGDecompressSettings *s)
 {
 	s->ignore_adler32 = 0;
-	s->custom_zlib = NULL;
-	s->custom_inflate = NULL;
-	s->custom_context = NULL;
+	s->custom_zlib = 0;
+	s->custom_inflate = 0;
+	s->custom_context = 0;
 }
 
 static inline void lodepng_decoder_settings_init(LodePNGDecoderSettings *settings)
@@ -71,4 +76,6 @@ static inline void lodepng_encoder_settings_init(LodePNGEncoderSettings *s)
 	s->add_id = 0;
 }
 
-#endif
+#endif /* LODEPNG_SETTINGS_INIT_FUNCS_DEFINED */
+
+#endif /* PNGWRITER_SETTINGS_H */

@@ -12,6 +12,9 @@
 
 #ifndef API_STATE_UTILS_H
 #define API_STATE_UTILS_H
+
+#include "settings.h" /* ensure lodepng_*_settings_init are visible here */
+
 static inline void lodepng_state_init(LodePNGState *state)
 {
 	lodepng_decoder_settings_init(&state->decoder);

@@ -18,18 +18,22 @@
 #include "bit.h"
 #include "colors.h"
 
+/* forward decl from filter.h */
+static unsigned unfilter(unsigned char *out, const unsigned char *in, unsigned w, unsigned h, unsigned bpp);
+
 /*out must be buffer big enough to contain full image, and in must contain the full decompressed data from
 the IDAT chunks (with filter index bytes and possible padding bits)
 return value is error*/
 static unsigned postProcessScanlines(unsigned char *out, unsigned char *in,
 									 unsigned w, unsigned h, const LodePNGInfo *info_png)
 {
-	(void)info_png;
-	// no-op stub: assumes scanlines already unfiltered
-	size_t n = lodepng_get_raw_size(w, h, &info_png->color);
-	for (size_t i = 0; i < n; ++i)
-		out[i] = in[i];
-	return 0;
+	/* Only non-interlaced supported here */
+	if (info_png->interlace_method != 0)
+		return 34; /* illegal/interlace not supported in this stub */
+
+	/* in: each row starts with 1 filter byte */
+	unsigned bpp = lodepng_get_bpp(&info_png->color);
+	return unfilter(out, in, w, h, bpp);
 }
 
 static unsigned readChunk_PLTE(LodePNGColorMode *color, const unsigned char *data, size_t chunkLength)

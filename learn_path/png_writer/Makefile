@@ -10,13 +10,11 @@ OBJDIR := obj
 TESTDIR := tests
 BINDIR := bin
 
-# All top-level .c in project root (library sources)
-LIB_SRCS := $(wildcard $(SRCDIR)/*.c)
+# Library sources: all root .c except the smoke-test main.c
+LIB_SRCS := $(filter-out $(SRCDIR)/main.c,$(wildcard $(SRCDIR)/*.c))
 LIB_OBJS := $(addprefix $(OBJDIR)/,$(notdir $(LIB_SRCS:.c=.o)))
-
 LIBNAME := libpnglode.a
 
-# Test programs
 TEST_SRC := $(TESTDIR)/test_png.c
 TEST_OBJ := $(OBJDIR)/test_png.o
 TEST_BIN := $(BINDIR)/test_png
@@ -30,15 +28,21 @@ MAIN_BIN := $(BINDIR)/main
 all: dirs $(LIBNAME) $(MAIN_BIN) $(TEST_BIN)
 
 dirs:
-	@mkdir -p $(BINDIR)
-	@mkdir -p $(OBJDIR)
+	@mkdir -p $(BINDIR) $(OBJDIR)
 
-# Build library archive from object files in obj/
+# Build library archive from object files (no main.o)
 $(LIBNAME): $(LIB_OBJS)
 	$(AR) $(ARFLAGS) $@ $^
 
-# Compile top-level sources into obj/<basename>.o
-# e.g. init.c -> obj/init.o
+# Link main with the library
+$(MAIN_BIN): $(MAIN_OBJ) $(LIBNAME)
+	$(CC) $(CFLAGS) -o $@ $(MAIN_OBJ) $(LIBNAME) $(LDFLAGS)
+
+# Link test_png with the library
+$(TEST_BIN): $(TEST_OBJ) $(LIBNAME)
+	$(CC) $(CFLAGS) -o $@ $(TEST_OBJ) $(LIBNAME) $(LDFLAGS)
+
+# Compile root sources into obj/<basename>.o
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -50,15 +54,6 @@ $(TEST_OBJ): $(TEST_SRC)
 $(MAIN_OBJ): $(MAIN_SRC)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Link main (simple smoke test)
-$(MAIN_BIN): $(MAIN_OBJ)
-	$(CC) $(CFLAGS) -o $@ $(MAIN_OBJ) $(LDFLAGS)
-
-# Link test program with library
-$(TEST_BIN): $(LIBNAME) $(TEST_OBJ)
-	$(CC) $(CFLAGS) -o $@ $(TEST_OBJ) $(LIBNAME) $(LDFLAGS)
-
-# run tests
 test: $(TEST_BIN)
 	./$(TEST_BIN)
 

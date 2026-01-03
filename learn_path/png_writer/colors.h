@@ -307,23 +307,19 @@ static void color_tree_add(ColorTree *tree,
 	tree->index = (int)index;
 }
 
-/*
-Paeth predicter, used by PNG filter type 4
-The parameters are of type short, but should come from unsigned chars, the shorts
-are only needed to make the paeth calculation correct.
-*/
-static unsigned char paethPredictor(short a, short b, short c)
+/* Paeth predictor, per PNG spec. Use int math to avoid overflow artifacts. */
+static unsigned char paethPredictor(int a, int b, int c)
 {
-	short pa = abs(b - c);
-	short pb = abs(a - c);
-	short pc = abs(a + b - c - c);
+	int p = a + b - c;
+	int pa = p > a ? p - a : a - p;
+	int pb = p > b ? p - b : b - p;
+	int pc = p > c ? p - c : c - p;
 
-	if (pc < pa && pc < pb)
-		return (unsigned char)c;
-	else if (pb < pa)
-		return (unsigned char)b;
-	else
+	if (pa <= pb && pa <= pc)
 		return (unsigned char)a;
+	if (pb <= pc)
+		return (unsigned char)b;
+	return (unsigned char)c;
 }
 
 unsigned lodepng_convert(unsigned char *out, const unsigned char *in,
