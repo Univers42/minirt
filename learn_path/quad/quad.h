@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 23:54:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/04 00:07:19 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/04 00:36:28 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 typedef struct s_quad
 {
 	t_point3 q;
-	t_vec3		u;
-	t_vec3		v;
-	t_vec3		w;
+	t_vec3 u;
+	t_vec3 v;
+	t_vec3 w;
 	t_material *mat;
 	t_aabb bbox;
 	t_vec3 normal;
@@ -28,15 +28,16 @@ typedef struct s_quad
 } t_quad;
 
 /* Compute bounding box from quad vertices: Q, Q+u, Q+v, Q+u+v
-   Also compute plane normal = unit(cross(u, v)) and d = dot(normal, Q) */
+   Also compute plane normal = unit(cross(u, v)), w = cross(u,v), and d = dot(normal, Q) */
 static inline void set_bounding_box(t_quad *quad)
 {
 	if (!quad)
 		return;
 
-	/* compute plane normal and D (store even if degenerate) */
+	/* compute plane normal, w vector, and D */
 	{
 		t_vec3 n = cross(&quad->u, &quad->v);
+		quad->w = n; /* store raw cross product for plane coordinate calculations */
 		t_vec3 n_unit = unit_vector(&n);
 		/* If u and v are colinear, unit_vector returns zero; handle gracefully */
 		quad->normal = n_unit;
@@ -76,6 +77,7 @@ static inline t_quad quad_create(const t_point3 *Q, const t_vec3 *u, const t_vec
 		quad.q = point3_create(0.0, 0.0, 0.0);
 		quad.u = vec3_zero();
 		quad.v = vec3_zero();
+		quad.w = vec3_zero();
 		quad.mat = NULL;
 		quad.bbox = aabb_empty();
 		quad.normal = vec3_zero();
@@ -100,7 +102,20 @@ static inline t_aabb quad_bounding_box(const t_quad *quad)
 	return quad->bbox;
 }
 
-/* Hit test: plane intersection + inside-parallelogram check */
+/* Check if plane coordinates (alpha, beta) are interior to the quad and set rec UV */
+static inline bool quad_is_interior(real_t alpha, real_t beta, t_hit_record *rec)
+{
+	/* Check if both coordinates are in [0, 1] */
+	if (!contains((real_t)0.0, (real_t)1.0, alpha) || !contains((real_t)0.0, (real_t)1.0, beta))
+		return false;
+
+	/* Set UV coordinates in hit record */
+	rec->u = alpha;
+	rec->v = beta;
+	return true;
+}
+
+/* Hit test: plane intersection + plane-coordinate check */
 static inline bool quad_hit(const t_quad *quad, const t_ray *r, t_interval rayt, t_hit_record *rec)
 {
 	/* basic validation */
@@ -124,27 +139,27 @@ static inline bool quad_hit(const t_quad *quad, const t_ray *r, t_interval rayt,
 	/* compute intersection point */
 	t_vec3 p = ray_at((t_ray *)r, t);
 
-	/* Check if point lies inside the parallelogram defined by Q, u, v.
-	   Solve for uu, vv in p = Q + uu*u + vv*v, then require 0 <= uu,vv <= 1. */
-	t_vec3 w = vec3_sub(&p, &quad->q);
-	real_t u_len_sq = vec3_length_squared(&quad->u);
-	real_t v_len_sq = vec3_length_squared(&quad->v);
-	if (u_len_sq <= (real_t)0.0 || v_len_sq <= (real_t)0.0)
+	/* Compute plane coordinates using cross products and dot products
+	   alpha = dot(w, cross(planar_hitpt_vector, v)) / |w|^2
+	   beta  = dot(w, cross(u, planar_hitpt_vector)) / |w|^2 */
+	t_vec3 planar_hitpt_vector = vec3_sub(&p, &quad->q);
+	real_t w_len_sq = vec3_length_squared(&quad->w);
+	if (w_len_sq <= (real_t)0.0)
 		return false; /* degenerate quad */
 
-	real_t uu = (real_t)dot(&w, &quad->u) / u_len_sq;
-	real_t vv = (real_t)dot(&w, &quad->v) / v_len_sq;
+	t_vec3 cross_phv_v = cross(&planar_hitpt_vector, &quad->v);
+	real_t alpha = (real_t)dot(&quad->w, &cross_phv_v) / w_len_sq;
 
-	/* allow tiny epsilon tolerance */
-	const real_t BIAS = (real_t)1e-8;
-	if (!(uu + BIAS >= (real_t)0.0 && uu <= (real_t)1.0 + BIAS && vv + BIAS >= (real_t)0.0 && vv <= (real_t)1.0 + BIAS))
+	t_vec3 cross_u_phv = cross(&quad->u, &planar_hitpt_vector);
+	real_t beta = (real_t)dot(&quad->w, &cross_u_phv) / w_len_sq;
+
+	/* Check if point is interior and set UV; reject if exterior */
+	if (!quad_is_interior(alpha, beta, rec))
 		return false;
 
-	/* fill hit record */
+	/* Ray hits the 2D shape; set the rest of the hit record and return true */
 	rec->t = t;
 	rec->p = p;
-	rec->u = uu;
-	rec->v = vv;
 	rec->mat = quad->mat;
 	set_face_normal(rec, r, &quad->normal);
 
