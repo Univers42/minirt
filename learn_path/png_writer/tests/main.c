@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 01:21:08 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 20:33:18 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/04 00:23:26 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ static int earth(const char *tex_path)
 	cam.samples_per_pixel = 500; /* Increased from 100 for less noise */
 	cam.max_depth = 200;		 /* Increased from 50 for better light bounces */
 
-	cam.vfov = 80.0;
-	cam.lookfrom = point3_create(0.0, 0.0, 0.0);
+	cam.vfov = 20.0;
+	cam.lookfrom = point3_create(0.0, 0.0, 12.0);
 	cam.lookat = point3_create(0.0, 0.0, 0.0);
 	cam.vup = vec3_create(0.0, 1.0, 0.0);
 
