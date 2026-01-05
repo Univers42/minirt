@@ -6,13 +6,15 @@
 #    By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/03 23:03:35 by dlesieur          #+#    #+#              #
-#    Updated: 2026/01/03 23:24:22 by dlesieur         ###   ########.fr        #
+#    Updated: 2026/01/04 22:54:07 by dlesieur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := librt.a
 CC := cc
 CFLAGS := -std=c99 -I.
+OPTFLAGS := -O3 -march=native -ffast-math -flto -DNDEBUG -pipe -fopenmp
+CFLAGS += $(OPTFLAGS)
 AR := ar
 ARFLAGS := rcs
 
@@ -25,7 +27,7 @@ TESTDIR := tests
 
 # External dependency
 PNG_WRITER_LIB := ../png_writer/libpnglode.a
-LDFLAGS := -lm
+LDFLAGS := -lm -flto -fopenmp
 
 # Source and object files
 LIB_SRCS := $(filter-out $(SRCDIR)/main.c,$(wildcard $(SRCDIR)/*.c))

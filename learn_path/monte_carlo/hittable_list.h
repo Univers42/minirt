@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:34:04 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/04 01:10:57 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/04 23:22:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ static inline bool hittable_list_hit(const t_hittable_list *list, const t_ray *r
 	return hit_anything;
 }
 
-static const t_hittable_list *g_current_list = NULL;
+static __thread const t_hittable_list *g_current_list = NULL;
 static inline void set_current_hlist(const void *obj) { g_current_list = (const t_hittable_list *)obj; }
 static inline bool hittable_list_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 {

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   constant_medium.h                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/04 01:25:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/04 15:58:51 by dlesieur         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+/* ============================================================================ */
+/*                                                                              */
+/*                                 FILE HEADER                                  */
+/* ---------------------------------------------------------------------------- */
+/*  File:       constant_medium.h                                               */
+/*  Author:     dlesieur                                                        */
+/*  Email:      dlesieur@student.42.fr                                          */
+/*  Created:    2026/01/04 23:22:42                                             */
+/*  Updated:    2026/01/04 23:22:42                                             */
+/*                                                                              */
+/* ============================================================================ */
 
 #ifndef CONSTANT_MEDIUM_H
 #define CONSTANT_MEDIUM_H
@@ -32,7 +32,7 @@ typedef struct s_constant_medium
 } t_constant_medium;
 
 /* Set current medium for hit_noobj callback */
-static const t_constant_medium *g_current_medium = NULL;
+static __thread const t_constant_medium *g_current_medium = NULL;
 static inline void set_current_medium(const void *obj)
 {
 	g_current_medium = (const t_constant_medium *)obj;

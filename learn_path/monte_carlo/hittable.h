@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 19:37:39 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/04 01:11:51 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/04 23:22:39 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static inline t_vec3 rotate_y_vec(const t_vec3 *v, real_t sin_t, real_t cos_t)
 }
 
 /* translate wrapper */
-static const t_translate_wrap *g_current_translate = NULL;
+static __thread const t_translate_wrap *g_current_translate = NULL;
 static inline void set_current_translate(const void *obj) { g_current_translate = (const t_translate_wrap *)obj; }
 static inline bool translate_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 {
@@ -124,7 +124,7 @@ static inline t_translate_wrap *translate_create(const t_hittable_wrapper *child
 }
 
 /* rotate_y wrapper */
-static const t_rotate_y_wrap *g_current_rotate = NULL;
+static __thread const t_rotate_y_wrap *g_current_rotate = NULL;
 static inline void set_current_rotate(const void *obj) { g_current_rotate = (const t_rotate_y_wrap *)obj; }
 static inline bool rotate_y_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 {

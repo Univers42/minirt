@@ -1,15 +1,3 @@
-/* ============================================================================ */
-/*                                                                              */
-/*                                 FILE HEADER                                  */
-/* ---------------------------------------------------------------------------- */
-/*  File:       cornell_box_unstratified.c                                      */
-/*  Author:     dlesieur                                                        */
-/*  Email:      dlesieur@student.42.fr                                          */
-/*  Created:    2026/01/04 17:14:43                                             */
-/*  Updated:    2026/01/04 17:14:43                                             */
-/*                                                                              */
-/* ============================================================================ */
-
 #include "common.h"
 #include "../quad.h"
 #include "../bvh.h"
@@ -165,12 +153,26 @@ void cornell_box(void)
 		}
 	}
 
+	/* Build BVH over the populated world to accelerate intersection queries */
+	t_bvh_node *world_bvh = bvh_node_create(&world);
+	t_hittable_list accel;
+	hittable_list_init(&accel);
+	if (world_bvh)
+	{
+		t_hittable_wrapper bvh_wrap = {
+			.object = world_bvh,
+			.owned = true,
+			.set_current = set_current_bvh,
+			.hit_noobj = bvh_node_hit,
+			.bbox = world_bvh->bbox};
+		hittable_list_add_wrapper(&accel, &bvh_wrap);
+	}
+
 	/* Setup camera */
 	t_camera cam;
 	cam.aspect_ratio = 1.0;
-	cam.image_width = 600;
-	/* Increase samples per pixel so stratification yields a visible improvement */
-	cam.samples_per_pixel = 1000;
+	cam.image_width = 1200;
+	cam.samples_per_pixel = 1000.0; /* keep full quality */
 	cam.max_depth = 50;
 	cam.background = vec3_create(0.0, 0.0, 0.0);
 	cam.vfov = 40.0;
@@ -182,9 +184,12 @@ void cornell_box(void)
 	cam.focus_dist = vec3_length(&focus_vec);
 
 	camera_init(&cam, cam.aspect_ratio, cam.image_width);
-	camera_render(&cam, stdout, &world);
+	/* Render against accelerated BVH (fallback to flat list if BVH build failed) */
+	const t_hittable_list *render_world = world_bvh ? &accel : &world;
+	camera_render(&cam, stdout, render_world);
 
 	/* Cleanup */
+	hittable_list_clear(&accel); /* frees BVH if built */
 	hittable_list_clear(&world);
 	red->destroy(red);
 	free(red);

@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   sphere.h                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/03 14:30:52 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 17:22:49 by dlesieur         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+/* ============================================================================ */
+/*                                                                              */
+/*                                 FILE HEADER                                  */
+/* ---------------------------------------------------------------------------- */
+/*  File:       sphere.h                                                        */
+/*  Author:     dlesieur                                                        */
+/*  Email:      dlesieur@student.42.fr                                          */
+/*  Created:    2026/01/04 23:09:23                                             */
+/*  Updated:    2026/01/04 23:09:23                                             */
+/*                                                                              */
+/* ============================================================================ */
 
 #ifndef SPHERE_H
 #define SPHERE_H
@@ -153,7 +153,7 @@ static inline real_t hit_sphere(const t_vec3 *center, real_t radius, const t_ray
 }
 
 /* Module-local current sphere for no-obj 4-arg hit calls */
-static const t_sphere *g_current_sphere = NULL;
+static __thread const t_sphere *g_current_sphere = NULL;
 static inline void set_current_sphere(const void *obj) { g_current_sphere = (const t_sphere *)obj; }
 
 /* 4-arg sphere hit: now uses time-dependent center, computes UV, and assigns material to rec->mat */

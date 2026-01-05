@@ -16,6 +16,10 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+#include <time.h>
 #include "types.h"
 #include "point.h"
 #include "vector.h"
@@ -221,7 +225,24 @@ static inline t_vec3 ray_color_with_background(const t_ray *r, const t_hittable_
 		return vec3_zero();
 
 	if (!hittable_list_hit(world, r, interval((real_t)1e-4, INFINITY), &rec))
-		return *background;
+	{
+		/* No hit - return background/sky color */
+		/* Check if background is essentially black (for dark scenes like Cornell box) */
+		if (background->x < 0.01 && background->y < 0.01 && background->z < 0.01)
+			return vec3_zero();
+
+		/* For sky-lit outdoor scenes: use classic sky gradient
+		   This matches the original C++ ray tracer behavior:
+		   lerp between white at horizon and blue at zenith */
+		t_vec3 unit_dir = unit_vector(&r->dir);
+		real_t a = (real_t)0.5 * (unit_dir.y + (real_t)1.0);
+
+		/* Original C++ uses: (1-a)*white + a*blue
+		   white = (1.0, 1.0, 1.0), blue = (0.5, 0.7, 1.0) for classic look
+		   But we use the provided background color as the "blue" target */
+		t_vec3 white = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
+		return vec3_lerp(&white, background, a);
+	}
 
 	t_ray scattered;
 	t_color attenuation;
@@ -234,19 +255,8 @@ static inline t_vec3 ray_color_with_background(const t_ray *r, const t_hittable_
 	/* If material exists and scatters, combine emission with scattered light */
 	if (rec.mat && rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered))
 	{
-		/* Get scattering PDF from material */
-		real_t scattering_pdf = (rec.mat->scattering_pdf) ? rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered) : (real_t)0.0;
-
-		/* Use uniform PDF value: 1 / (2*pi) */
-		real_t pdf_value = (real_t)1.0 / ((real_t)2.0 * (real_t)PI);
-
-		/* Recursively compute scattered color */
 		t_vec3 scattered_col = ray_color_with_background(&scattered, world, depth - 1, background);
-
-		/* Combine: attenuation * scattering_pdf * scattered_color / pdf_value */
-		t_vec3 weighted = vec3_mul_scalar(&scattered_col, scattering_pdf / pdf_value);
-		t_vec3 attenuated = vec3_mul_elem(&attenuation, &weighted);
-
+		t_vec3 attenuated = vec3_mul_elem(&attenuation, &scattered_col);
 		return vec3_add(&emission, &attenuated);
 	}
 
@@ -254,36 +264,79 @@ static inline t_vec3 ray_color_with_background(const t_ray *r, const t_hittable_
 	return emission;
 }
 
+/* Convert pixel color to binary PPM (P6) row buffer */
+static inline unsigned char *write_color_to_buf_bin(unsigned char *dst, const t_vec3 *pixel)
+{
+	real_t r = linear_to_gamma(pixel->x);
+	real_t g = linear_to_gamma(pixel->y);
+	real_t b = linear_to_gamma(pixel->z);
+
+	static const t_interval intensity = {0.000, 0.999, true};
+	*dst++ = (unsigned char)component_to_byte(r, &intensity);
+	*dst++ = (unsigned char)component_to_byte(g, &intensity);
+	*dst++ = (unsigned char)component_to_byte(b, &intensity);
+	return dst;
+}
+
+/* Format seconds into hh:mm:ss (or mm:ss if <1h) */
+static inline void format_time(double seconds, char *buf, size_t bufsize)
+{
+	if (seconds < 0.0)
+	{
+		snprintf(buf, bufsize, "--:--:--");
+		return;
+	}
+	int h = (int)(seconds / 3600.0);
+	int m = (int)((seconds - h * 3600) / 60.0);
+	int s = (int)(seconds - h * 3600 - m * 60);
+	if (h > 0)
+		snprintf(buf, bufsize, "%02d:%02d:%02d", h, m, s);
+	else
+		snprintf(buf, bufsize, "%02d:%02d", m, s);
+}
+
 /* Render function with stratified sampling */
 static inline void camera_render(const t_camera *camera, FILE *out, const t_hittable_list *world)
 {
-	(void)out; /* unused: we write to file instead */
-
+	(void)out;
 	if (!camera)
 		return;
+	setvbuf(stderr, NULL, _IONBF, 0); /* unbuffered progress */
+	clock_t start_clock = clock();
 
-	/* Generate output filename */
 	char filename[256];
 	snprintf(filename, sizeof(filename), "../output/render.ppm");
-
-	/* Open output file */
 	FILE *ppm_file = fopen(filename, "w");
 	if (!ppm_file)
 	{
 		fprintf(stderr, "Error: cannot open file %s for writing\n", filename);
 		return;
 	}
+	setvbuf(ppm_file, NULL, _IOFBF, 1 << 20);
 
-	fprintf(ppm_file, "P3\n%d %d\n255\n", camera->image_width, camera->image_height);
+	fprintf(ppm_file, "P6\n%d %d\n255\n", camera->image_width, camera->image_height);
 
-	for (int j = 0; j < camera->image_height; ++j)
+	int w = camera->image_width;
+	int h = camera->image_height;
+	t_vec3 *pixels = (t_vec3 *)malloc((size_t)w * (size_t)h * sizeof(t_vec3));
+	if (!pixels)
 	{
-		fprintf(stderr, "\rScanlines remaining: %d ", (camera->image_height - j));
-		fflush(stderr);
-		for (int i = 0; i < camera->image_width; ++i)
+		fprintf(stderr, "Error: cannot allocate pixel buffer\n");
+		fclose(ppm_file);
+		return;
+	}
+
+	fprintf(stderr, "Starting render...\n");
+	int rows_done = 0;
+	fprintf(stderr, "\rRendering:   0.0%% | rows left: %4d | elapsed:   0.0s | ETA:   --:-- ", h);
+
+	/* Parallel render into buffer with live progress */
+#pragma omp parallel for schedule(dynamic, 1)
+	for (int j = 0; j < h; ++j)
+	{
+		for (int i = 0; i < w; ++i)
 		{
 			t_color pixel_color = vec3_zero();
-			/* Stratified sampling: loop over sqrt_spp x sqrt_spp grid */
 			for (int s_j = 0; s_j < camera->sqrt_spp; ++s_j)
 			{
 				for (int s_i = 0; s_i < camera->sqrt_spp; ++s_i)
@@ -293,13 +346,69 @@ static inline void camera_render(const t_camera *camera, FILE *out, const t_hitt
 					pixel_color = vec3_add(&pixel_color, &sample_color);
 				}
 			}
-			t_vec3 scaled = vec3_mul_scalar(&pixel_color, camera->pixel_samples_scale);
-			write_color(ppm_file, &scaled);
+			/* Store in correct scanline order (j=0 is top row in PPM) */
+			pixels[j * w + i] = vec3_mul_scalar(&pixel_color, camera->pixel_samples_scale);
+		}
+
+		int done;
+#pragma omp atomic capture
+		done = ++rows_done;
+		if ((done & 7) == 0)
+		{
+			double elapsed = (double)(clock() - start_clock) / (double)CLOCKS_PER_SEC;
+			double per_line = (done > 0) ? (elapsed / (double)done) : 0.0;
+			double remain = (per_line > 0.0) ? per_line * (double)(h - done) : -1.0;
+			double pct = (100.0 * (double)done) / (double)h;
+			char elapsed_buf[32], eta_buf[32];
+			format_time(elapsed, elapsed_buf, sizeof(elapsed_buf));
+			format_time(remain, eta_buf, sizeof(eta_buf));
+#pragma omp critical
+			{
+				fprintf(stderr, "\rRendering: %5.1f%% | rows left: %4d | elapsed: %s | ETA: %s ",
+						pct, (h - done), elapsed_buf, eta_buf);
+			}
 		}
 	}
-	fprintf(stderr, "\rDone.                 \n");
+
+	fprintf(stderr, "\nStarting write...\n");
+
+	/* Write buffered image sequentially (binary P6, one fwrite per scanline) */
+	size_t rowbuf_sz = (size_t)w * 3;
+	unsigned char *rowbuf = (unsigned char *)malloc(rowbuf_sz);
+	if (!rowbuf)
+	{
+		fprintf(stderr, "Error: cannot allocate row buffer\n");
+		free(pixels);
+		fclose(ppm_file);
+		return;
+	}
+
+	for (int j = 0; j < h; ++j)
+	{
+		unsigned char *ptr = rowbuf;
+		for (int i = 0; i < w; ++i)
+			ptr = write_color_to_buf_bin(ptr, &pixels[j * w + i]);
+		fwrite(rowbuf, 1, rowbuf_sz, ppm_file);
+
+		if ((j & 31) == 0)
+		{
+			double elapsed = (double)(clock() - start_clock) / (double)CLOCKS_PER_SEC;
+			double pct = (100.0 * (double)j) / (double)h;
+			double per_line = (j > 0) ? (elapsed / (double)j) : 0.0;
+			double remain = (per_line > 0.0) ? per_line * (double)(h - j) : -1.0;
+			char elapsed_buf[32], eta_buf[32];
+			format_time(elapsed, elapsed_buf, sizeof(elapsed_buf));
+			format_time(remain, eta_buf, sizeof(eta_buf));
+			fprintf(stderr, "\rWriting : %5.1f%% | lines left: %4d | elapsed: %s | ETA: %s ",
+					pct, (h - j), elapsed_buf, eta_buf);
+		}
+	}
+	double total = (double)(clock() - start_clock) / (double)CLOCKS_PER_SEC;
+	fprintf(stderr, "\rDone.  Elapsed: %.1fs\n", total);
 	fprintf(stderr, "Rendered image saved to: %s\n", filename);
 
+	free(rowbuf);
+	free(pixels);
 	fclose(ppm_file);
 }
 

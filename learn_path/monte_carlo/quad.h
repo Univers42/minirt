@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 23:54:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/04 01:09:42 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/04 23:22:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ static inline bool quad_hit(const t_quad *quad, const t_ray *r, t_interval rayt,
 }
 
 /* Bind current quad for hit_noobj indirection (mirrors sphere pattern) */
-static const t_quad *g_current_quad = NULL;
+static __thread const t_quad *g_current_quad = NULL;
 static inline void set_current_quad(const void *obj)
 {
 	g_current_quad = (const t_quad *)obj;

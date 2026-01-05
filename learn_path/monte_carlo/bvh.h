@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/03 16:38:12 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/03 16:55:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/01/04 23:22:40 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static inline int bvh_box_z_compare(const void *a, const void *b)
 }
 
 /* Set current BVH node for callback dispatch */
-static const t_bvh_node *g_current_bvh = NULL;
+static __thread const t_bvh_node *g_current_bvh = NULL;
 static inline void set_current_bvh(const void *obj)
 {
 	g_current_bvh = (const t_bvh_node *)obj;

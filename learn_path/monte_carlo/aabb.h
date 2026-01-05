@@ -1,14 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   aabb.h                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/03 16:17:15 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/01/04 01:09:27 by dlesieur         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+/* ============================================================================ */
+/*                                                                              */
+/*                                 FILE HEADER                                  */
+/* ---------------------------------------------------------------------------- */
+/*  File:       aabb.h                                                          */
+/*  Author:     dlesieur                                                        */
+/*  Email:      dlesieur@student.42.fr                                          */
+/*  Created:    2026/01/04 22:08:19                                             */
+/*  Updated:    2026/01/04 22:08:19                                             */
+/*                                                                              */
+/* ============================================================================ */
 
 #ifndef AABB_H
 #define AABB_H
@@ -89,54 +89,59 @@ static inline bool aabb_hit(const t_aabb *box, const t_ray *r, t_interval *ray_t
 	if (!box || !r || !ray_t)
 		return false;
 
-	for (int axis = 0; axis < 3; ++axis)
+	real_t inv_x = (real_t)1.0 / r->dir.x;
+	real_t inv_y = (real_t)1.0 / r->dir.y;
+	real_t inv_z = (real_t)1.0 / r->dir.z;
+
+	real_t t0, t1;
+
+	/* X slab */
+	t0 = (box->x.min - r->orig.x) * inv_x;
+	t1 = (box->x.max - r->orig.x) * inv_x;
+	if (t0 > t1)
 	{
-		const t_interval *ax = aabb_axis_interval(box, axis);
-		real_t ray_orig_axis;
-		real_t ray_dir_axis;
-
-		/* Get axis component from ray origin and direction */
-		if (axis == 0)
-		{
-			ray_orig_axis = r->orig.x;
-			ray_dir_axis = r->dir.x;
-		}
-		else if (axis == 1)
-		{
-			ray_orig_axis = r->orig.y;
-			ray_dir_axis = r->dir.y;
-		}
-		else
-		{
-			ray_orig_axis = r->orig.z;
-			ray_dir_axis = r->dir.z;
-		}
-
-		/* Compute t values for this axis */
-		real_t adinv = (real_t)1.0 / ray_dir_axis;
-		real_t t0 = (ax->min - ray_orig_axis) * adinv;
-		real_t t1 = (ax->max - ray_orig_axis) * adinv;
-
-		/* Swap if needed to ensure t0 <= t1 */
-		if (t0 < t1)
-		{
-			if (t0 > ray_t->min)
-				ray_t->min = t0;
-			if (t1 < ray_t->max)
-				ray_t->max = t1;
-		}
-		else
-		{
-			if (t1 > ray_t->min)
-				ray_t->min = t1;
-			if (t0 < ray_t->max)
-				ray_t->max = t0;
-		}
-
-		/* Early exit: no intersection */
-		if (ray_t->max <= ray_t->min)
-			return false;
+		real_t tmp = t0;
+		t0 = t1;
+		t1 = tmp;
 	}
+	if (t0 > ray_t->min)
+		ray_t->min = t0;
+	if (t1 < ray_t->max)
+		ray_t->max = t1;
+	if (ray_t->max <= ray_t->min)
+		return false;
+
+	/* Y slab */
+	t0 = (box->y.min - r->orig.y) * inv_y;
+	t1 = (box->y.max - r->orig.y) * inv_y;
+	if (t0 > t1)
+	{
+		real_t tmp = t0;
+		t0 = t1;
+		t1 = tmp;
+	}
+	if (t0 > ray_t->min)
+		ray_t->min = t0;
+	if (t1 < ray_t->max)
+		ray_t->max = t1;
+	if (ray_t->max <= ray_t->min)
+		return false;
+
+	/* Z slab */
+	t0 = (box->z.min - r->orig.z) * inv_z;
+	t1 = (box->z.max - r->orig.z) * inv_z;
+	if (t0 > t1)
+	{
+		real_t tmp = t0;
+		t0 = t1;
+		t1 = tmp;
+	}
+	if (t0 > ray_t->min)
+		ray_t->min = t0;
+	if (t1 < ray_t->max)
+		ray_t->max = t1;
+	if (ray_t->max <= ray_t->min)
+		return false;
 
 	return true;
 }
