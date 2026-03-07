@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 19:00:53 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:01:16 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/07 21:30:37 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,18 @@ real_t vec3_max_component(const t_vec3 *v)
 	return m;
 }
 
-/* linear -> gamma (gamma = 2.0) with safe handling of negative inputs */
+/* linear -> sRGB with safe handling of negative/NaN inputs */
 real_t linear_to_gamma(real_t v)
 {
+	if (!(v == v))
+		return ((real_t)0.0);
 	if (v > (real_t)0.0)
-		return (real_t)sqrt((double)v);
-	return (real_t)0.0;
+	{
+		if (v <= (real_t)0.0031308)
+			return ((real_t)(12.92 * v));
+		return ((real_t)(1.055 * pow((double)v, 1.0 / 2.4) - 0.055));
+	}
+	return ((real_t)0.0);
 }
 
 /* Convert a [0,1] component to byte [0,255] with clamping (no gamma here) */

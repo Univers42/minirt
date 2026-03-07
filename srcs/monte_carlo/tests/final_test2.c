@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 21:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 20:19:28 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/07 21:38:46 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,6 +302,6 @@ void	final_scene2(int image_width, int samples_per_pixel, int max_depth)
 
 int	main(void)
 {
-	final_scene2(400, 1000, 4);
+	final_scene2(800, 10000, 40);
 	return (0);
 }

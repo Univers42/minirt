@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:53:17 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 20:13:18 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/07 21:30:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ void	camera_render(const t_camera *camera, FILE *out,
 		return ;
 	setvbuf(stderr, NULL, _IONBF, 0);
 	get_output_filename(filename, sizeof(filename), "render");
-	ppm_file = fopen(filename, "w");
+	ppm_file = fopen(filename, "wb");
 	if (!ppm_file)
 	{
 		fprintf(stderr, "Error: cannot open '%s' for writing\n", filename);

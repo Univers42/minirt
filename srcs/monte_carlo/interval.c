@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/02 21:00:45 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:14:09 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/07 21:30:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ bool	contains(real_t min, real_t max, real_t x)
 
 real_t	clamp(real_t x, real_t min, real_t max)
 {
+	if (!(x == x))
+		return (min);
 	if (x < min)
 		return (min);
 	else if (x > max)

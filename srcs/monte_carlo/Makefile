@@ -6,16 +6,16 @@
 #    By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/03 23:03:35 by dlesieur          #+#    #+#              #
-#    Updated: 2026/01/04 22:54:07 by dlesieur         ###   ########.fr        #
+#    Updated: 2026/03/07 22:08:22 by dlesieur         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME := librt.a
 CC := cc
 CFLAGS := -std=c99 -I.
-OPTFLAGS := -O3 -march=native -ffast-math -flto -DNDEBUG -pipe -fopenmp
+OPTFLAGS := -O3 -march=native -fno-math-errno -flto -DNDEBUG -pipe -fopenmp
 CFLAGS += $(OPTFLAGS)
-AR := ar
+AR := gcc-ar
 ARFLAGS := rcs
 
 # Build directory structure
@@ -27,6 +27,9 @@ TESTDIR := tests
 
 # External dependency
 PNG_WRITER_LIB := ../png_writer/libpnglode.a
+WF_DIR := ../wavefront
+WF_LIB := $(WF_DIR)/build/libwavefront.a
+WF_RT_OBJ := $(WF_DIR)/build/obj/wf_rt.o
 LDFLAGS := -lm -flto -fopenmp
 
 # Source and object files
@@ -62,6 +65,19 @@ $(LIB_PATH): $(PNG_WRITER_LIB) $(LIB_OBJS) | $(BUILD_DIR)
 # Compile test binaries: pattern rule for build/bin/%
 $(BIN_DIR)/%: $(TESTDIR)/%.c $(LIB_PATH) | $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LIB_PATH) $(PNG_WRITER_LIB) $(LDFLAGS)
+
+# Check and build wavefront library if needed
+$(WF_LIB):
+	@echo "Building wavefront library..."
+	$(MAKE) -C $(WF_DIR) all
+
+$(WF_RT_OBJ): $(WF_LIB)
+	$(MAKE) -C $(WF_DIR) rt_obj CFLAGS="$(CFLAGS) -I."
+
+# Special rule for scene_obj (needs wavefront lib + rt integration)
+$(BIN_DIR)/scene_obj: $(TESTDIR)/scene_obj.c $(LIB_PATH) $(WF_LIB) $(WF_RT_OBJ) | $(BIN_DIR)
+	$(CC) $(CFLAGS) -I$(WF_DIR) -o $@ $< $(WF_RT_OBJ) \
+		$(LIB_PATH) $(WF_LIB) $(PNG_WRITER_LIB) $(LDFLAGS)
 
 # Build all test programs
 test: $(TEST_BINS)

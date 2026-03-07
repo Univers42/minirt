@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:53:17 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:48:10 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/07 21:30:38 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ void	camera_init(t_camera *cam, real_t aspect_ratio, int image_width)
 {
 	if (!cam)
 		return ;
-	cam->max_depth = 50;
+	if (cam->max_depth <= 0)
+		cam->max_depth = 50;
 	if (aspect_ratio > 0)
 		cam->aspect_ratio = aspect_ratio;
 	else
