@@ -11,58 +11,61 @@
 /* ************************************************************************** */
 
 #ifndef UIVECTOR_H
-# define UIVECTOR_H
+#define UIVECTOR_H
+#include <stddef.h>
+#include "types.h"
+#include "utils.h"
 
+#ifndef UIVECTOR_DEFINED
+#define UIVECTOR_DEFINED
 typedef struct s_uivector
 {
-	unsigned	*data;
-	size_t		size;
-	size_t		allocsize;
-}	t_uivector;
+	unsigned *data;
+	size_t size;
+	size_t allocsize;
+} uivector;
+#endif
 
-static void uivector_cleanup(void* p) {
-  ((uivector*)p)->size = ((uivector*)p)->allocsize = 0;
-  lodepng_free(((uivector*)p)->data);
-  ((uivector*)p)->data = NULL;
+static inline void uivector_init(uivector *v)
+{
+	v->data = NULL;
+	v->size = 0;
+	v->allocsize = 0;
 }
-
-
-static unsigned uivector_reserve(uivector* p, size_t allocsize) {
-  if(allocsize > p->allocsize) {
-    size_t newsize = (allocsize > p->allocsize * 2) ? allocsize : (allocsize * 3 / 2);
-    void* data = lodepng_realloc(p->data, newsize);
-    if(data) {
-      p->allocsize = newsize;
-      p->data = (unsigned*)data;
-    }
-    else return 0; 
-  }
-  return 1;
+static inline int uivector_resize(uivector *v, size_t s)
+{
+	if (s > v->allocsize)
+	{
+		size_t n = s ? s : 1;
+		unsigned *p = (unsigned *)lodepng_realloc(v->data, n * sizeof(unsigned));
+		if (!p)
+			return 0;
+		v->data = p;
+		v->allocsize = n;
+	}
+	v->size = s;
+	return 1;
 }
-
-
-static unsigned uivector_resize(uivector* p, size_t size) {
-  if(!uivector_reserve(p, size * sizeof(unsigned))) return 0;
-  p->size = size;
-  return 1; 
+static inline int uivector_resizev(uivector *v, size_t s, unsigned val)
+{
+	size_t i;
+	if (!uivector_resize(v, s))
+		return 0;
+	for (i = 0; i < s; ++i)
+		v->data[i] = val;
+	return 1;
 }
-
-
-static unsigned uivector_resizev(uivector* p, size_t size, unsigned value) {
-  size_t oldsize = p->size, i;
-  if(!uivector_resize(p, size)) return 0;
-  for(i = oldsize; i < size; ++i) p->data[i] = value;
-  return 1;
+static inline int uivector_push_back(uivector *v, unsigned val)
+{
+	if (v->size + 1 > v->allocsize && !uivector_resize(v, v->size + 1))
+		return 0;
+	v->data[v->size++] = val;
+	return 1;
 }
-
-static void uivector_init(uivector* p) {
-  p->data = NULL;
-  p->size = p->allocsize = 0;
+static inline void uivector_cleanup(uivector *v)
+{
+	lodepng_free(v->data);
+	v->data = NULL;
+	v->size = v->allocsize = 0;
 }
-
-static unsigned uivector_push_back(uivector* p, unsigned c) {
-  if(!uivector_resize(p, p->size + 1)) return 0;
-  p->data[p->size - 1] = c;
-  return 1;
-}
-# endif
+#endif

@@ -11,28 +11,28 @@
 /* ************************************************************************** */
 
 #ifndef STR_H
-# define STR_H
-# include <stdlib.h>
-# include <stdio.h>
-# include <string.h>
-# include <unistd.h>
+#define STR_H
+#include <stdlib.h>
+#include <string.h>
 
-static inline void string_cleanup(char** out) {
-  free(*out);
-  *out = NULL;
+static inline void string_cleanup(char **out)
+{
+	if (out && *out)
+	{
+		free(*out);
+		*out = NULL;
+	}
 }
 
-
-static inline char* alloc_string(const char* in) {
-  size_t insize = strlen(in);
-  char* out = (char*)malloc(insize + 1);
-  if(out) {
-    size_t i;
-    for(i = 0; i != insize; ++i) {
-      out[i] = in[i];
-    }
-    out[i] = 0;
-  }
-  return out;
+static inline char *alloc_string(const char *in)
+{
+	if (!in)
+		return NULL;
+	size_t len = strlen(in) + 1;
+	char *s = (char *)malloc(len);
+	if (!s)
+		return NULL;
+	memcpy(s, in, len);
+	return s;
 }
 #endif

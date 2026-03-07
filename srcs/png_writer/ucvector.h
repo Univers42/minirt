@@ -11,59 +11,59 @@
 /* ************************************************************************** */
 
 #ifndef UCVECTOR_H
-# define UCVECTOR_H
+#define UCVECTOR_H
+#include <stddef.h>
+#include "types.h"
+#include "utils.h"
 
+#ifndef UCVECTOR_DEFINED
+#define UCVECTOR_DEFINED
 typedef struct s_ucvector
 {
-	unsigned char	*data;
-	size_t			size;
-	size_t			allocsize;
-}	t_ucvector;
+	unsigned char *data;
+	size_t size;
+	size_t allocsize;
+} ucvector;
+#endif
 
-static inline unsigned ucvector_reserve(t_ucvector *p, size_t allocsize)
+static inline void ucvector_init(ucvector *v)
 {
-	size_t	newsize;
-	void	*data;
-
-	if (allocsize <= p->allocsize)
-		return (1);
-	if (allocsize > p->allocsize * 2)
-		newsize = allocsize;
-	else
-		newsize = allocsize * 3 / 2;
-	data = realloc(p->data, newsize);
-	if (!data)
-		return (0);
-	
+	v->data = NULL;
+	v->size = 0;
+	v->allocsize = 0;
 }
-
-static inline unsigned ucvector_resize(ucvector* p, size_t size) {
-  if(!ucvector_reserve(p, size * sizeof(unsigned char))) return 0;
-  p->size = size;
-  return 1; 
-}
-
-static inline void ucvector_cleanup(void* p) {
-  ((ucvector*)p)->size = ((ucvector*)p)->allocsize = 0;
-  lodepng_free(((ucvector*)p)->data);
-  ((ucvector*)p)->data = NULL;
-}
-
-static inline void ucvector_init(ucvector* p) {
-  p->data = NULL;
-  p->size = p->allocsize = 0;
-}
-
-
-static inline void ucvector_init_buffer(ucvector* p, unsigned char* buffer, size_t size)
+static inline void ucvector_init_buffer(ucvector *v, unsigned char *d, size_t s)
 {
-  p->data = buffer;
-  p->allocsize = p->size = size;
+	v->data = d;
+	v->size = s;
+	v->allocsize = s;
 }
-
-static inline unsigned ucvector_push_back(ucvector* p, unsigned char c)
+static inline int ucvector_resize(ucvector *v, size_t s)
 {
-  if(!ucvector_resize(p, p->size + 1)) return 0;
-  p->data[p->size - 1] = c;
-  return 1;
+	if (s > v->allocsize)
+	{
+		size_t n = s ? s : 1;
+		unsigned char *p = (unsigned char *)lodepng_realloc(v->data, n);
+		if (!p)
+			return 0;
+		v->data = p;
+		v->allocsize = n;
+	}
+	v->size = s;
+	return 1;
 }
+static inline int ucvector_reserve(ucvector *v, size_t s) { return s <= v->allocsize || ucvector_resize(v, s); }
+static inline int ucvector_push_back(ucvector *v, unsigned char c)
+{
+	if (v->size + 1 > v->allocsize && !ucvector_resize(v, v->size + 1))
+		return 0;
+	v->data[v->size++] = c;
+	return 1;
+}
+static inline void ucvector_cleanup(ucvector *v)
+{
+	lodepng_free(v->data);
+	v->data = NULL;
+	v->size = v->allocsize = 0;
+}
+#endif

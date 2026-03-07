@@ -12,14 +12,15 @@
 
 #include "all.h"
 
-static void writeSignature(ucvector* out) {
-  
-  ucvector_push_back(out, 137);
-  ucvector_push_back(out, 80);
-  ucvector_push_back(out, 78);
-  ucvector_push_back(out, 71);
-  ucvector_push_back(out, 13);
-  ucvector_push_back(out, 10);
-  ucvector_push_back(out, 26);
-  ucvector_push_back(out, 10);
+void writeSignature(ucvector *out)
+{
+
+	ucvector_push_back(out, 137);
+	ucvector_push_back(out, 80);
+	ucvector_push_back(out, 78);
+	ucvector_push_back(out, 71);
+	ucvector_push_back(out, 13);
+	ucvector_push_back(out, 10);
+	ucvector_push_back(out, 26);
+	ucvector_push_back(out, 10);
 }

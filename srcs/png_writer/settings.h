@@ -10,51 +10,72 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SETTINGS_H
-# define SETTINGS_H
+#ifndef PNGWRITER_SETTINGS_H
+#define PNGWRITER_SETTINGS_H
 
-void lodepng_compress_settings_init(LodePNGCompressSettings* settings) {
-  
-  settings->btype = 2;
-  settings->use_lz77 = 1;
-  settings->windowsize = DEFAULT_WINDOWSIZE;
-  settings->minmatch = 3;
-  settings->nicematch = 128;
-  settings->lazymatching = 1;
+#include "types.h" /* for LodePNG*Settings structs */
 
-  settings->custom_zlib = 0;
-  settings->custom_deflate = 0;
-  settings->custom_context = 0;
+/* Avoid redefinition if you already have these elsewhere */
+#ifndef LODEPNG_SETTINGS_INIT_FUNCS_DEFINED
+#define LODEPNG_SETTINGS_INIT_FUNCS_DEFINED
+
+static inline void lodepng_compress_settings_init(LodePNGCompressSettings *s)
+{
+	/* keep defaults conservative; encoder can override */
+	s->btype = 2;
+	s->use_lz77 = 1;
+	s->windowsize = 2048;
+	s->minmatch = 3;
+	s->nicematch = 128;
+	s->lazymatching = 1;
+	s->custom_zlib = 0;
+	s->custom_deflate = 0;
+	s->custom_context = 0;
 }
 
-void lodepng_decompress_settings_init(LodePNGDecompressSettings* settings) {
-  settings->ignore_adler32 = 0;
-
-  settings->custom_zlib = 0;
-  settings->custom_inflate = 0;
-  settings->custom_context = 0;
+static inline void lodepng_decompress_settings_init(LodePNGDecompressSettings *s)
+{
+	s->ignore_adler32 = 0;
+	s->custom_zlib = 0;
+	s->custom_inflate = 0;
+	s->custom_context = 0;
 }
 
-void lodepng_color_profile_init(LodePNGColorProfile* profile) {
-  profile->colored = 0;
-  profile->key = 0;
-  profile->key_r = profile->key_g = profile->key_b = 0;
-  profile->alpha = 0;
-  profile->numcolors = 0;
-  profile->bits = 1;
-  profile->numpixels = 0;
-}
-
-void lodepng_encoder_settings_init(LodePNGEncoderSettings* settings) {
-  lodepng_compress_settings_init(&settings->zlibsettings);
-  settings->filter_palette_zero = 1;
-  settings->filter_strategy = LFS_MINSUM;
-  settings->auto_convert = 1;
-  settings->force_palette = 0;
-  settings->predefined_filters = 0;
+static inline void lodepng_decoder_settings_init(LodePNGDecoderSettings *settings)
+{
+	settings->color_convert = 1;
 #ifdef LODEPNG_COMPILE_ANCILLARY_CHUNKS
-  settings->add_id = 0;
-  settings->text_compression = 1;
-#endif 
+	settings->read_text_chunks = 1;
+	settings->remember_unknown_chunks = 0;
+#endif
+	settings->ignore_crc = 0;
+	settings->ignore_critical = 0;
+	settings->ignore_end = 0;
+	lodepng_decompress_settings_init(&settings->zlibsettings);
 }
-# endif
+
+static inline void lodepng_color_profile_init(LodePNGColorProfile *p)
+{
+	p->colored = 0;
+	p->alpha = 0;
+	p->key = 0;
+	p->key_r = p->key_g = p->key_b = 0;
+	p->bits = 1;
+	p->numpixels = 0;
+	p->numcolors = 0;
+}
+
+static inline void lodepng_encoder_settings_init(LodePNGEncoderSettings *s)
+{
+	lodepng_compress_settings_init(&s->zlibsettings);
+	s->filter_palette_zero = 1;
+	s->filter_strategy = LFS_MINSUM;
+	s->auto_convert = 1;
+	s->force_palette = 0;
+	s->text_compression = 1;
+	s->add_id = 0;
+}
+
+#endif /* LODEPNG_SETTINGS_INIT_FUNCS_DEFINED */
+
+#endif /* PNGWRITER_SETTINGS_H */

@@ -10,22 +10,4 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "png_codec.h"
-
-typedef struct s_ctx
-{
-	unsigned char			**out;
-	size_t					*outsize;
-	const unsigned char		*image;
-	unsigned				w;
-	unsigned				h;
-	t_png_color_type		color_type;
-	unsigned				bit_depth;
-}	t_ctx;
-
-unsigned lodepng_encode_memory(t_ctx *out)
-{
-	unsigned	err;
-
-	t_
-}
+#include "all.h"
