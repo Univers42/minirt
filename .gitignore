@@ -1,35 +1,49 @@
-# Prerequisites
+# ─── Build outputs ───────────────────────────────────────────────────────── #
+build/
+miniRT
+
+# ─── FDF build artifacts ────────────────────────────────────────────────── #
+fdf/object/
+fdf/fdf
+
+# ─── Vendor build artifacts ─────────────────────────────────────────────── #
+vendor/libft/build/
+vendor/png_writer/build/
+vendor/wavefront/build/
+vendor/minilibx-linux/obj/
+vendor/minilibx-linux/libmlx.a
+vendor/minilibx-linux/libmlx_Linux.a
+vendor/minilibx-linux/test/mlx-test
+vendor/minilibx-linux/test/main.o
+vendor/minilibx-linux/Makefile.gen
+vendor/minilibx-linux/test/makefile.gen
+
+# ─── Dependency files ───────────────────────────────────────────────────── #
 *.d
-example_rt/
-rt_in_one_week/raytracing.github.io-release/
-# Object files
+
+# ─── Object files ───────────────────────────────────────────────────────── #
 *.o
 *.ko
 *.obj
 *.elf
 
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
+# ─── Libraries ──────────────────────────────────────────────────────────── #
 *.a
+*.lib
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
+# ─── Shared objects ─────────────────────────────────────────────────────── #
 *.dll
 *.so
 *.so.*
 *.dylib
 
-# Executables
+# ─── Precompiled headers ────────────────────────────────────────────────── #
+*.gch
+*.pch
+
+# ─── Executables ────────────────────────────────────────────────────────── #
 *.exe
 *.out
 *.app
@@ -37,15 +51,19 @@ rt_in_one_week/raytracing.github.io-release/
 *.x86_64
 *.hex
 
-# Debug files
+# ─── Linker output ──────────────────────────────────────────────────────── #
+*.ilk
+*.map
+*.exp
+
+# ─── Debug files ────────────────────────────────────────────────────────── #
 *.dSYM/
 *.su
 *.idb
 *.pdb
-./temp
-temp*
-temp/
-# Kernel Module Compile Results
+*.dwo
+
+# ─── Kernel module results ──────────────────────────────────────────────── #
 *.mod*
 *.cmd
 .tmp_versions/
@@ -54,5 +72,24 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# debug information files
-*.dwo
+# ─── Temp / editor / OS ────────────────────────────────────────────────── #
+temp/
+temp*
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ─── Render output ──────────────────────────────────────────────────────── #
+*.ppm
+*.png
+
+# ─── Clangd / compile_commands ──────────────────────────────────────────── #
+.clangd
+compile_commands.json
+.compile_commands.json
+
+# ─── Reference projects ────────────────────────────────────────────────── #
+example_rt/
+rt_in_one_week/raytracing.github.io-release/

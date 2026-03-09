@@ -1,0 +1,30 @@
+# ─── C source / headers: custom diff hunk headers ───────────────────────── #
+*.c     diff=c
+*.h     diff=c
+
+# ─── Makefiles ──────────────────────────────────────────────────────────── #
+Makefile    text eol=lf
+*.mk        text eol=lf
+
+# ─── Shell / config ─────────────────────────────────────────────────────── #
+*.sh        text eol=lf
+configure   text eol=lf
+
+# ─── Scene files ────────────────────────────────────────────────────────── #
+*.rt        text eol=lf
+
+# ─── FDF map files ──────────────────────────────────────────────────────── #
+*.fdf       text eol=lf
+
+# ─── OBJ / MTL (wavefront) ─────────────────────────────────────────────── #
+*.obj       binary
+*.mtl       text eol=lf
+
+# ─── Image assets (no diff, no merge) ───────────────────────────────────── #
+*.ppm       binary
+*.png       binary
+*.xpm       binary
+*.bmp       binary
+
+# ─── Vendor libraries: keep LF ──────────────────────────────────────────── #
+vendor/**   text=auto eol=lf

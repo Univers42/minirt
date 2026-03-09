@@ -1,0 +1,9 @@
+https://gabrielgambetta.com/zx-raytracer.html
+https://gabrielgambetta.com/computer-graphics-from-scratch/02-basic-raytracing.html
+https://www.raysect.org/how_it_works.html
+https://eclat-digital.com/spectral-ray-tracing-the-key-to-accurate-daylighting-simulation/
+https://larswander.com/writing/spectral-ray-tracing/
+https://www.youtube.com/watch?v=wA1KVZ1eOuA
+https://github.com/SebLague/Ray-Tracing.git
+https://jacco.ompf2.com/2022/04/13/how-to-build-a-bvh-part-1-basics/
+https://blog.demofox.org/2020/05/25/casual-shadertoy-path-tracing-1-basic-camera-diffuse-emissive/

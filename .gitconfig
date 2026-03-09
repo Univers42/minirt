@@ -1,0 +1,36 @@
+# ─── miniRT project-local git config ─────────────────────────────────────── #
+#                                                                              #
+#  Activate once from the project root:                                        #
+#    git config --local include.path ../.gitconfig                             #
+#                                                                              #
+# ──────────────────────────────────────────────────────────────────────────── #
+
+[core]
+	whitespace = trailing-space,space-before-tab
+	autocrlf = input
+
+[diff]
+	algorithm = histogram
+	colorMoved = zebra
+
+[diff "c"]
+	xfuncname = "^(([a-zA-Z_][a-zA-Z_0-9]*[ \\t]+)+[a-zA-Z_][a-zA-Z_0-9]*[ \\t]*\\()"
+
+[merge]
+	conflictstyle = zdiff3
+
+[pull]
+	rebase = true
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[rebase]
+	autoStash = true
+
+[rerere]
+	enabled = true
