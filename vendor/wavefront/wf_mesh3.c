@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 22:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 22:08:23 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:14:04 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,20 @@ static bool	wf_triangulate_face(t_wf_mesh *mesh, const t_wf_model *m,
 {
 	t_wf_triangle	tri;
 	int				idx[3];
+	int				i;
 
-	memset(&tri, 0, sizeof(tri));
-	tri.group_idx = group_idx;
-	idx[0] = 0;
-	idx[1] = 1;
-	idx[2] = 2;
-	wf_fill_tri(&tri, m, f, idx);
-	if (!wf_mesh_add_tri(mesh, &tri))
-		return (false);
-	if (f->nverts == 4)
+	i = 1;
+	while (i + 1 < f->nverts)
 	{
+		memset(&tri, 0, sizeof(tri));
+		tri.group_idx = group_idx;
 		idx[0] = 0;
-		idx[1] = 2;
-		idx[2] = 3;
+		idx[1] = i;
+		idx[2] = i + 1;
 		wf_fill_tri(&tri, m, f, idx);
 		if (!wf_mesh_add_tri(mesh, &tri))
 			return (false);
+		i++;
 	}
 	return (true);
 }
@@ -100,14 +97,4 @@ void	wf_mesh_compute_bounds(t_wf_mesh *mesh)
 	mesh->center.x = (mesh->bounds_min.x + mesh->bounds_max.x) * 0.5f;
 	mesh->center.y = (mesh->bounds_min.y + mesh->bounds_max.y) * 0.5f;
 	mesh->center.z = (mesh->bounds_min.z + mesh->bounds_max.z) * 0.5f;
-}
-
-void	wf_mesh_print_info(const t_wf_mesh *mesh)
-{
-	fprintf(stderr, "WF Mesh: %zu triangles\n", mesh->ntris);
-	fprintf(stderr, "  bounds: [%.3f,%.3f,%.3f] - [%.3f,%.3f,%.3f]\n",
-		mesh->bounds_min.x, mesh->bounds_min.y, mesh->bounds_min.z,
-		mesh->bounds_max.x, mesh->bounds_max.y, mesh->bounds_max.z);
-	fprintf(stderr, "  center: [%.3f,%.3f,%.3f]\n",
-		mesh->center.x, mesh->center.y, mesh->center.z);
 }

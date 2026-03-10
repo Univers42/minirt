@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:51:55 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 20:07:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:44:19 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,10 @@ typedef struct s_triangle
 	t_vec3		e1;
 	t_vec3		e2;
 	t_vec3		normal;
+	t_vec3		n0;
+	t_vec3		n1;
+	t_vec3		n2;
+	bool		has_smooth;
 	t_material	*mat;
 	t_aabb		bbox;
 }	t_triangle;
@@ -49,6 +53,9 @@ typedef struct s_mesh
 
 t_triangle	triangle_create(const t_point3 *v0, const t_point3 *v1,
 				const t_point3 *v2, t_material *mat);
+t_triangle	triangle_create_smooth(const t_point3 *v0, const t_point3 *v1,
+				const t_point3 *v2, const t_vec3 *n0, const t_vec3 *n1,
+				const t_vec3 *n2, t_material *mat);
 bool		triangle_hit(const t_triangle *tri, const t_ray *r,
 				t_interval rayt, t_hit_record *rec);
 void		set_current_triangle(const void *obj);

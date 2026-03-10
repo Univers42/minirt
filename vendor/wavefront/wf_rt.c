@@ -6,35 +6,43 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 22:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 22:08:20 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:44:19 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wf_rt.h"
+#include "studio_config.h"
+#include <stdio.h>
+
+static t_triangle	wf_make_tri(const t_wf_triangle *wt, t_material *mat)
+{
+	t_point3	v[3];
+	t_vec3		n[3];
+	int			i;
+
+	i = -1;
+	while (++i < 3)
+	{
+		v[i] = (t_point3){wt->v[i].x, wt->v[i].y, wt->v[i].z};
+		n[i] = (t_vec3){wt->n[i].x, wt->n[i].y, wt->n[i].z};
+	}
+	if (RT_OBJ_SMOOTH_NORMALS && wt->has_normals)
+		return (triangle_create_smooth(&v[0], &v[1], &v[2],
+				&n[0], &n[1], &n[2], mat));
+	return (triangle_create(&v[0], &v[1], &v[2], mat));
+}
 
 bool	wf_mesh_to_rt_mesh(const t_wf_mesh *wf, t_mesh *rt,
 		t_material *mat)
 {
 	size_t		i;
-	t_point3	v0;
-	t_point3	v1;
-	t_point3	v2;
 	t_triangle	tri;
 
 	mesh_init(rt);
 	i = 0;
 	while (i < wf->ntris)
 	{
-		v0 = (t_point3){wf->tris[i].v[0].x,
-			wf->tris[i].v[0].y,
-			wf->tris[i].v[0].z};
-		v1 = (t_point3){wf->tris[i].v[1].x,
-			wf->tris[i].v[1].y,
-			wf->tris[i].v[1].z};
-		v2 = (t_point3){wf->tris[i].v[2].x,
-			wf->tris[i].v[2].y,
-			wf->tris[i].v[2].z};
-		tri = triangle_create(&v0, &v1, &v2, mat);
+		tri = wf_make_tri(&wf->tris[i], mat);
 		if (!mesh_add_triangle(rt, &tri))
 			return (false);
 		i++;
@@ -80,12 +88,14 @@ bool	wf_obj_to_rt_mesh_at(const char *path, t_mesh *mesh,
 	ok = wf_parse_file(&model, path);
 	if (ok)
 	{
+		wf_model_print_info(&model);
 		ok = wf_triangulate(&wfmesh, &model);
 		if (ok)
 		{
 			wf_mesh_center(&wfmesh);
 			wf_mesh_normalize(&wfmesh, target_size);
 			wf_mesh_translate(&wfmesh, px, py, pz);
+			wf_mesh_print_info(&wfmesh);
 			ok = wf_mesh_to_rt_mesh(&wfmesh, mesh, mat);
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:43:36 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:14:57 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 23:33:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,26 @@ t_aabb	aabb_add_vec3(const t_aabb *box, const t_vec3 *offset)
 	ny = interval_add(&box->y, offset->y);
 	nz = interval_add(&box->z, offset->z);
 	return (aabb_from_intervals(&nx, &ny, &nz));
+}
+
+void	aabb_pad(t_aabb *box)
+{
+	real_t	delta;
+
+	delta = (real_t)0.0001;
+	if (interval_size(&box->x) < delta)
+	{
+		box->x.min -= delta;
+		box->x.max += delta;
+	}
+	if (interval_size(&box->y) < delta)
+	{
+		box->y.min -= delta;
+		box->y.max += delta;
+	}
+	if (interval_size(&box->z) < delta)
+	{
+		box->z.min -= delta;
+		box->z.max += delta;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:43:36 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:14:58 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 23:33:28 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_aabb	aabb_from_points(const t_point3 *a, const t_point3 *b)
 		box.z = interval(a->z, b->z);
 	else
 		box.z = interval(b->z, a->z);
+	aabb_pad(&box);
 	return (box);
 }
 

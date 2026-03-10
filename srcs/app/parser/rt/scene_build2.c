@@ -1,0 +1,99 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   scene_build2.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 00:00:00 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/03/09 20:55:47 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "rt_parser.h"
+#include "material.h"
+#include "texture.h"
+#include "quad.h"
+#include <stdlib.h>
+
+/* ------------------------------------------------------------------ */
+/*  Create material from specification                                */
+/*  Falls back to lambertian if spec type is MAT_LAMBERTIAN or        */
+/*  if allocation fails for the requested type.                       */
+/* ------------------------------------------------------------------ */
+
+static t_material	*create_mat_special(const t_mat_spec *ms, t_color clr)
+{
+	if (ms->type == MAT_METAL)
+		return (metal_create_fuzz(clr, ms->fuzz));
+	if (ms->type == MAT_DIELECTRIC)
+		return (dielectric_create(ms->ior));
+	if (ms->type == MAT_GLOSSY)
+		return (glossy_create(clr, ms->roughness, ms->fuzz));
+	if (ms->type == MAT_TINTED_GLASS)
+		return (tinted_glass_create(ms->ior, clr));
+	if (ms->type == MAT_ISOTROPIC)
+		return (isotropic_create(clr));
+	return (NULL);
+}
+
+static t_material	*create_mat_emissive(const t_mat_spec *ms, t_color clr)
+{
+	if (ms->scale > 0.0)
+		return (diffuse_light_create_scaled(clr, ms->scale));
+	return (diffuse_light_create(clr));
+}
+
+static t_material	*create_mat_checker(const t_mat_spec *ms, t_color clr)
+{
+	t_texture	*even;
+	t_texture	*odd;
+	t_texture	*checker;
+	double		scale;
+
+	even = solid_color_create(clr);
+	odd = solid_color_create(ms->color2);
+	if (!even || !odd)
+		return (NULL);
+	scale = ms->scale;
+	if (scale <= 0.0)
+		scale = 10.0;
+	checker = checker_texture_create(scale, even, odd);
+	if (!checker)
+		return (NULL);
+	return (lambertian_create_texture(checker));
+}
+
+t_material	*create_material(const t_mat_spec *ms, t_color clr)
+{
+	if (ms->type == MAT_EMISSIVE)
+		return (create_mat_emissive(ms, clr));
+	if (ms->type == MAT_CHECKER)
+		return (create_mat_checker(ms, clr));
+	if (ms->type != MAT_LAMBERTIAN)
+		return (create_mat_special(ms, clr));
+	return (lambertian_create(clr));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Build a quad directly into the world hittable list                */
+/* ------------------------------------------------------------------ */
+
+bool	build_quad_obj(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material	*mat;
+	t_quad		q;
+	t_quad		*qp;
+
+	mat = create_material(&obj->mat, obj->data.quad.color);
+	if (!mat)
+		return (false);
+	q = quad_create(&obj->data.quad.position,
+			&obj->data.quad.u, &obj->data.quad.v, mat);
+	qp = (t_quad *)malloc(sizeof(t_quad));
+	if (!qp)
+		return (false);
+	*qp = q;
+	return (hittable_list_add_nonowned(world, qp,
+			set_current_quad, quad_hit_noobj, &q.bbox));
+}

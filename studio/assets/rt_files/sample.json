@@ -1,0 +1,46 @@
+{
+  "ambient": {
+    "ratio": 0.2,
+    "color": [255, 255, 255]
+  },
+  "camera": {
+    "position": [0, 2, 10],
+    "direction": [0, 0, -1],
+    "fov": 70
+  },
+  "lights": [
+    {
+      "position": [0, 8, 0],
+      "brightness": 0.8,
+      "color": [255, 255, 255]
+    }
+  ],
+  "objects": [
+    {
+      "type": "sphere",
+      "center": [0, 1, 0],
+      "diameter": 2.0,
+      "color": [255, 50, 50]
+    },
+    {
+      "type": "sphere",
+      "center": [-3, 0.5, -1],
+      "diameter": 1.0,
+      "color": [50, 255, 50]
+    },
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [200, 200, 200]
+    },
+    {
+      "type": "cylinder",
+      "center": [3, 1.5, -2],
+      "axis": [0, 1, 0],
+      "diameter": 1.0,
+      "height": 3.0,
+      "color": [50, 50, 255]
+    }
+  ]
+}

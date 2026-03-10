@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 19:08:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:17:43 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:06:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ bool	rotate_y_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 		return (false);
 	rec->p = rotate_y_vec(&rec->p, rot->sin_theta, rot->cos_theta);
 	rec->normal = rotate_y_vec(&rec->normal, rot->sin_theta, rot->cos_theta);
-	set_face_normal(rec, r, &rec->normal);
 	return (true);
 }
 

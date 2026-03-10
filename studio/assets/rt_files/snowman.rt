@@ -1,0 +1,70 @@
+# ==========================================
+# SNOWMAN - Winter scene on icy ground
+# Strong sun casting visible shadow
+# ==========================================
+
+# Low blue sky — lets sun dominate for clear shadows
+A 0.08 120,170,240
+
+# Camera: 3/4 view from front-right, slightly above
+# Shows the ground, the snowman, and the shadow stretching
+# toward the camera
+C 10,7,-14 -0.57,-0.17,0.80 48
+
+# Strong warm sunlight from upper-left — casts shadow
+# toward the camera (right-front of the snowman)
+L -10,25,5 1.0 255,245,215
+
+# Weaker cool fill light from camera side to soften
+# harsh shadows slightly and add blue tones
+L 8,10,-10 0.3 180,200,255
+
+# ──────── GROUND ────────
+# Icy snow ground — light blue-white
+pl 0,0,0 0,1,0 215,225,245
+
+# ──────── SNOWMAN BODY ────────
+# Bottom sphere (large base)
+sp 0,2,0 4 245,245,255
+
+# Middle sphere
+sp 0,5.5,0 3 245,245,255
+
+# Head
+sp 0,8,0 2 245,245,255
+
+# ──────── HAT ────────
+# Brim (flat dark cylinder, center = 9 + 0.15 = 9.15)
+cy 0,9.15,0 0,1,0 3 0.3 25,25,30
+
+# Top (tall cylinder, center = 9.30 + 1.25 = 10.55)
+cy 0,10.55,0 0,1,0 2 2.5 25,25,30
+
+# ──────── FACE ────────
+# Carrot nose — apex (tip) points outward, base at face
+co 0,8,-2.5 0,0,1 0.6 1.5 255,140,0
+
+# Left eye (coal)
+sp -0.4,8.5,-0.85 0.25 15,15,15
+
+# Right eye (coal)
+sp 0.4,8.5,-0.85 0.25 15,15,15
+
+# ──────── BUTTONS ────────
+sp 0,6.2,-1.35 0.22 15,15,15
+sp 0,5.5,-1.45 0.22 15,15,15
+sp 0,4.8,-1.35 0.22 15,15,15
+
+# ──────── STICK ARMS ────────
+# Left arm reaching out and slightly up
+cy -2.5,5.8,0 -0.90,0.44,0 0.14 2.5 100,65,30
+
+# Right arm reaching out and slightly up
+cy 2.5,5.8,0 0.90,0.44,0 0.14 2.5 100,65,30
+
+# ──────── GROUND DETAIL ────────
+# Small snow mounds around the snowman
+sp -3.5,0.35,3 0.7 230,232,245
+sp 4,0.3,2.5 0.6 232,234,248
+sp -1.5,0.2,-5 0.4 235,235,250
+sp 5,0.25,-3 0.5 228,230,242

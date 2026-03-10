@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:51:55 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 20:07:41 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:44:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ t_triangle	triangle_create(const t_point3 *v0, const t_point3 *v1,
 	tri.v1 = *v1;
 	tri.v2 = *v2;
 	tri.mat = mat;
+	tri.has_smooth = false;
 	tri.e1 = vec3_sub(v1, v0);
 	tri.e2 = vec3_sub(v2, v0);
 	n = cross(&tri.e1, &tri.e2);
@@ -54,6 +55,21 @@ t_triangle	triangle_create(const t_point3 *v0, const t_point3 *v1,
 			&(t_point3){mn[0], mn[1], mn[2]},
 			&(t_point3){mx[0], mx[1], mx[2]});
 	return (tri);
+}
+
+static void	interp_normal(const t_triangle *tri, real_t u, real_t v,
+		t_vec3 *out)
+{
+	t_vec3	a;
+	t_vec3	b;
+	t_vec3	c;
+
+	a = vec3_mul_scalar(&tri->n0, (real_t)1.0 - u - v);
+	b = vec3_mul_scalar(&tri->n1, u);
+	c = vec3_mul_scalar(&tri->n2, v);
+	*out = vec3_add(&a, &b);
+	*out = vec3_add(out, &c);
+	*out = unit_vector(out);
 }
 
 bool	triangle_hit(const t_triangle *tri, const t_ray *r,
@@ -92,40 +108,31 @@ bool	triangle_hit(const t_triangle *tri, const t_ray *r,
 	rec->v = v;
 	rec->mat = tri->mat;
 	rec->albedo = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
-	set_face_normal(rec, r, &tri->normal);
+	if (tri->has_smooth)
+	{
+		interp_normal(tri, u, v, &h);
+		set_face_normal(rec, r, &h);
+	}
+	else
+		set_face_normal(rec, r, &tri->normal);
 	return (true);
 }
 
-static __thread const t_triangle	*g_current_triangle = NULL;
+/* ------------------------------------------------------------------ */
+/*  Smooth-shading variant — stores per-vertex normals for            */
+/*  barycentric interpolation in triangle_hit().                      */
+/* ------------------------------------------------------------------ */
 
-void	set_current_triangle(const void *obj)
+t_triangle	triangle_create_smooth(const t_point3 *v0, const t_point3 *v1,
+		const t_point3 *v2, const t_vec3 *n0, const t_vec3 *n1,
+		const t_vec3 *n2, t_material *mat)
 {
-	g_current_triangle = (const t_triangle *)obj;
-}
+	t_triangle	tri;
 
-bool	triangle_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
-{
-	if (!g_current_triangle)
-		return (false);
-	return (triangle_hit(g_current_triangle, r, rayt, rec));
-}
-
-bool	hittable_list_add_triangle(t_hittable_list *list,
-		const t_triangle *tri)
-{
-	t_triangle			*copy;
-	t_hittable_wrapper	wrap;
-
-	if (!list || !tri)
-		return (false);
-	copy = (t_triangle *)malloc(sizeof(t_triangle));
-	if (!copy)
-		return (false);
-	*copy = *tri;
-	wrap.object = copy;
-	wrap.owned = true;
-	wrap.set_current = set_current_triangle;
-	wrap.hit_noobj = triangle_hit_noobj;
-	wrap.bbox = tri->bbox;
-	return (hittable_list_add_wrapper(list, &wrap));
+	tri = triangle_create(v0, v1, v2, mat);
+	tri.n0 = *n0;
+	tri.n1 = *n1;
+	tri.n2 = *n2;
+	tri.has_smooth = true;
+	return (tri);
 }

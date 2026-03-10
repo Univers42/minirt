@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 22:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 21:51:54 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:14:04 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool	wf_parse_face_line(t_wf_model *m, const char *line)
 
 	memset(&face, 0, sizeof(face));
 	p = wf_skip_spaces(line);
-	while (*p && *p != '\n' && *p != '\r' && face.nverts < 4)
+	while (*p && *p != '\n' && *p != '\r' && face.nverts < 8)
 	{
 		p = wf_next_token(p, tok, sizeof(tok));
 		if (tok[0] == '\0')

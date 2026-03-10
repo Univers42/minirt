@@ -6,11 +6,12 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 19:00:53 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 21:30:37 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 20:27:28 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "color.h"
+#include "studio_config.h"
 
 /* Return a color (t_vec3) by value, not a pointer */
 t_vec3 color_create(real_t x, real_t y, real_t z)
@@ -29,18 +30,47 @@ real_t vec3_max_component(const t_vec3 *v)
 	return m;
 }
 
-/* linear -> sRGB with safe handling of negative/NaN inputs */
-real_t linear_to_gamma(real_t v)
+/*
+** linear_to_gamma — profile-aware gamma transfer function.
+** Selected at compile time by RT_COLOR_PROFILE (see settings.h).
+**   CIE     : pow(v, 1/2.2)  — deepest blacks, best perceptual contrast
+**   sRGB    : IEC 61966-2-1 piecewise (linear toe + pow 1/2.4)
+**   GAMMA20 : sqrt(v)        — book default
+*/
+real_t	linear_to_gamma(real_t v)
 {
-	if (!(v == v))
+	if (v <= (real_t)0.0)
 		return ((real_t)0.0);
-	if (v > (real_t)0.0)
-	{
-		if (v <= (real_t)0.0031308)
-			return ((real_t)(12.92 * v));
-		return ((real_t)(1.055 * pow((double)v, 1.0 / 2.4) - 0.055));
-	}
-	return ((real_t)0.0);
+#if RT_COLOR_PROFILE == RT_COLOR_SRGB
+	if (v <= (real_t)0.0031308)
+		return ((real_t)(12.92 * v));
+	return ((real_t)(1.055 * pow((double)v, 1.0 / 2.4) - 0.055));
+#elif RT_COLOR_PROFILE == RT_COLOR_GAMMA20
+	return ((real_t)sqrt((double)v));
+#else
+	return ((real_t)pow((double)v, 1.0 / 2.2));
+#endif
+}
+
+/*
+** aces_tonemap — Narkowicz 2015 ACES filmic tone-mapping curve.
+** Maps HDR linear values to [0,1] display range with graceful
+** highlight rolloff and preserved shadow detail.
+** Formula: (v*(2.51v+0.03)) / (v*(2.43v+0.59)+0.14)
+*/
+static real_t	aces_tonemap(real_t v)
+{
+	real_t	num;
+	real_t	den;
+
+	if (v < (real_t)0.0)
+		v = (real_t)0.0;
+	num = v * ((real_t)2.51 * v + (real_t)0.03);
+	den = v * ((real_t)2.43 * v + (real_t)0.59) + (real_t)0.14;
+	v = num / den;
+	if (v > (real_t)1.0)
+		v = (real_t)1.0;
+	return (v);
 }
 
 /* Convert a [0,1] component to byte [0,255] with clamping (no gamma here) */
@@ -48,6 +78,60 @@ int component_to_byte(real_t v, const t_interval *intensity)
 {
 	v = clamp(v, intensity->min, intensity->max);
 	return (int)(256.0 * v);
+}
+
+/* S-curve contrast: pivot at 0.5, scale deviation by 'c'. */
+static real_t	apply_contrast(real_t v, real_t c)
+{
+	v = ((real_t)0.5) + (v - (real_t)0.5) * c;
+	if (v < (real_t)0.0)
+		v = (real_t)0.0;
+	if (v > (real_t)1.0)
+		v = (real_t)1.0;
+	return (v);
+}
+
+/*
+** color_post_process — full HDR-to-display pipeline.
+** Input:  raw linear radiance values (may exceed 1.0).
+** Output: display-ready [0,1] values.
+**
+** Pipeline order:
+**   1. Exposure multiply   (RT_EXPOSURE, linear space)
+**   2. ACES tone mapping   (RT_TONE_MAP, linear→[0,1])
+**   3. Gamma correction    (RT_COLOR_PROFILE)
+**   4. Contrast S-curve    (RT_CONTRAST)
+**   5. Saturation adjust   (RT_SATURATION, BT.709 luma)
+*/
+void	color_post_process(real_t *r, real_t *g, real_t *b)
+{
+	real_t	luma;
+
+	*r *= (real_t)RT_EXPOSURE;
+	*g *= (real_t)RT_EXPOSURE;
+	*b *= (real_t)RT_EXPOSURE;
+#if RT_TONE_MAP == 1
+	*r = aces_tonemap(*r);
+	*g = aces_tonemap(*g);
+	*b = aces_tonemap(*b);
+#endif
+	*r = linear_to_gamma(*r);
+	*g = linear_to_gamma(*g);
+	*b = linear_to_gamma(*b);
+	*r = apply_contrast(*r, (real_t)RT_CONTRAST);
+	*g = apply_contrast(*g, (real_t)RT_CONTRAST);
+	*b = apply_contrast(*b, (real_t)RT_CONTRAST);
+	luma = (real_t)0.2126 * (*r) + (real_t)0.7152 * (*g)
+		+ (real_t)0.0722 * (*b);
+	*r = luma + (real_t)RT_SATURATION * (*r - luma);
+	*g = luma + (real_t)RT_SATURATION * (*g - luma);
+	*b = luma + (real_t)RT_SATURATION * (*b - luma);
+	if (*r < (real_t)0.0)
+		*r = (real_t)0.0;
+	if (*g < (real_t)0.0)
+		*g = (real_t)0.0;
+	if (*b < (real_t)0.0)
+		*b = (real_t)0.0;
 }
 
 /* Write pixel color: apply gamma, then clamp, then convert to byte */

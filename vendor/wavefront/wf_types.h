@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 22:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 21:51:04 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/09 20:14:04 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_wf_face_vert
 
 typedef struct s_wf_face
 {
-	t_wf_face_vert	verts[4];
+	t_wf_face_vert	verts[8];
 	int				nverts;
 }	t_wf_face;
 

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:52:32 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:48:15 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:06:22 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ t_vec3	cosine_pdf_generate(const t_pdf *pdf)
 		return (vec3_create(0.0, 1.0, 0.0));
 	r1 = random_real();
 	r2 = random_real();
-	z = (real_t)sqrt(1.0 - (double)r2);
+	z = (real_t)sqrt((double)r2);
 	phi = 2.0 * PI * r1;
 	local_dir = vec3_create(
-			(real_t)cos((double)phi) * (real_t)sqrt((double)r2),
-			(real_t)sin((double)phi) * (real_t)sqrt((double)r2), z);
+			(real_t)cos((double)phi) * (real_t)sqrt(1.0 - (double)r2),
+			(real_t)sin((double)phi) * (real_t)sqrt(1.0 - (double)r2), z);
 	return (onb_local(cpdf->uvw, &local_dir));
 }
 

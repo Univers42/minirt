@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:52:37 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:41:02 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:06:15 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ real_t	reflectance(real_t cosine, real_t refraction_index)
 }
 
 t_color	default_emitted(const t_material *mat, real_t u, real_t v,
-			const t_point3 *p)
+			const t_point3 *p, bool front_face)
 {
 	(void)mat;
 	(void)u;
 	(void)v;
 	(void)p;
+	(void)front_face;
 	return (vec3_create(0.0, 0.0, 0.0));
 }
 

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 19:08:28 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:17:44 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:06:21 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ bool	translate_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 	if (!tr->child.hit_noobj(&moved, rayt, rec))
 		return (false);
 	rec->p = vec3_add(&rec->p, &tr->offset);
-	set_face_normal(rec, &moved, &rec->normal);
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:52:37 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:58:42 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:06:16 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,15 @@ bool	tinted_glass_scatter(const t_material *mat, const t_ray *r_in,
 }
 
 t_color	diffuse_light_emitted(const t_material *mat, real_t u, real_t v,
-			const t_point3 *p)
+			const t_point3 *p, bool front_face)
 {
 	const t_diffuse_light	*light;
 	t_color					c;
 
 	light = (const t_diffuse_light *)mat->data;
 	if (!light || !light->tex)
+		return (vec3_create(0.0, 0.0, 0.0));
+	if (!front_face)
 		return (vec3_create(0.0, 0.0, 0.0));
 	c = light->tex->value(light->tex, u, v, p);
 	if (light->scale > (real_t)0.0)

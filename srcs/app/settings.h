@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:52:09 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 18:58:24 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:25:03 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,28 @@
 #define INFINITY (1.0 / 0.0)
 #endif
 #endif
+
+/* ================================================================== */
+/*  Color profile constants                                           */
+/*                                                                    */
+/*  Controls the linear → display gamma transfer function.            */
+/*  Override at build time with  -DRT_COLOR_PROFILE=RT_COLOR_SRGB     */
+/*  or set in studio_config.h.                                        */
+/*                                                                    */
+/*  RT_COLOR_CIE     – CIE gamma 2.2 power law (default, best        */
+/*                     contrast, physically accurate for CRT/LCD)     */
+/*  RT_COLOR_SRGB    – IEC 61966-2-1 piecewise sRGB transfer fn      */
+/*                     (standard web/photo, brighter shadows)         */
+/*  RT_COLOR_GAMMA20 – Simple gamma 2.0 (sqrt), as in the book       */
+/*                     "Ray Tracing in One Weekend" series            */
+/* ================================================================== */
+# define RT_COLOR_CIE		0
+# define RT_COLOR_SRGB		1
+# define RT_COLOR_GAMMA20	2
+
+# ifndef RT_COLOR_PROFILE
+#  define RT_COLOR_PROFILE	RT_COLOR_CIE
+# endif
 
 /* Utility function: convert degrees to radians (requires PI and math.h above) */
 #include "types.h"

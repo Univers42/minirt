@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:52:37 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:41:01 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:06:14 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_material
 {
 	void	*data;
 	t_color	(*emitted)(const struct s_material *mat, real_t u, real_t v,
-			const t_point3 *p);
+			const t_point3 *p, bool front_face);
 	bool	(*scatter)(const struct s_material *mat, const t_ray *r_in,
 			const t_hit_record *rec, t_color *attenuation, t_ray *scattered);
 	real_t	(*scattering_pdf)(const struct s_material *mat, const t_ray *r_in,
@@ -77,7 +77,7 @@ typedef struct s_glossy
 
 real_t		reflectance(real_t cosine, real_t refraction_index);
 t_color		default_emitted(const t_material *mat, real_t u, real_t v,
-				const t_point3 *p);
+				const t_point3 *p, bool front_face);
 real_t		default_scattering_pdf(const t_material *mat, const t_ray *r_in,
 				const t_hit_record *rec, const t_ray *scattered);
 real_t		lambertian_scattering_pdf(const t_material *mat,
@@ -99,7 +99,7 @@ bool		glossy_scatter(const t_material *mat, const t_ray *r_in,
 				const t_hit_record *rec, t_color *attenuation,
 				t_ray *scattered);
 t_color		diffuse_light_emitted(const t_material *mat, real_t u, real_t v,
-				const t_point3 *p);
+				const t_point3 *p, bool front_face);
 bool		diffuse_light_scatter(const t_material *mat, const t_ray *r_in,
 				const t_hit_record *rec, t_color *attenuation,
 				t_ray *scattered);

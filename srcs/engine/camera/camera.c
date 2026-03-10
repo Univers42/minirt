@@ -6,11 +6,12 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:53:17 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 21:30:38 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 20:27:27 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "camera.h"
+#include "studio_config.h"
 #include <math.h>
 
 static void	camera_init_basis(t_camera *cam)
@@ -79,9 +80,16 @@ void	camera_init(t_camera *cam, real_t aspect_ratio, int image_width)
 		cam->image_width = image_width;
 	else
 		cam->image_width = 100;
-	cam->image_height = (int)((real_t)cam->image_width / cam->aspect_ratio);
-	if (cam->image_height < 1)
-		cam->image_height = 1;
+	if (cam->image_height > 0)
+		cam->aspect_ratio = (real_t)cam->image_width
+			/ (real_t)cam->image_height;
+	else
+	{
+		cam->image_height = (int)((real_t)cam->image_width
+				/ cam->aspect_ratio);
+		if (cam->image_height < 1)
+			cam->image_height = 1;
+	}
 	cam->center = cam->lookfrom;
 	camera_init_basis(cam);
 	if (cam->samples_per_pixel <= (real_t)0.0)

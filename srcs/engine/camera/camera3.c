@@ -6,23 +6,107 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:53:17 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 19:48:11 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 20:27:29 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "camera.h"
 #include "material.h"
+#include "camera_lights.h"
+#include "studio_config.h"
+#include "random.h"
 
+/*
+** bg_sky_color — gradient sky dome for miss rays.
+**
+** Produces a smooth gradient between a neutral "horizon glow" and
+** the scene's background (sky) colour.  The horizon brightness is
+** derived from the background itself (2× peak component) so that
+** the entire sky energy is controlled by the ambient ratio set in
+** the .rt file.  This prevents the old pure-white horizon from
+** flooding scenes with (1,1,1) environment radiance.
+**
+**   a ≈ 0  (looking down) → horizon glow (lighter, neutral)
+**   a ≈ 1  (looking up)   → background colour (sky tint)
+*/
 static t_vec3	bg_sky_color(const t_ray *r, const t_color *background)
 {
 	t_vec3	unit_dir;
 	real_t	a;
-	t_vec3	white;
+	real_t	peak;
+	t_vec3	horizon;
 
 	unit_dir = unit_vector(&r->dir);
 	a = (real_t)0.5 * (unit_dir.y + (real_t)1.0);
-	white = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
-	return (vec3_lerp(&white, background, a));
+	peak = background->x;
+	if (background->y > peak)
+		peak = background->y;
+	if (background->z > peak)
+		peak = background->z;
+	horizon = vec3_create(peak * (real_t)2.0,
+			peak * (real_t)2.0, peak * (real_t)2.0);
+	return (vec3_lerp(&horizon, background, a));
+}
+
+static t_color	compute_lighting(const t_hit_record *rec,
+					const t_hittable_list *world, int depth,
+					const t_color *bg, const t_color *att,
+					const t_ray *scattered)
+{
+	t_color	direct;
+	t_color	indirect;
+	t_color	total;
+
+	direct = vec3_zero();
+#if RT_DIRECT_LIGHT_ENABLED
+	direct = sample_direct_lights(rec, world);
+	direct = vec3_mul_elem(att, &direct);
+#endif
+	indirect = ray_color_with_background(scattered, world,
+			depth - 1, bg);
+	indirect = vec3_mul_elem(att, &indirect);
+	total = vec3_add(&direct, &indirect);
+	return (total);
+}
+
+/*
+** russian_roulette — probabilistic path termination for unbiased
+** speedup.  After RT_RR_START_DEPTH bounces, paths with low
+** attenuation have a proportional chance of being terminated.
+** Surviving paths are boosted by 1/p_continue to keep the
+** estimator unbiased.
+**
+** Returns: 1 if the path survives (att is scaled), 0 if terminated.
+*/
+static int	russian_roulette(int depth, int max_depth, t_color *att)
+{
+#if RT_RR_START_DEPTH > 0
+	real_t	p_max;
+	real_t	p_continue;
+	int		bounces;
+
+	bounces = max_depth - depth;
+	if (bounces < RT_RR_START_DEPTH)
+		return (1);
+	p_max = att->x;
+	if (att->y > p_max)
+		p_max = att->y;
+	if (att->z > p_max)
+		p_max = att->z;
+	p_continue = p_max;
+	if (p_continue < (real_t)0.05)
+		p_continue = (real_t)0.05;
+	if (p_continue > (real_t)0.95)
+		p_continue = (real_t)0.95;
+	if (random_real() > p_continue)
+		return (0);
+	*att = vec3_div_scalar(att, p_continue);
+#else
+	(void)depth;
+	(void)max_depth;
+	(void)att;
+#endif
+	return (1);
 }
 
 t_vec3	ray_color_with_background(const t_ray *r,
@@ -33,7 +117,7 @@ t_vec3	ray_color_with_background(const t_ray *r,
 	t_ray			scattered;
 	t_color			attenuation;
 	t_color			emission;
-	t_vec3			scattered_col;
+	t_color			lit;
 
 	if (depth <= 0)
 		return (vec3_zero());
@@ -46,14 +130,16 @@ t_vec3	ray_color_with_background(const t_ray *r,
 	}
 	emission = vec3_zero();
 	if (rec.mat && rec.mat->emitted)
-		emission = rec.mat->emitted(rec.mat, rec.u, rec.v, &rec.p);
+		emission = rec.mat->emitted(rec.mat, rec.u, rec.v, &rec.p,
+				rec.front_face);
 	if (rec.mat && rec.mat->scatter(rec.mat, r, &rec, &attenuation,
 			&scattered))
 	{
-		scattered_col = ray_color_with_background(&scattered, world,
-				depth - 1, background);
-		attenuation = vec3_mul_elem(&attenuation, &scattered_col);
-		return (vec3_add(&emission, &attenuation));
+		if (!russian_roulette(depth, RT_MAX_DEPTH, &attenuation))
+			return (emission);
+		lit = compute_lighting(&rec, world, depth, background,
+				&attenuation, &scattered);
+		return (vec3_add(&emission, &lit));
 	}
 	return (emission);
 }
@@ -66,9 +152,10 @@ unsigned char	*write_color_to_buf_bin(unsigned char *dst,
 	real_t				b;
 	static const t_interval	intensity = {0.000, 0.999, true};
 
-	r = linear_to_gamma(pixel->x);
-	g = linear_to_gamma(pixel->y);
-	b = linear_to_gamma(pixel->z);
+	r = pixel->x;
+	g = pixel->y;
+	b = pixel->z;
+	color_post_process(&r, &g, &b);
 	*dst++ = (unsigned char)component_to_byte(r, &intensity);
 	*dst++ = (unsigned char)component_to_byte(g, &intensity);
 	*dst++ = (unsigned char)component_to_byte(b, &intensity);

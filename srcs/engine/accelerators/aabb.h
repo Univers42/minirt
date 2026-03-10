@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 18:43:36 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/07 18:58:13 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/10 23:33:28 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_aabb
 } t_aabb;
 
 t_aabb aabb_add_vec3(const t_aabb *box, const t_vec3 *offset);
+void aabb_pad(t_aabb *box);
 bool aabb_hit(const t_aabb *box, const t_ray *r, t_interval *ray_t);
 int aabb_longest_axis(const t_aabb *box);
 const t_interval *aabb_axis_interval(const t_aabb *box, int axis);
