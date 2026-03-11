@@ -1,70 +1,45 @@
 # ==========================================
-# SNOWMAN - Winter scene on icy ground
-# Strong sun casting visible shadow
+# SNOWMAN - Classic winter scene
+# Three stacked spheres with a hat
 # ==========================================
 
-# Low blue sky — lets sun dominate for clear shadows
-A 0.08 120,170,240
+A 0.15 200,210,230
 
-# Camera: 3/4 view from front-right, slightly above
-# Shows the ground, the snowman, and the shadow stretching
-# toward the camera
-C 10,7,-14 -0.57,-0.17,0.80 48
+C 0,5,-18 0,-0.05,1 50
 
-# Strong warm sunlight from upper-left — casts shadow
-# toward the camera (right-front of the snowman)
-L -10,25,5 1.0 255,245,215
+# Sunlight from behind-left
+L -8,15,-5 0.8 255,250,230
 
-# Weaker cool fill light from camera side to soften
-# harsh shadows slightly and add blue tones
-L 8,10,-10 0.3 180,200,255
+# Ground (snow)
+pl 0,0,0 0,1,0 240,240,255
 
-# ──────── GROUND ────────
-# Icy snow ground — light blue-white
-pl 0,0,0 0,1,0 215,225,245
-
-# ──────── SNOWMAN BODY ────────
-# Bottom sphere (large base)
+# Body - bottom sphere (large)
 sp 0,2,0 4 245,245,255
 
-# Middle sphere
+# Body - middle sphere
 sp 0,5.5,0 3 245,245,255
 
 # Head
 sp 0,8,0 2 245,245,255
 
-# ──────── HAT ────────
-# Brim (flat dark cylinder, center = 9 + 0.15 = 9.15)
-cy 0,9.15,0 0,1,0 3 0.3 25,25,30
+# Hat - brim (flat cylinder)
+# Anti-collision: head top = 8 + 1 = 9, brim h=0.3 so center at 9 + 0.15 = 9.15
+cy 0,9.15,0 0,1,0 3 0.3 30,30,30
 
-# Top (tall cylinder, center = 9.30 + 1.25 = 10.55)
-cy 0,10.55,0 0,1,0 2 2.5 25,25,30
+# Hat - top (tall cylinder)
+# Anti-collision: brim top = 9.15 + 0.15 = 9.3, hat h=2.5 so center at 9.3 + 1.25 = 10.55
+cy 0,10.55,0 0,1,0 2 2.5 30,30,30
 
-# ──────── FACE ────────
-# Carrot nose — apex (tip) points outward, base at face
-co 0,8,-2.5 0,0,1 0.6 1.5 255,140,0
+# Nose (small cone pointing forward)
+co 0,8,-1.0 0,0,-1 0.6 1.5 255,140,0
 
-# Left eye (coal)
-sp -0.4,8.5,-0.85 0.25 15,15,15
+# Left eye
+sp -0.4,8.5,-0.8 0.25 20,20,20
 
-# Right eye (coal)
-sp 0.4,8.5,-0.85 0.25 15,15,15
+# Right eye
+sp 0.4,8.5,-0.8 0.25 20,20,20
 
-# ──────── BUTTONS ────────
-sp 0,6.2,-1.35 0.22 15,15,15
-sp 0,5.5,-1.45 0.22 15,15,15
-sp 0,4.8,-1.35 0.22 15,15,15
-
-# ──────── STICK ARMS ────────
-# Left arm reaching out and slightly up
-cy -2.5,5.8,0 -0.90,0.44,0 0.14 2.5 100,65,30
-
-# Right arm reaching out and slightly up
-cy 2.5,5.8,0 0.90,0.44,0 0.14 2.5 100,65,30
-
-# ──────── GROUND DETAIL ────────
-# Small snow mounds around the snowman
-sp -3.5,0.35,3 0.7 230,232,245
-sp 4,0.3,2.5 0.6 232,234,248
-sp -1.5,0.2,-5 0.4 235,235,250
-sp 5,0.25,-3 0.5 228,230,242
+# Buttons on middle body
+sp 0,6.2,-1.3 0.25 20,20,20
+sp 0,5.5,-1.4 0.25 20,20,20
+sp 0,4.8,-1.3 0.25 20,20,20

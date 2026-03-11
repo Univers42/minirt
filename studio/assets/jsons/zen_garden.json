@@ -1,0 +1,147 @@
+{
+  "_description": "A serene Japanese zen garden bathed in soft morning light. A bronze Buddha sits in quiet meditation on a stone platform, surrounded by carefully raked sand patterns on a checker-stone ground. A crystal-clear water sphere floats nearby, refracting the gentle sky. Smooth river stones and sculpted green shrubs complete the tranquil composition.",
+  "ambient": {
+    "ratio": 0.15,
+    "color": [180, 210, 230]
+  },
+  "render": {
+    "width": 1200,
+    "aspect_ratio": 1.7778,
+    "spp": 150,
+    "max_depth": 40
+  },
+  "camera": {
+    "position": [6, 5, -10],
+    "direction": [-0.25, -0.2, 1],
+    "fov": 55
+  },
+  "lights": [
+    {
+      "position": [0, 15, 0],
+      "brightness": 0.7,
+      "color": [255, 250, 230]
+    },
+    {
+      "position": [-5, 8, -5],
+      "brightness": 0.2,
+      "color": [255, 240, 200]
+    }
+  ],
+  "objects": [
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/buddha.obj",
+      "position": [0, 1.2, 0],
+      "scale": 3.0,
+      "color": [180, 165, 130],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.5
+      }
+    },
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [180, 170, 160],
+      "material": {
+        "type": "checker",
+        "scale": 2.0,
+        "color2": [100, 90, 80]
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-4, 0.6, -3],
+      "diameter": 1.2,
+      "color": [100, 110, 120],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.8
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-3, 0.5, -1.5],
+      "diameter": 1.0,
+      "color": [120, 120, 130],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.9
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-5, 0.4, -1],
+      "diameter": 0.8,
+      "color": [110, 115, 125],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.85
+      }
+    },
+    {
+      "type": "cylinder",
+      "center": [4, 0, -2],
+      "axis": [0, 1, 0],
+      "diameter": 2.0,
+      "height": 0.6,
+      "color": [160, 150, 140],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [4, 1.5, -2],
+      "diameter": 2.0,
+      "color": [140, 200, 180],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.33
+      }
+    },
+    {
+      "type": "cone",
+      "apex": [-6, 3.5, 4],
+      "axis": [0, -1, 0],
+      "diameter": 1.2,
+      "height": 3.5,
+      "color": [50, 90, 50],
+      "material": "lambertian"
+    },
+    {
+      "type": "cylinder",
+      "center": [-6, 0, 4],
+      "axis": [0, 1, 0],
+      "diameter": 0.3,
+      "height": 2.0,
+      "color": [80, 60, 40],
+      "material": "lambertian"
+    },
+    {
+      "type": "cone",
+      "apex": [6, 4, 5],
+      "axis": [0, -1, 0],
+      "diameter": 1.5,
+      "height": 4.0,
+      "color": [40, 80, 40],
+      "material": "lambertian"
+    },
+    {
+      "type": "cylinder",
+      "center": [6, 0, 5],
+      "axis": [0, 1, 0],
+      "diameter": 0.35,
+      "height": 2.5,
+      "color": [80, 60, 40],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [-2, 0.01, -5],
+      "u": [4, 0, 0],
+      "v": [0, 0, 3],
+      "color": [200, 190, 170],
+      "material": "lambertian"
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+{
+  "_description": "Cozy Living Room — A warm Cornell-box-style living room interior. Soft cream walls, wooden parquet floor, a plush sofa (built from quads and cylinders), a coffee table with a glass vase and a metallic decorative bunny. A floor lamp in the corner casts warm golden light. A large window on the left wall lets in cool blue ambient daylight. The room feels inviting and lived-in.",
+
+  "ambient": {
+    "ratio": 0.08,
+    "color": [255, 240, 210]
+  },
+  "render": {
+    "width": 1200,
+    "aspect_ratio": 1.3333,
+    "spp": 200,
+    "max_depth": 50
+  },
+  "camera": {
+    "position": [0, 5, -10],
+    "direction": [0, -0.1, 1],
+    "fov": 55
+  },
+  "lights": [
+    {
+      "position": [0, 10, 0],
+      "brightness": 0.4,
+      "color": [255, 240, 220]
+    }
+  ],
+  "objects": [
+
+    {"_comment": "=== WOODEN PARQUET FLOOR — warm checker pattern ==="},
+    {
+      "type": "quad",
+      "position": [-7, 0, -7],
+      "u": [14, 0, 0],
+      "v": [0, 0, 17],
+      "color": [160, 120, 70],
+      "material": {
+        "type": "checker",
+        "scale": 1.5,
+        "color2": [120, 85, 45]
+      }
+    },
+
+    {"_comment": "=== BACK WALL — soft cream ==="},
+    {
+      "type": "quad",
+      "position": [-7, 0, 10],
+      "u": [14, 0, 0],
+      "v": [0, 11, 0],
+      "color": [240, 230, 210],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== LEFT WALL — with warm tone ==="},
+    {
+      "type": "quad",
+      "position": [-7, 0, -7],
+      "u": [0, 0, 17],
+      "v": [0, 11, 0],
+      "color": [230, 220, 200],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== RIGHT WALL ==="},
+    {
+      "type": "quad",
+      "position": [7, 0, -7],
+      "u": [0, 0, 17],
+      "v": [0, 11, 0],
+      "color": [230, 220, 200],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== CEILING — white ==="},
+    {
+      "type": "quad",
+      "position": [-7, 11, -7],
+      "u": [14, 0, 0],
+      "v": [0, 0, 17],
+      "color": [250, 248, 242],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== CEILING LIGHT — soft rectangular warm light panel ==="},
+    {
+      "type": "quad",
+      "position": [-2, 10.9, 0],
+      "u": [4, 0, 0],
+      "v": [0, 0, 4],
+      "color": [255, 240, 200],
+      "material": {
+        "type": "emissive",
+        "scale": 8.0
+      }
+    },
+
+    {"_comment": "=== WINDOW LIGHT — cool blue daylight coming from the left wall ==="},
+    {
+      "type": "quad",
+      "position": [-6.9, 3, 1],
+      "u": [0, 0, 4],
+      "v": [0, 4, 0],
+      "color": [180, 210, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 5.0
+      }
+    },
+
+    {"_comment": "=== SOFA BASE — long flat box shape using a wide cylinder ==="},
+    {
+      "type": "cylinder",
+      "center": [0, 0, 7],
+      "axis": [0, 1, 0],
+      "diameter": 5.5,
+      "height": 1.5,
+      "color": [80, 55, 40],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== SOFA BACK CUSHION — quad leaning against the back wall ==="},
+    {
+      "type": "quad",
+      "position": [-2.5, 1.5, 9.5],
+      "u": [5, 0, 0],
+      "v": [0, 2.5, -0.3],
+      "color": [140, 90, 55],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== SOFA CUSHION — soft top surface ==="},
+    {
+      "type": "quad",
+      "position": [-2.2, 1.5, 5.5],
+      "u": [4.4, 0, 0],
+      "v": [0, 0.2, 3.5],
+      "color": [160, 110, 65],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== COFFEE TABLE — cylinder tabletop on thin legs ==="},
+    {
+      "type": "cylinder",
+      "center": [0, 0, 2],
+      "axis": [0, 1, 0],
+      "diameter": 0.3,
+      "height": 1.8,
+      "color": [60, 45, 30],
+      "material": "lambertian"
+    },
+    {
+      "type": "cylinder",
+      "center": [0, 1.8, 2],
+      "axis": [0, 1, 0],
+      "diameter": 3.5,
+      "height": 0.2,
+      "color": [90, 65, 40],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.1,
+        "fuzz": 0.03
+      }
+    },
+
+    {"_comment": "=== GLASS VASE — on the coffee table ==="},
+    {
+      "type": "sphere",
+      "center": [-0.5, 2.6, 2],
+      "diameter": 0.9,
+      "color": [200, 230, 210],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+
+    {"_comment": "=== DECORATIVE BUNNY — small metallic bunny figurine on the coffee table ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/bunny.obj",
+      "position": [0.8, 2.6, 2.2],
+      "scale": 0.8,
+      "color": [200, 180, 150],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.1
+      }
+    },
+
+    {"_comment": "=== FLOOR LAMP POLE — tall thin cylinder in the right corner ==="},
+    {
+      "type": "cylinder",
+      "center": [5, 0, 7],
+      "axis": [0, 1, 0],
+      "diameter": 0.2,
+      "height": 5.5,
+      "color": [50, 45, 40],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.3
+      }
+    },
+
+    {"_comment": "=== FLOOR LAMP SHADE — warm glowing sphere on top ==="},
+    {
+      "type": "sphere",
+      "center": [5, 6, 7],
+      "diameter": 1.2,
+      "color": [255, 220, 150],
+      "material": {
+        "type": "emissive",
+        "scale": 8.0
+      }
+    },
+
+    {"_comment": "=== DECORATIVE RUG — flat quad on the floor in front of the sofa ==="},
+    {
+      "type": "quad",
+      "position": [-2, 0.02, 0],
+      "u": [4, 0, 0],
+      "v": [0, 0, 5],
+      "color": [140, 50, 40],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== PICTURE FRAME — metallic rectangle on the back wall ==="},
+    {
+      "type": "quad",
+      "position": [-2, 5, 9.9],
+      "u": [4, 0, 0],
+      "v": [0, 3, 0],
+      "color": [180, 160, 120],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.05
+      }
+    },
+
+    {"_comment": "=== DECORATIVE SPHERE — golden ball on the floor by the sofa ==="},
+    {
+      "type": "sphere",
+      "center": [-4, 0.4, 4],
+      "diameter": 0.8,
+      "color": [200, 175, 80],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    }
+  ]
+}

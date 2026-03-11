@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/09 00:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/09 20:55:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 00:50:53 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,11 @@ bool	parse_json_objects(const t_json_node *arr, t_scene *sc)
 	{
 		o = json_arr_at(arr, i);
 		type = json_str(json_get(o, "type"), "");
+		if (!type[0])
+		{
+			i++;
+			continue ;
+		}
 		if (!fill_obj(&sc->objects[sc->object_count], o))
 			if (!fill_extra(&sc->objects[sc->object_count], o, type))
 			{

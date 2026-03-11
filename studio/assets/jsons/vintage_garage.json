@@ -1,0 +1,188 @@
+{
+  "_description": "Vintage Workshop Garage — A warm, atmospheric workshop where a classic BMW sits on the oily workshop floor. Two antique-style floor lamps with glowing bulbs light the space. A tree-shaped decoration (cone on cylinder trunk) adds charm to the corner. Oil-stained concrete floor with a glossy wet sheen. Tools and metallic spheres scattered around. The BMW is properly raised on the floor, not clipping through it.",
+
+  "ambient": {
+    "ratio": 0.1,
+    "color": [220, 200, 170]
+  },
+  "render": {
+    "width": 1200,
+    "aspect_ratio": 1.7778,
+    "spp": 150,
+    "max_depth": 40
+  },
+  "camera": {
+    "position": [3, 6, -10],
+    "direction": [-0.1, -0.25, 1],
+    "fov": 50,
+    "defocus_angle": 0.6,
+    "focus_dist": 11.0
+  },
+  "lights": [
+    {
+      "position": [2, 10, 0],
+      "brightness": 0.6,
+      "color": [255, 240, 200]
+    },
+    {
+      "position": [-5, 4, -5],
+      "brightness": 0.2,
+      "color": [255, 220, 180]
+    }
+  ],
+  "objects": [
+
+    {"_comment": "=== WORKSHOP FLOOR — oily concrete with a glossy wet sheen ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [120, 80, 50],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.15,
+        "fuzz": 0.05
+      }
+    },
+
+    {"_comment": "=== BMW — scale=2.5, center at y=1.5 → spans y=0.25..2.75. Bottom clears floor at y=0 ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/bmw.obj",
+      "position": [-2, 1.5, 2],
+      "scale": 2.5,
+      "color": [30, 40, 60],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.03,
+        "fuzz": 0.01
+      }
+    },
+
+    {"_comment": "=== GLASS HEADLIGHT SPHERE — outer clear shell ==="},
+    {
+      "type": "sphere",
+      "center": [5, 1.5, -2],
+      "diameter": 3.0,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+
+    {"_comment": "=== AMBER INTERIOR — tinted glass inner sphere, nested inside the clear one without clipping (diameter 2.6 < 3.0) ==="},
+    {
+      "type": "sphere",
+      "center": [5, 1.5, -2],
+      "diameter": 2.6,
+      "color": [255, 80, 30],
+      "material": {
+        "type": "tinted_glass",
+        "ior": 1.5
+      }
+    },
+
+    {"_comment": "=== FLOOR LAMP LEFT — pole + warm glowing bulb ==="},
+    {
+      "type": "cylinder",
+      "center": [-6, 0, -4],
+      "axis": [0, 1, 0],
+      "diameter": 0.25,
+      "height": 5.0,
+      "color": [160, 140, 120],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.05
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-6, 5.7, -4],
+      "diameter": 1.2,
+      "color": [255, 230, 180],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
+    },
+
+    {"_comment": "=== FLOOR LAMP RIGHT — pole + warm glowing bulb ==="},
+    {
+      "type": "cylinder",
+      "center": [7, 0, 5],
+      "axis": [0, 1, 0],
+      "diameter": 0.25,
+      "height": 4.0,
+      "color": [160, 140, 120],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.05
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [7, 4.7, 5],
+      "diameter": 1.2,
+      "color": [255, 230, 180],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
+    },
+
+    {"_comment": "=== GOLDEN TOOL SPHERE — small shiny metal ball on the ground ==="},
+    {
+      "type": "sphere",
+      "center": [-4, 0.4, -1],
+      "diameter": 0.8,
+      "color": [200, 180, 130],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    },
+
+    {"_comment": "=== SMALL CHROME BALL — another decorative tool ==="},
+    {
+      "type": "sphere",
+      "center": [2, 0.35, -5],
+      "diameter": 0.7,
+      "color": [180, 200, 160],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    },
+
+    {"_comment": "=== DECORATIVE TREE — cone crown on cylinder trunk ==="},
+    {
+      "type": "cylinder",
+      "center": [0, 0, 7],
+      "axis": [0, 1, 0],
+      "diameter": 0.4,
+      "height": 2.0,
+      "color": [70, 50, 35],
+      "material": "lambertian"
+    },
+    {
+      "type": "cone",
+      "apex": [0, 5.5, 7],
+      "axis": [0, -1, 0],
+      "diameter": 2.0,
+      "height": 3.5,
+      "color": [90, 120, 80],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== BACK WALL ==="},
+    {
+      "type": "quad",
+      "position": [-12, 0, 12],
+      "u": [24, 0, 0],
+      "v": [0, 10, 0],
+      "color": [100, 80, 60],
+      "material": "lambertian"
+    }
+  ]
+}

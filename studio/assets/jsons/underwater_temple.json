@@ -1,0 +1,179 @@
+{
+  "_description": "A sunken temple resting on the ocean floor, half-consumed by time and tides. A weathered Erato statue stands as silent guardian among crumbling stone columns. Tinted-glass water planes shimmer overhead, filtering shafts of blue-green light. Dielectric air bubbles drift lazily upward through the isotropic underwater haze, lending the ruins an ethereal, dreamlike quality.",
+  "ambient": {
+    "ratio": 0.04,
+    "color": [40, 80, 120]
+  },
+  "render": {
+    "width": 1200,
+    "aspect_ratio": 1.7778,
+    "spp": 250,
+    "max_depth": 70
+  },
+  "camera": {
+    "position": [0, 3, -12],
+    "direction": [0, -0.05, 1],
+    "fov": 55
+  },
+  "lights": [
+    {
+      "position": [0, 15, 5],
+      "brightness": 0.4,
+      "color": [100, 180, 220]
+    }
+  ],
+  "objects": [
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [40, 70, 90],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.05,
+        "fuzz": 0.02
+      }
+    },
+    {
+      "type": "quad",
+      "position": [-10, 6, -5],
+      "u": [20, 0, 0],
+      "v": [0, 0, 20],
+      "color": [50, 100, 140],
+      "material": {
+        "type": "tinted_glass",
+        "ior": 1.33
+      }
+    },
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/erato.obj",
+      "position": [0, 0, 3],
+      "scale": 3.0,
+      "color": [200, 200, 190],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.6
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-4, 1.5, -2],
+      "diameter": 3.0,
+      "color": [220, 220, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.33
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [5, 1, -1],
+      "diameter": 2.0,
+      "color": [220, 220, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.33
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [2, 0.8, -5],
+      "diameter": 1.6,
+      "color": [220, 220, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.33
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-2, 0.5, -6],
+      "diameter": 1.0,
+      "color": [220, 230, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.33
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-6, 0.6, 1],
+      "diameter": 1.2,
+      "color": [220, 230, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.33
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [0, 2, 8],
+      "diameter": 6.0,
+      "color": [60, 120, 160],
+      "material": "isotropic"
+    },
+    {
+      "type": "sphere",
+      "center": [-3, 10, 8],
+      "diameter": 2.0,
+      "color": [80, 200, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 6.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [4, 8, 10],
+      "diameter": 1.5,
+      "color": [120, 220, 200],
+      "material": {
+        "type": "emissive",
+        "scale": 5.0
+      }
+    },
+    {
+      "type": "cylinder",
+      "center": [-7, 0, 6],
+      "axis": [0, 1, 0],
+      "diameter": 1.5,
+      "height": 8.0,
+      "color": [60, 100, 80],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.7
+      }
+    },
+    {
+      "type": "cylinder",
+      "center": [7, 0, 6],
+      "axis": [0, 1, 0],
+      "diameter": 1.5,
+      "height": 8.0,
+      "color": [60, 100, 80],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.7
+      }
+    },
+    {
+      "type": "cone",
+      "apex": [-7, 12, 6],
+      "axis": [0, -1, 0],
+      "diameter": 2.5,
+      "height": 4.0,
+      "color": [50, 90, 70],
+      "material": "lambertian"
+    },
+    {
+      "type": "cone",
+      "apex": [7, 12, 6],
+      "axis": [0, -1, 0],
+      "diameter": 2.5,
+      "height": 4.0,
+      "color": [50, 90, 70],
+      "material": "lambertian"
+    }
+  ]
+}

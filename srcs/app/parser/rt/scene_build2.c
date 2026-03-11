@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 00:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/09 20:55:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 00:50:53 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,14 @@ static t_material	*create_mat_checker(const t_mat_spec *ms, t_color clr)
 
 t_material	*create_material(const t_mat_spec *ms, t_color clr)
 {
+	t_texture	*img;
+
+	if (ms->texture_path[0])
+	{
+		img = image_texture_create_png(ms->texture_path);
+		if (img)
+			return (lambertian_create_texture(img));
+	}
 	if (ms->type == MAT_EMISSIVE)
 		return (create_mat_emissive(ms, clr));
 	if (ms->type == MAT_CHECKER)

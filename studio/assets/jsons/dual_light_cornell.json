@@ -1,0 +1,159 @@
+{
+  "_description": "A classic Cornell box lit by two competing light sources — a warm orange panel on the left wall and a cool blue panel on the right. The scene showcases material diversity: a glossy red sphere, a dielectric glass orb, a brushed metal cube, and a diffuse white pedestal, all bathed in the dramatic interplay of warm and cool illumination.",
+  "ambient": {
+    "ratio": 0.0,
+    "color": [0, 0, 0]
+  },
+  "render": {
+    "width": 1200,
+    "aspect_ratio": 1.0,
+    "spp": 300,
+    "max_depth": 60
+  },
+  "camera": {
+    "position": [278, 278, -800],
+    "direction": [0, 0, 1],
+    "fov": 40
+  },
+  "lights": [],
+  "objects": [
+    {
+      "type": "quad",
+      "position": [555, 0, 0],
+      "u": [0, 0, 555],
+      "v": [0, 555, 0],
+      "color": [10, 80, 30],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [0, 0, 555],
+      "u": [0, 0, -555],
+      "v": [0, 555, 0],
+      "color": [140, 20, 20],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [0, 555, 0],
+      "u": [555, 0, 0],
+      "v": [0, 0, 555],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [0, 0, 555],
+      "u": [555, 0, 0],
+      "v": [0, 0, -555],
+      "color": [200, 200, 200],
+      "material": {
+        "type": "checker",
+        "scale": 55.0,
+        "color2": [50, 50, 50]
+      }
+    },
+    {
+      "type": "quad",
+      "position": [555, 0, 555],
+      "u": [-555, 0, 0],
+      "v": [0, 555, 0],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [183, 554, 177],
+      "u": [60, 0, 0],
+      "v": [0, 0, 60],
+      "color": [255, 140, 80],
+      "material": {
+        "type": "emissive",
+        "scale": 12.0
+      }
+    },
+    {
+      "type": "quad",
+      "position": [313, 554, 317],
+      "u": [60, 0, 0],
+      "v": [0, 0, 60],
+      "color": [80, 140, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 12.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [160, 100, 145],
+      "diameter": 200,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [160, 100, 145],
+      "diameter": 190,
+      "color": [255, 200, 150],
+      "material": {
+        "type": "tinted_glass",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [390, 100, 280],
+      "diameter": 200,
+      "color": [220, 200, 170],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [278, 80, 400],
+      "diameter": 160,
+      "color": [50, 180, 80],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.1,
+        "fuzz": 0.03
+      }
+    },
+    {
+      "type": "cylinder",
+      "center": [90, 0, 380],
+      "axis": [0, 1, 0],
+      "diameter": 80,
+      "height": 250,
+      "color": [180, 180, 200],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.4
+      }
+    },
+    {
+      "type": "cone",
+      "apex": [450, 300, 120],
+      "axis": [0, -1, 0],
+      "diameter": 120,
+      "height": 200,
+      "color": [200, 160, 100],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.6
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [278, 400, 280],
+      "diameter": 100,
+      "color": [180, 160, 200],
+      "material": "isotropic"
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+{
+  "_description": "Street Racing Night — Three cars blast down a neon-lit night street. The sportsCar leads in red, the BMW follows close in dark blue, and a third racer (sportsCar clone) trails in green. Motion blur is simulated by placing semi-transparent isotropic ghost copies of each car slightly behind their solid version, creating the illusion of speed. Neon light strips line the road edges. The wet asphalt reflects all the colored light.",
+
+  "ambient": {
+    "ratio": 0.02,
+    "color": [30, 20, 50]
+  },
+  "render": {
+    "width": 1200,
+    "aspect_ratio": 2.0,
+    "spp": 200,
+    "max_depth": 50
+  },
+  "camera": {
+    "position": [10, 5, -8],
+    "direction": [-0.5, -0.15, 1],
+    "fov": 55,
+    "defocus_angle": 0.15,
+    "focus_dist": 14.0
+  },
+  "lights": [
+    {
+      "position": [0, 15, 5],
+      "brightness": 0.3,
+      "color": [200, 200, 220]
+    }
+  ],
+  "objects": [
+
+    {"_comment": "=== WET ASPHALT ROAD — glossy dark surface that reflects neon lights ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [30, 30, 35],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.08,
+        "fuzz": 0.03
+      }
+    },
+
+    {"_comment": "=== ROAD CENTER LINE — white dash on the road ==="},
+    {
+      "type": "quad",
+      "position": [-0.15, 0.01, -15],
+      "u": [0.3, 0, 0],
+      "v": [0, 0, 40],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== LEFT ROAD EDGE — red neon strip ==="},
+    {
+      "type": "quad",
+      "position": [-8, 0.02, -15],
+      "u": [0.3, 0, 0],
+      "v": [0, 0, 40],
+      "color": [255, 40, 40],
+      "material": {
+        "type": "emissive",
+        "scale": 6.0
+      }
+    },
+
+    {"_comment": "=== RIGHT ROAD EDGE — blue neon strip ==="},
+    {
+      "type": "quad",
+      "position": [8, 0.02, -15],
+      "u": [0.3, 0, 0],
+      "v": [0, 0, 40],
+      "color": [40, 80, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 6.0
+      }
+    },
+
+    {"_comment": "=== LEAD CAR (sportsCar) — red, in the right lane, furthest ahead ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/sportsCar.obj",
+      "position": [3, 1.2, 8],
+      "scale": 3.0,
+      "color": [200, 30, 25],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.03,
+        "fuzz": 0.01
+      }
+    },
+
+    {"_comment": "=== LEAD CAR MOTION GHOST — faded transparent copy trailing behind for speed blur ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/sportsCar.obj",
+      "position": [3, 1.2, 5],
+      "scale": 3.0,
+      "color": [200, 30, 25],
+      "material": "isotropic"
+    },
+
+    {"_comment": "=== LEAD CAR HEADLIGHTS — bright emissive spheres in front of the car ==="},
+    {
+      "type": "sphere",
+      "center": [2, 0.8, 10.5],
+      "diameter": 0.4,
+      "color": [255, 255, 220],
+      "material": {
+        "type": "emissive",
+        "scale": 15.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [4, 0.8, 10.5],
+      "diameter": 0.4,
+      "color": [255, 255, 220],
+      "material": {
+        "type": "emissive",
+        "scale": 15.0
+      }
+    },
+
+    {"_comment": "=== BMW — dark metallic blue, in the left lane, slightly behind ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/bmw.obj",
+      "position": [-3, 1.2, 4],
+      "scale": 3.0,
+      "color": [25, 40, 80],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.02,
+        "fuzz": 0.005
+      }
+    },
+
+    {"_comment": "=== BMW MOTION GHOST ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/bmw.obj",
+      "position": [-3, 1.2, 1],
+      "scale": 3.0,
+      "color": [25, 40, 80],
+      "material": "isotropic"
+    },
+
+    {"_comment": "=== BMW HEADLIGHTS ==="},
+    {
+      "type": "sphere",
+      "center": [-4, 0.8, 6.5],
+      "diameter": 0.4,
+      "color": [220, 230, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 15.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-2, 0.8, 6.5],
+      "diameter": 0.4,
+      "color": [220, 230, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 15.0
+      }
+    },
+
+    {"_comment": "=== THIRD RACER (sportsCar) — green, further back in the right lane ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/sportsCar.obj",
+      "position": [3, 1.2, -2],
+      "scale": 3.0,
+      "color": [30, 160, 50],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.03,
+        "fuzz": 0.01
+      }
+    },
+
+    {"_comment": "=== THIRD RACER MOTION GHOST ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/sportsCar.obj",
+      "position": [3, 1.2, -5],
+      "scale": 3.0,
+      "color": [30, 160, 50],
+      "material": "isotropic"
+    },
+
+    {"_comment": "=== THIRD RACER HEADLIGHTS ==="},
+    {
+      "type": "sphere",
+      "center": [2, 0.8, 0.5],
+      "diameter": 0.4,
+      "color": [255, 255, 220],
+      "material": {
+        "type": "emissive",
+        "scale": 12.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [4, 0.8, 0.5],
+      "diameter": 0.4,
+      "color": [255, 255, 220],
+      "material": {
+        "type": "emissive",
+        "scale": 12.0
+      }
+    },
+
+    {"_comment": "=== STREET LAMP LEFT — tall pole with light ==="},
+    {
+      "type": "cylinder",
+      "center": [-10, 0, 0],
+      "axis": [0, 1, 0],
+      "diameter": 0.3,
+      "height": 8.0,
+      "color": [60, 60, 65],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.3
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-10, 8.5, 0],
+      "diameter": 1.0,
+      "color": [255, 200, 100],
+      "material": {
+        "type": "emissive",
+        "scale": 12.0
+      }
+    },
+
+    {"_comment": "=== STREET LAMP RIGHT ==="},
+    {
+      "type": "cylinder",
+      "center": [10, 0, 10],
+      "axis": [0, 1, 0],
+      "diameter": 0.3,
+      "height": 8.0,
+      "color": [60, 60, 65],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.3
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [10, 8.5, 10],
+      "diameter": 1.0,
+      "color": [255, 200, 100],
+      "material": {
+        "type": "emissive",
+        "scale": 12.0
+      }
+    },
+
+    {"_comment": "=== NEON SIGN LEFT — purple glow above the left guardrail ==="},
+    {
+      "type": "quad",
+      "position": [-9, 4, 5],
+      "u": [0, 0, 6],
+      "v": [0, 2, 0],
+      "color": [180, 50, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 4.0
+      }
+    },
+
+    {"_comment": "=== NEON SIGN RIGHT — orange glow ==="},
+    {
+      "type": "quad",
+      "position": [9, 3, -2],
+      "u": [0, 0, 8],
+      "v": [0, 1.5, 0],
+      "color": [255, 140, 30],
+      "material": {
+        "type": "emissive",
+        "scale": 4.0
+      }
+    },
+
+    {"_comment": "=== EXHAUST SMOKE — isotropic volume behind the lead car ==="},
+    {
+      "type": "sphere",
+      "center": [3, 0.8, 4],
+      "diameter": 3.0,
+      "color": [80, 80, 90],
+      "material": "isotropic"
+    }
+  ]
+}

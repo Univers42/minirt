@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 00:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/09 20:55:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 00:50:53 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,20 @@ static t_mat_type	mat_type_from_str(const char *s)
 
 static void	parse_mat_obj(const t_json_node *m, t_mat_spec *ms)
 {
+	const char	*tex;
+
 	ms->type = mat_type_from_str(json_str(json_get(m, "type"), ""));
 	ms->fuzz = json_num(json_get(m, "fuzz"), 0.0);
 	ms->ior = json_num(json_get(m, "ior"), 1.5);
 	ms->scale = json_num(json_get(m, "scale"), 0.0);
 	ms->roughness = json_num(json_get(m, "roughness"), 0.0);
 	ms->color2 = json_to_color255(json_get(m, "color2"));
+	tex = json_str(json_get(m, "texture"), "");
+	if (tex[0])
+	{
+		strncpy(ms->texture_path, tex, sizeof(ms->texture_path) - 1);
+		ms->texture_path[sizeof(ms->texture_path) - 1] = '\0';
+	}
 }
 
 void	parse_mat_spec(const t_json_node *o, t_rt_object *out)

@@ -6,7 +6,7 @@
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 14:00:00 by dlesieur          #+#    #+#             */
-/*   Updated: 2026/03/09 20:55:47 by dlesieur         ###   ########.fr       */
+/*   Updated: 2026/03/11 00:50:53 by dlesieur         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,7 @@ typedef struct s_mat_spec
 	double		scale;
 	double		roughness;
 	t_color		color2;
+	char		texture_path[256];
 }	t_mat_spec;
 
 typedef union u_obj_data

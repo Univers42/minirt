@@ -1,0 +1,175 @@
+{
+  "_description": "A 1970s disco dance floor at midnight. A mirrored disco ball hangs from the ceiling, casting fragmented reflections across the room. Six colored spotlights — red, blue, green, magenta, cyan, and yellow — sweep the space from above. The checkered black-and-white floor gleams under the lights while metallic walls bounce color in every direction.",
+  "ambient": {
+    "ratio": 0.01,
+    "color": [30, 20, 50]
+  },
+  "render": {
+    "width": 1200,
+    "aspect_ratio": 1.7778,
+    "spp": 300,
+    "max_depth": 60
+  },
+  "camera": {
+    "position": [0, 5, -10],
+    "direction": [0, -0.15, 1],
+    "fov": 55
+  },
+  "lights": [],
+  "objects": [
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [20, 15, 25],
+      "material": {
+        "type": "checker",
+        "scale": 3.0,
+        "color2": [60, 50, 80]
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [0, 6, 0],
+      "diameter": 4.0,
+      "color": [200, 200, 210],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [0, 6, 0],
+      "diameter": 3.6,
+      "color": [200, 200, 210],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [0, 12, 0],
+      "diameter": 1.5,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 20.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-5, 1.5, -3],
+      "diameter": 3.0,
+      "color": [255, 40, 60],
+      "material": {
+        "type": "emissive",
+        "scale": 4.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [5, 1.5, -3],
+      "diameter": 3.0,
+      "color": [40, 60, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 4.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-3, 1, 5],
+      "diameter": 2.0,
+      "color": [40, 255, 100],
+      "material": {
+        "type": "emissive",
+        "scale": 4.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [3, 1, 5],
+      "diameter": 2.0,
+      "color": [255, 200, 40],
+      "material": {
+        "type": "emissive",
+        "scale": 4.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [0, 0.8, -6],
+      "diameter": 1.6,
+      "color": [255, 100, 255],
+      "material": {
+        "type": "emissive",
+        "scale": 4.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [-6, 2, 2],
+      "diameter": 4.0,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [6, 2, 2],
+      "diameter": 4.0,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "cylinder",
+      "center": [-8, 0, -6],
+      "axis": [0, 1, 0],
+      "diameter": 0.5,
+      "height": 10.0,
+      "color": [120, 100, 160],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.05
+      }
+    },
+    {
+      "type": "cylinder",
+      "center": [8, 0, -6],
+      "axis": [0, 1, 0],
+      "diameter": 0.5,
+      "height": 10.0,
+      "color": [120, 100, 160],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.05
+      }
+    },
+    {
+      "type": "quad",
+      "position": [-3, 9.5, -3],
+      "u": [6, 0, 0],
+      "v": [0, 0, 6],
+      "color": [200, 200, 220],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    },
+    {
+      "type": "quad",
+      "position": [-15, 0, 12],
+      "u": [30, 0, 0],
+      "v": [0, 16, 0],
+      "color": [15, 10, 25],
+      "material": "lambertian"
+    }
+  ]
+}
