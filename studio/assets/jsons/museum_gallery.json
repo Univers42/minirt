@@ -1,14 +1,14 @@
 {
-  "_description": "Grand Art Museum Gallery — A spacious, elegantly lit gallery with a black-and-white checkered marble floor. Five framed paintings hang on the walls, each a PNG image displayed as a textured quad within a gilded golden frame. A classical Erato statue stands on a tall obsidian column at the center rear, sculpted in luminous white marble. Two tinted glass art spheres float on pedestals flanking the entrance. Warm amber track lights and cool fill lights create a sophisticated atmosphere befitting a world-class museum.",
+  "_description": "Grand Art Museum Gallery — A dramatic, richly appointed gallery with deep charcoal walls accented by warm mahogany wainscoting below the dado rail. The coffered dark ceiling features recessed warm spotlights that cast pools of golden light onto each framed painting. Five PNG artworks hang in gilded frames against the dark walls. A classical Erato statue in warm marble stands on a polished obsidian column at center, bathed in a focused amber spotlight. Tinted glass art spheres glow on pedestals near the entrance. Crown molding in brushed gold lines the ceiling edge, and a polished oak bench invites visitors to sit and contemplate the art. The checkered floor reflects the warm light throughout.",
 
   "ambient": {
-    "ratio": 0.08,
-    "color": [230, 220, 200]
+    "ratio": 0.02,
+    "color": [80, 70, 55]
   },
   "render": {
     "width": 1200,
     "aspect_ratio": 1.7778,
-    "spp": 250,
+    "spp": 300,
     "max_depth": 50
   },
   "camera": {
@@ -20,124 +20,343 @@
   },
   "lights": [
     {
-      "position": [0, 11.5, -2],
-      "brightness": 0.5,
-      "color": [255, 245, 230]
+      "position": [0, 11, 0],
+      "brightness": 0.4,
+      "color": [255, 235, 200]
     },
     {
-      "position": [-7, 9, -6],
-      "brightness": 0.25,
-      "color": [255, 230, 200]
-    },
-    {
-      "position": [7, 9, -6],
-      "brightness": 0.25,
-      "color": [255, 230, 200]
-    },
-    {
-      "position": [0, 9, 6],
+      "position": [-6, 10, -6],
       "brightness": 0.2,
-      "color": [220, 220, 255]
+      "color": [255, 220, 180]
+    },
+    {
+      "position": [6, 10, -6],
+      "brightness": 0.2,
+      "color": [255, 220, 180]
+    },
+    {
+      "position": [0, 10, 7],
+      "brightness": 0.25,
+      "color": [255, 230, 190]
     }
   ],
   "objects": [
 
     {
-      "_comment": "=== CHECKERED FLOOR — classic museum black-and-white marble ===",
+      "_comment": "=== FLOOR — dark polished checker marble ===",
       "type": "plane",
       "point": [0, 0, 0],
       "normal": [0, 1, 0],
-      "color": [210, 205, 200],
+      "color": [140, 130, 115],
       "material": {
         "type": "checker",
         "scale": 2.0,
-        "color2": [30, 28, 25]
+        "color2": [25, 22, 18]
       }
     },
 
     {
-      "_comment": "=== BACK WALL ===",
+      "_comment": "=== BACK WALL upper — deep charcoal slate ===",
+      "type": "quad",
+      "position": [-12, 3.5, 10],
+      "u": [24, 0, 0],
+      "v": [0, 8.5, 0],
+      "color": [55, 52, 60],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.15,
+        "fuzz": 0.05
+      }
+    },
+    {
+      "_comment": "=== BACK WALL lower — warm mahogany wainscoting ===",
       "type": "quad",
       "position": [-12, 0, 10],
       "u": [24, 0, 0],
-      "v": [0, 12, 0],
-      "color": [240, 235, 225],
-      "material": "lambertian"
+      "v": [0, 3.5, 0],
+      "color": [70, 40, 25],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.2,
+        "fuzz": 0.08
+      }
+    },
+    {
+      "_comment": "=== BACK WALL dado rail — gold strip ===",
+      "type": "quad",
+      "position": [-12, 3.4, 9.98],
+      "u": [24, 0, 0],
+      "v": [0, 0.2, 0],
+      "color": [180, 150, 60],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.2
+      }
     },
 
     {
-      "_comment": "=== LEFT WALL ===",
+      "_comment": "=== LEFT WALL upper ===",
+      "type": "quad",
+      "position": [-12, 3.5, -18],
+      "u": [0, 0, 28],
+      "v": [0, 8.5, 0],
+      "color": [55, 52, 60],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.15,
+        "fuzz": 0.05
+      }
+    },
+    {
+      "_comment": "=== LEFT WALL lower — wainscoting ===",
       "type": "quad",
       "position": [-12, 0, -18],
       "u": [0, 0, 28],
-      "v": [0, 12, 0],
-      "color": [235, 230, 220],
-      "material": "lambertian"
+      "v": [0, 3.5, 0],
+      "color": [70, 40, 25],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.2,
+        "fuzz": 0.08
+      }
+    },
+    {
+      "_comment": "=== LEFT WALL dado rail ===",
+      "type": "quad",
+      "position": [-11.98, 3.4, -18],
+      "u": [0, 0, 28],
+      "v": [0, 0.2, 0],
+      "color": [180, 150, 60],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.2
+      }
     },
 
     {
-      "_comment": "=== RIGHT WALL ===",
+      "_comment": "=== RIGHT WALL upper ===",
+      "type": "quad",
+      "position": [12, 3.5, -18],
+      "u": [0, 0, 28],
+      "v": [0, 8.5, 0],
+      "color": [55, 52, 60],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.15,
+        "fuzz": 0.05
+      }
+    },
+    {
+      "_comment": "=== RIGHT WALL lower — wainscoting ===",
       "type": "quad",
       "position": [12, 0, -18],
       "u": [0, 0, 28],
-      "v": [0, 12, 0],
-      "color": [235, 230, 220],
-      "material": "lambertian"
+      "v": [0, 3.5, 0],
+      "color": [70, 40, 25],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.2,
+        "fuzz": 0.08
+      }
+    },
+    {
+      "_comment": "=== RIGHT WALL dado rail ===",
+      "type": "quad",
+      "position": [11.98, 3.4, -18],
+      "u": [0, 0, 28],
+      "v": [0, 0.2, 0],
+      "color": [180, 150, 60],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.2
+      }
     },
 
     {
-      "_comment": "=== CEILING ===",
+      "_comment": "=== CEILING — dark coffered tone ===",
       "type": "quad",
       "position": [-12, 12, -18],
       "u": [24, 0, 0],
       "v": [0, 0, 28],
-      "color": [250, 248, 245],
+      "color": [40, 38, 35],
       "material": "lambertian"
     },
 
     {
-      "_comment": "=== CEILING LIGHT PANEL 1 — warm track light ===",
+      "_comment": "=== CROWN MOLDING — back wall top edge ===",
       "type": "quad",
-      "position": [-4, 11.95, -4],
-      "u": [3, 0, 0],
-      "v": [0, 0, 3],
-      "color": [255, 245, 225],
+      "position": [-12, 11.8, 9.97],
+      "u": [24, 0, 0],
+      "v": [0, 0.2, 0],
+      "color": [170, 140, 55],
       "material": {
-        "type": "emissive",
-        "scale": 14.0
+        "type": "metal",
+        "fuzz": 0.15
+      }
+    },
+    {
+      "_comment": "=== CROWN MOLDING — left wall top edge ===",
+      "type": "quad",
+      "position": [-11.97, 11.8, -18],
+      "u": [0, 0, 28],
+      "v": [0, 0.2, 0],
+      "color": [170, 140, 55],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.15
+      }
+    },
+    {
+      "_comment": "=== CROWN MOLDING — right wall top edge ===",
+      "type": "quad",
+      "position": [11.97, 11.8, -18],
+      "u": [0, 0, 28],
+      "v": [0, 0.2, 0],
+      "color": [170, 140, 55],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.15
       }
     },
 
     {
-      "_comment": "=== CEILING LIGHT PANEL 2 ===",
+      "_comment": "=== BASEBOARD — back wall floor edge ===",
       "type": "quad",
-      "position": [1, 11.95, -4],
-      "u": [3, 0, 0],
-      "v": [0, 0, 3],
-      "color": [255, 245, 225],
+      "position": [-12, 0, 9.97],
+      "u": [24, 0, 0],
+      "v": [0, 0.3, 0],
+      "color": [35, 20, 12],
       "material": {
-        "type": "emissive",
-        "scale": 14.0
+        "type": "glossy",
+        "roughness": 0.1,
+        "fuzz": 0.03
+      }
+    },
+    {
+      "_comment": "=== BASEBOARD — left wall ===",
+      "type": "quad",
+      "position": [-11.97, 0, -18],
+      "u": [0, 0, 28],
+      "v": [0, 0.3, 0],
+      "color": [35, 20, 12],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.1,
+        "fuzz": 0.03
+      }
+    },
+    {
+      "_comment": "=== BASEBOARD — right wall ===",
+      "type": "quad",
+      "position": [11.97, 0, -18],
+      "u": [0, 0, 28],
+      "v": [0, 0.3, 0],
+      "color": [35, 20, 12],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.1,
+        "fuzz": 0.03
       }
     },
 
     {
-      "_comment": "=== CEILING LIGHT PANEL 3 — rear ===",
+      "_comment": "=== RECESSED CEILING LIGHT 1 — warm spot, front-left ===",
       "type": "quad",
-      "position": [-1.5, 11.95, 3],
-      "u": [3, 0, 0],
-      "v": [0, 0, 3],
-      "color": [255, 240, 210],
+      "position": [-5, 11.95, -6],
+      "u": [1.5, 0, 0],
+      "v": [0, 0, 1.5],
+      "color": [255, 230, 180],
       "material": {
         "type": "emissive",
-        "scale": 12.0
+        "scale": 18.0
+      }
+    },
+    {
+      "_comment": "=== RECESSED CEILING LIGHT 2 — warm spot, front-right ===",
+      "type": "quad",
+      "position": [3.5, 11.95, -6],
+      "u": [1.5, 0, 0],
+      "v": [0, 0, 1.5],
+      "color": [255, 230, 180],
+      "material": {
+        "type": "emissive",
+        "scale": 18.0
+      }
+    },
+    {
+      "_comment": "=== RECESSED CEILING LIGHT 3 — center ===",
+      "type": "quad",
+      "position": [-1, 11.95, -1],
+      "u": [2, 0, 0],
+      "v": [0, 0, 2],
+      "color": [255, 235, 190],
+      "material": {
+        "type": "emissive",
+        "scale": 16.0
+      }
+    },
+    {
+      "_comment": "=== RECESSED CEILING LIGHT 4 — rear ===",
+      "type": "quad",
+      "position": [-1, 11.95, 5],
+      "u": [2, 0, 0],
+      "v": [0, 0, 2],
+      "color": [255, 225, 170],
+      "material": {
+        "type": "emissive",
+        "scale": 16.0
+      }
+    },
+
+    {
+      "_comment": "=== WALL SCONCE LEFT 1 — between paintings on left wall ===",
+      "type": "sphere",
+      "center": [-11.6, 7.5, -3.5],
+      "diameter": 0.5,
+      "color": [255, 210, 140],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
+    },
+    {
+      "_comment": "=== WALL SCONCE LEFT 2 ===",
+      "type": "sphere",
+      "center": [-11.6, 7.5, 6.5],
+      "diameter": 0.5,
+      "color": [255, 210, 140],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
+    },
+    {
+      "_comment": "=== WALL SCONCE RIGHT 1 ===",
+      "type": "sphere",
+      "center": [11.6, 7.5, -1.5],
+      "diameter": 0.5,
+      "color": [255, 210, 140],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
+    },
+    {
+      "_comment": "=== WALL SCONCE RIGHT 2 ===",
+      "type": "sphere",
+      "center": [11.6, 7.5, 7.0],
+      "diameter": 0.5,
+      "color": [255, 210, 140],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
       }
     },
 
     {
       "_comment": "=== PAINTING 1 (back wall, center) — Earth Map ===",
       "type": "quad",
-      "position": [-2.2, 4.0, 9.95],
+      "position": [-2.2, 5.0, 9.95],
       "u": [4.4, 0, 0],
       "v": [0, 3.0, 0],
       "color": [255, 255, 255],
@@ -149,44 +368,56 @@
     {
       "_comment": "frame top P1",
       "type": "quad",
-      "position": [-2.5, 7.0, 9.93],
-      "u": [5.0, 0, 0],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [-2.6, 8.0, 9.92],
+      "u": [5.2, 0, 0],
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame bottom P1",
       "type": "quad",
-      "position": [-2.5, 3.7, 9.93],
-      "u": [5.0, 0, 0],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [-2.6, 4.65, 9.92],
+      "u": [5.2, 0, 0],
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame left P1",
       "type": "quad",
-      "position": [-2.5, 3.7, 9.93],
-      "u": [0.3, 0, 0],
-      "v": [0, 3.6, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [-2.6, 4.65, 9.92],
+      "u": [0.35, 0, 0],
+      "v": [0, 3.7, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame right P1",
       "type": "quad",
-      "position": [2.2, 3.7, 9.93],
-      "u": [0.3, 0, 0],
-      "v": [0, 3.6, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [2.25, 4.65, 9.92],
+      "u": [0.35, 0, 0],
+      "v": [0, 3.7, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
+    },
+
+    {
+      "_comment": "=== SPOTLIGHT P1 — aimed at Earth painting ===",
+      "type": "sphere",
+      "center": [0, 10.5, 9.2],
+      "diameter": 0.6,
+      "color": [255, 240, 200],
+      "material": {
+        "type": "emissive",
+        "scale": 12.0
+      }
     },
 
     {
       "_comment": "=== PAINTING 2 (left wall, front) — Lion portrait ===",
       "type": "quad",
-      "position": [-11.95, 4.2, -8],
+      "position": [-11.95, 5.0, -8],
       "u": [0, 0, 3.6],
       "v": [0, 3.0, 0],
       "color": [255, 255, 255],
@@ -198,44 +429,56 @@
     {
       "_comment": "frame top P2",
       "type": "quad",
-      "position": [-11.93, 7.2, -8.3],
+      "position": [-11.92, 8.0, -8.3],
       "u": [0, 0, 4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame bottom P2",
       "type": "quad",
-      "position": [-11.93, 3.9, -8.3],
+      "position": [-11.92, 4.65, -8.3],
       "u": [0, 0, 4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame left P2",
       "type": "quad",
-      "position": [-11.93, 3.9, -8.3],
-      "u": [0, 0, 0.3],
-      "v": [0, 3.6, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [-11.92, 4.65, -8.3],
+      "u": [0, 0, 0.35],
+      "v": [0, 3.7, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame right P2",
       "type": "quad",
-      "position": [-11.93, 3.9, -4.4],
-      "u": [0, 0, 0.3],
-      "v": [0, 3.6, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [-11.92, 4.65, -4.4],
+      "u": [0, 0, 0.35],
+      "v": [0, 3.7, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
+    },
+
+    {
+      "_comment": "=== SPOTLIGHT P2 ===",
+      "type": "sphere",
+      "center": [-11.2, 9.5, -6.2],
+      "diameter": 0.5,
+      "color": [255, 235, 190],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
     },
 
     {
       "_comment": "=== PAINTING 3 (left wall, rear) — Country landscape ===",
       "type": "quad",
-      "position": [-11.95, 4.2, 1],
+      "position": [-11.95, 5.0, 1],
       "u": [0, 0, 3.6],
       "v": [0, 2.5, 0],
       "color": [255, 255, 255],
@@ -247,44 +490,56 @@
     {
       "_comment": "frame top P3",
       "type": "quad",
-      "position": [-11.93, 6.7, 0.7],
+      "position": [-11.92, 7.5, 0.7],
       "u": [0, 0, 4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame bottom P3",
       "type": "quad",
-      "position": [-11.93, 3.9, 0.7],
+      "position": [-11.92, 4.65, 0.7],
       "u": [0, 0, 4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame left P3",
       "type": "quad",
-      "position": [-11.93, 3.9, 0.7],
-      "u": [0, 0, 0.3],
-      "v": [0, 3.1, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [-11.92, 4.65, 0.7],
+      "u": [0, 0, 0.35],
+      "v": [0, 3.2, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame right P3",
       "type": "quad",
-      "position": [-11.93, 3.9, 4.6],
-      "u": [0, 0, 0.3],
-      "v": [0, 3.1, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [-11.92, 4.65, 4.65],
+      "u": [0, 0, 0.35],
+      "v": [0, 3.2, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
+    },
+
+    {
+      "_comment": "=== SPOTLIGHT P3 ===",
+      "type": "sphere",
+      "center": [-11.2, 9.0, 2.8],
+      "diameter": 0.5,
+      "color": [255, 235, 190],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
     },
 
     {
       "_comment": "=== PAINTING 4 (right wall, front) — Rendered artwork ===",
       "type": "quad",
-      "position": [11.95, 4.2, -4.4],
+      "position": [11.95, 5.0, -4.4],
       "u": [0, 0, -3.6],
       "v": [0, 3.0, 0],
       "color": [255, 255, 255],
@@ -296,44 +551,56 @@
     {
       "_comment": "frame top P4",
       "type": "quad",
-      "position": [11.93, 7.2, -4.1],
+      "position": [11.92, 8.0, -4.1],
       "u": [0, 0, -4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame bottom P4",
       "type": "quad",
-      "position": [11.93, 3.9, -4.1],
+      "position": [11.92, 4.65, -4.1],
       "u": [0, 0, -4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame left P4",
       "type": "quad",
-      "position": [11.93, 3.9, -4.1],
-      "u": [0, 0, -0.3],
-      "v": [0, 3.6, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [11.92, 4.65, -4.1],
+      "u": [0, 0, -0.35],
+      "v": [0, 3.7, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame right P4",
       "type": "quad",
-      "position": [11.93, 3.9, -8.0],
-      "u": [0, 0, -0.3],
-      "v": [0, 3.6, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [11.92, 4.65, -8.0],
+      "u": [0, 0, -0.35],
+      "v": [0, 3.7, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
+    },
+
+    {
+      "_comment": "=== SPOTLIGHT P4 ===",
+      "type": "sphere",
+      "center": [11.2, 9.5, -6.2],
+      "diameter": 0.5,
+      "color": [255, 235, 190],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
     },
 
     {
       "_comment": "=== PAINTING 5 (right wall, rear) — Ski landscape ===",
       "type": "quad",
-      "position": [11.95, 4.2, 4.6],
+      "position": [11.95, 5.0, 4.6],
       "u": [0, 0, -3.6],
       "v": [0, 2.5, 0],
       "color": [255, 255, 255],
@@ -345,66 +612,132 @@
     {
       "_comment": "frame top P5",
       "type": "quad",
-      "position": [11.93, 6.7, 4.9],
+      "position": [11.92, 7.5, 4.9],
       "u": [0, 0, -4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame bottom P5",
       "type": "quad",
-      "position": [11.93, 3.9, 4.9],
+      "position": [11.92, 4.65, 4.9],
       "u": [0, 0, -4.2],
-      "v": [0, 0.3, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "v": [0, 0.35, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame left P5",
       "type": "quad",
-      "position": [11.93, 3.9, 4.9],
-      "u": [0, 0, -0.3],
-      "v": [0, 3.1, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [11.92, 4.65, 4.9],
+      "u": [0, 0, -0.35],
+      "v": [0, 3.2, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
     {
       "_comment": "frame right P5",
       "type": "quad",
-      "position": [11.93, 3.9, 1.0],
-      "u": [0, 0, -0.3],
-      "v": [0, 3.1, 0],
-      "color": [200, 170, 60],
-      "material": { "type": "metal", "fuzz": 0.15 }
+      "position": [11.92, 4.65, 1.0],
+      "u": [0, 0, -0.35],
+      "v": [0, 3.2, 0],
+      "color": [180, 150, 50],
+      "material": { "type": "metal", "fuzz": 0.1 }
     },
 
     {
-      "_comment": "=== CENTER COLUMN — tall obsidian pedestal for the Erato statue ===",
+      "_comment": "=== SPOTLIGHT P5 ===",
+      "type": "sphere",
+      "center": [11.2, 9.0, 2.8],
+      "diameter": 0.5,
+      "color": [255, 235, 190],
+      "material": {
+        "type": "emissive",
+        "scale": 10.0
+      }
+    },
+
+    {
+      "_comment": "=== CENTER COLUMN — tall polished obsidian pedestal ===",
       "type": "cylinder",
       "center": [0, 0, 5],
       "axis": [0, 1, 0],
       "diameter": 1.6,
       "height": 3.5,
-      "color": [25, 22, 20],
+      "color": [20, 18, 15],
       "material": {
         "type": "glossy",
-        "roughness": 0.03,
-        "fuzz": 0.01
+        "roughness": 0.02,
+        "fuzz": 0.005
       }
     },
 
     {
-      "_comment": "=== ERATO STATUE — marble, scale=3.5, center y=5.5 -> spans ~y=3.75..7.25, clears column top y=3.5 ===",
+      "_comment": "=== ERATO STATUE — warm marble, scale=3.5, center y=5.5 ===",
       "type": "mesh",
       "path": "studio/assets/obj_files/erato.obj",
       "position": [0, 5.5, 5],
       "scale": 3.5,
-      "color": [235, 230, 220],
+      "color": [220, 200, 175],
       "material": {
         "type": "glossy",
-        "roughness": 0.08,
-        "fuzz": 0.02
+        "roughness": 0.06,
+        "fuzz": 0.015
+      }
+    },
+
+    {
+      "_comment": "=== ERATO SPOTLIGHT — dramatic warm amber from above ===",
+      "type": "sphere",
+      "center": [0, 11.2, 5],
+      "diameter": 0.8,
+      "color": [255, 200, 120],
+      "material": {
+        "type": "emissive",
+        "scale": 20.0
+      }
+    },
+
+    {
+      "_comment": "=== OAK BENCH — visitor seating, center gallery ===",
+      "type": "quad",
+      "position": [-1.8, 1.3, -4],
+      "u": [3.6, 0, 0],
+      "v": [0, 0, 1.2],
+      "color": [110, 70, 35],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.2,
+        "fuzz": 0.06
+      }
+    },
+    {
+      "_comment": "=== BENCH LEFT LEG ===",
+      "type": "cylinder",
+      "center": [-1.5, 0, -3.8],
+      "axis": [0, 1, 0],
+      "diameter": 0.2,
+      "height": 1.3,
+      "color": [90, 55, 25],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.2,
+        "fuzz": 0.06
+      }
+    },
+    {
+      "_comment": "=== BENCH RIGHT LEG ===",
+      "type": "cylinder",
+      "center": [1.5, 0, -3.8],
+      "axis": [0, 1, 0],
+      "diameter": 0.2,
+      "height": 1.3,
+      "color": [90, 55, 25],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.2,
+        "fuzz": 0.06
       }
     },
 
@@ -415,10 +748,10 @@
       "axis": [0, 1, 0],
       "diameter": 1.4,
       "height": 2.2,
-      "color": [35, 32, 28],
+      "color": [30, 25, 20],
       "material": {
         "type": "glossy",
-        "roughness": 0.04,
+        "roughness": 0.03,
         "fuzz": 0.01
       }
     },
@@ -426,7 +759,7 @@
       "type": "sphere",
       "center": [-6, 3.1, -10],
       "diameter": 1.6,
-      "color": [100, 200, 255],
+      "color": [80, 180, 255],
       "material": {
         "type": "tinted_glass",
         "ior": 1.5
@@ -440,10 +773,10 @@
       "axis": [0, 1, 0],
       "diameter": 1.4,
       "height": 2.2,
-      "color": [35, 32, 28],
+      "color": [30, 25, 20],
       "material": {
         "type": "glossy",
-        "roughness": 0.04,
+        "roughness": 0.03,
         "fuzz": 0.01
       }
     },
@@ -451,7 +784,7 @@
       "type": "sphere",
       "center": [6, 3.1, -10],
       "diameter": 1.6,
-      "color": [255, 100, 100],
+      "color": [255, 80, 80],
       "material": {
         "type": "tinted_glass",
         "ior": 1.5
@@ -459,55 +792,7 @@
     },
 
     {
-      "_comment": "=== SPOTLIGHT AIMED AT ERATO ===",
-      "type": "sphere",
-      "center": [0, 11, 5],
-      "diameter": 1.0,
-      "color": [255, 220, 160],
-      "material": {
-        "type": "emissive",
-        "scale": 15.0
-      }
-    },
-
-    {
-      "_comment": "=== ACCENT LIGHT ABOVE PAINTING 1 ===",
-      "type": "sphere",
-      "center": [0, 9.5, 9.5],
-      "diameter": 0.5,
-      "color": [255, 240, 200],
-      "material": {
-        "type": "emissive",
-        "scale": 8.0
-      }
-    },
-
-    {
-      "_comment": "=== ACCENT LIGHT ABOVE PAINTING 2 ===",
-      "type": "sphere",
-      "center": [-11.5, 8.5, -6.2],
-      "diameter": 0.4,
-      "color": [255, 240, 200],
-      "material": {
-        "type": "emissive",
-        "scale": 6.0
-      }
-    },
-
-    {
-      "_comment": "=== ACCENT LIGHT ABOVE PAINTING 4 ===",
-      "type": "sphere",
-      "center": [11.5, 8.5, -6.2],
-      "diameter": 0.4,
-      "color": [255, 240, 200],
-      "material": {
-        "type": "emissive",
-        "scale": 6.0
-      }
-    },
-
-    {
-      "_comment": "=== CHROME MIRROR BALL — decorative piece near entrance ===",
+      "_comment": "=== CHROME MIRROR BALL — decorative near entrance ===",
       "type": "sphere",
       "center": [0, 1.2, -12],
       "diameter": 2.4,
