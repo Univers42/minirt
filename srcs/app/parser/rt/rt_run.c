@@ -71,7 +71,7 @@ int	rt_run(const char *filepath)
 	if (bvh)
 	{
 		bvh_wrap.object = bvh;
-		bvh_wrap.owned = true;
+		bvh_wrap.owned = false;
 		bvh_wrap.set_current = set_current_bvh;
 		bvh_wrap.hit_noobj = bvh_node_hit;
 		bvh_wrap.bbox = bvh->bbox;
@@ -82,15 +82,17 @@ int	rt_run(const char *filepath)
 	{
 		fprintf(stderr, "Error\nRender failed (out of memory)\n");
 		hittable_list_clear(&accel);
+		bvh_node_destroy(bvh);
 		scene_cleanup(&scene);
 		return (1);
 	}
 	if (mlx_ctx_init(&ctx, cam.image_width, cam.image_height,
-			"miniRT") < 0)
+			"rt") < 0)
 	{
 		fprintf(stderr, "Error\nFailed to initialize display\n");
 		free(buf);
 		hittable_list_clear(&accel);
+		bvh_node_destroy(bvh);
 		scene_cleanup(&scene);
 		return (1);
 	}
@@ -104,6 +106,7 @@ int	rt_run(const char *filepath)
 	mlx_loop(ctx.mlx);
 	mlx_ctx_destroy(&ctx);
 	hittable_list_clear(&accel);
+	bvh_node_destroy(bvh);
 	scene_cleanup(&scene);
 	return (0);
 }

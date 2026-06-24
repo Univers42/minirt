@@ -14,6 +14,7 @@
 #include "color.h"
 #include "interval.h"
 #include "studio_config.h"
+#include "shading.h"
 #ifdef _OPENMP
 # include <omp.h>
 #endif
@@ -56,6 +57,20 @@ static void	pixel_to_rgb(unsigned char *dst, const t_vec3 *pixel)
 	dst[2] = (unsigned char)component_to_byte(b, &intensity);
 }
 
+/* Deterministic engine: one centred primary ray, bounded bounce depth. */
+static void	render_pixel_direct(const t_camera *cam,
+				const t_hittable_list *world, int x, int y, t_vec3 *out)
+{
+	t_ray	cr;
+	int		d;
+
+	d = cam->max_depth;
+	if (d > RT_FAST_MAX_DEPTH)
+		d = RT_FAST_MAX_DEPTH;
+	cr = get_ray_center(cam, x, y);
+	*out = ray_color_direct(&cr, world, d, &cam->background);
+}
+
 static void	render_pixel(const t_camera *cam, const t_hittable_list *world,
 				int x, int y, t_vec3 *out)
 {
@@ -65,6 +80,11 @@ static void	render_pixel(const t_camera *cam, const t_hittable_list *world,
 	int		sj;
 	int		si;
 
+	if (render_get_engine_mode() == ENGINE_DIRECT)
+	{
+		render_pixel_direct(cam, world, x, y, out);
+		return ;
+	}
 	pc = vec3_zero();
 	sj = 0;
 	while (sj < cam->sqrt_spp)
