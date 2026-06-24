@@ -1,6 +1,8 @@
 # ─── Build outputs ───────────────────────────────────────────────────────── #
 build/
-miniRT
+/miniRT
+/rt
+/renders/
 
 # ─── FDF build artifacts ────────────────────────────────────────────────── #
 fdf/object/
