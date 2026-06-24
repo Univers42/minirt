@@ -58,3 +58,32 @@ t_texture	*noise_texture_create_tinted(real_t scale, t_color tint, int mode)
 	tex->destroy = noise_texture_destroy;
 	return (tex);
 }
+
+t_texture	*noise_texture_create_turb(real_t scale, int turb_depth)
+{
+	t_texture		*tex;
+	t_noise_texture	*nt;
+
+	tex = (t_texture *)malloc(sizeof(t_texture));
+	if (!tex)
+		return (NULL);
+	nt = (t_noise_texture *)malloc(sizeof(t_noise_texture));
+	if (!nt)
+		return (free(tex), NULL);
+	perlin_init(&nt->perlin);
+	if (scale > (real_t)0.0)
+		nt->scale = scale;
+	else
+		nt->scale = (real_t)1.0;
+	nt->use_turb = true;
+	if (turb_depth > 0)
+		nt->turb_depth = turb_depth;
+	else
+		nt->turb_depth = 7;
+	nt->mode = 0;
+	nt->tint = vec3_create(1.0, 1.0, 1.0);
+	tex->data = nt;
+	tex->value = noise_texture_value;
+	tex->destroy = noise_texture_destroy;
+	return (tex);
+}

@@ -21,13 +21,18 @@
 # include <math.h>
 # include <stdbool.h>
 
-typedef struct s_texture
+typedef struct s_texture		t_texture;
+
+typedef t_color					(*t_tex_value)(const t_texture *tex, real_t u,
+		real_t v, const t_point3 *p);
+typedef void					(*t_tex_destroy)(t_texture *tex);
+
+struct s_texture
 {
-	void	*data;
-	t_color	(*value)(const struct s_texture *tex, real_t u, real_t v,
-			const t_point3 *p);
-	void	(*destroy)(struct s_texture *tex);
-}	t_texture;
+	void			*data;
+	t_tex_value		value;
+	t_tex_destroy	destroy;
+};
 
 typedef struct s_solid_color
 {
@@ -65,5 +70,7 @@ t_color		image_texture_value(const t_texture *tex, real_t u, real_t v,
 				const t_point3 *p);
 void		image_texture_destroy(t_texture *tex);
 t_texture	*image_texture_create_png(const char *filename);
+t_color		img_bilinear_interp(t_color cl[4], real_t fx, real_t fy);
+t_color		img_px_linear(const t_image_texture *it, int cx, int cy);
 
 #endif

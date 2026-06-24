@@ -32,15 +32,15 @@ int	aabb_longest_axis(const t_aabb *box)
 	return (2);
 }
 
-static void	aabb_hit_slab(real_t slab_min, real_t slab_max, real_t orig,
+static void	aabb_hit_slab(const t_interval *slab, real_t orig,
 		real_t inv_dir, t_interval *ray_t)
 {
 	real_t	t0;
 	real_t	t1;
 	real_t	tmp;
 
-	t0 = (slab_min - orig) * inv_dir;
-	t1 = (slab_max - orig) * inv_dir;
+	t0 = (slab->min - orig) * inv_dir;
+	t1 = (slab->max - orig) * inv_dir;
 	if (t0 > t1)
 	{
 		tmp = t0;
@@ -57,16 +57,13 @@ bool	aabb_hit(const t_aabb *box, const t_ray *r, t_interval *ray_t)
 {
 	if (!box || !r || !ray_t)
 		return (false);
-	aabb_hit_slab(box->x.min, box->x.max, r->orig.x,
-		(real_t)1.0 / r->dir.x, ray_t);
+	aabb_hit_slab(&box->x, r->orig.x, (real_t)1.0 / r->dir.x, ray_t);
 	if (ray_t->max <= ray_t->min)
 		return (false);
-	aabb_hit_slab(box->y.min, box->y.max, r->orig.y,
-		(real_t)1.0 / r->dir.y, ray_t);
+	aabb_hit_slab(&box->y, r->orig.y, (real_t)1.0 / r->dir.y, ray_t);
 	if (ray_t->max <= ray_t->min)
 		return (false);
-	aabb_hit_slab(box->z.min, box->z.max, r->orig.z,
-		(real_t)1.0 / r->dir.z, ray_t);
+	aabb_hit_slab(&box->z, r->orig.z, (real_t)1.0 / r->dir.z, ray_t);
 	if (ray_t->max <= ray_t->min)
 		return (false);
 	return (true);

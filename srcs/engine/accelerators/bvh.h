@@ -36,15 +36,23 @@ typedef struct s_bvh_node
 /* Comparator function type for qsort */
 typedef int					(*t_comparator_fn)(const void *a, const void *b);
 
-int			bvh_box_compare(const void *a, const void *b, int axis_index);
-int			bvh_box_x_compare(const void *a, const void *b);
-int			bvh_box_y_compare(const void *a, const void *b);
-int			bvh_box_z_compare(const void *a, const void *b);
-void		set_current_bvh(const void *obj);
-bool		bvh_node_hit(const t_ray *r, t_interval rayt, t_hit_record *rec);
-t_bvh_node	*bvh_node_build(t_hittable_wrapper *objects, size_t start,
-				size_t end);
-t_bvh_node	*bvh_node_create(t_hittable_list *world);
-void		bvh_node_destroy(t_bvh_node *node);
+int				bvh_box_compare(const void *a, const void *b, int axis_index);
+int				bvh_box_x_compare(const void *a, const void *b);
+int				bvh_box_y_compare(const void *a, const void *b);
+int				bvh_box_z_compare(const void *a, const void *b);
+t_comparator_fn	bvh_axis_comparator(int axis);
+void			set_current_bvh(const void *obj);
+bool			bvh_node_hit(const t_ray *r, t_interval rayt,
+					t_hit_record *rec);
+t_bvh_node		*bvh_node_build(t_hittable_wrapper *objects, size_t start,
+					size_t end);
+t_bvh_node		*bvh_node_create(t_hittable_list *world);
+void			bvh_node_destroy(t_bvh_node *node);
+t_aabb			bvh_span_bbox(t_hittable_wrapper *objects, size_t start,
+					size_t end);
+void			bvh_build_leaf(t_bvh_node *node, t_hittable_wrapper *objects,
+					size_t start);
+void			bvh_build_pair(t_bvh_node *node, t_hittable_wrapper *objects,
+					size_t start, t_comparator_fn comparator);
 
 #endif

@@ -14,55 +14,25 @@
 #include <math.h>
 #include <stdio.h>
 
-static t_color	img_bilinear_interp(t_color cl[4], real_t fx, real_t fy)
-{
-	t_color	dx0;
-	t_color	dx1;
-	t_color	c0;
-	t_color	c1;
-	t_color	dy;
-
-	dx0 = vec3_sub(&cl[1], &cl[0]);
-	dx1 = vec3_sub(&cl[3], &cl[2]);
-	dx0 = vec3_mul_scalar(&dx0, fx);
-	dx1 = vec3_mul_scalar(&dx1, fx);
-	c0 = vec3_add(&cl[0], &dx0);
-	c1 = vec3_add(&cl[2], &dx1);
-	dy = vec3_sub(&c1, &c0);
-	dy = vec3_mul_scalar(&dy, fy);
-	return (vec3_add(&c0, &dy));
-}
-
 static t_color	img_bilinear_sample(const t_image_texture *it,
 				real_t u, real_t v)
 {
-	real_t				x;
-	real_t				y;
-	int					c[4];
-	real_t				f[2];
-	const unsigned char	*px[4];
-	t_color				cl[4];
+	int		c[4];
+	real_t	f[2];
+	t_color	cl[4];
 
-	x = u * (real_t)it->image.w;
-	y = v * (real_t)it->image.h;
-	c[0] = (int)floor(x) % (int)it->image.w;
-	c[1] = (int)floor(y) % (int)it->image.h;
+	f[0] = u * (real_t)it->image.w;
+	f[1] = v * (real_t)it->image.h;
+	c[0] = (int)floor(f[0]) % (int)it->image.w;
+	c[1] = (int)floor(f[1]) % (int)it->image.h;
 	c[2] = (c[0] + 1) % (int)it->image.w;
 	c[3] = (c[1] + 1) % (int)it->image.h;
-	f[0] = x - floor(x);
-	f[1] = y - floor(y);
-	px[0] = lode_image_pixel_rgb(&it->image, c[0], c[1]);
-	px[1] = lode_image_pixel_rgb(&it->image, c[2], c[1]);
-	px[2] = lode_image_pixel_rgb(&it->image, c[0], c[3]);
-	px[3] = lode_image_pixel_rgb(&it->image, c[2], c[3]);
-	cl[0] = vec3_create(srgb_to_linear(px[0][0]),
-			srgb_to_linear(px[0][1]), srgb_to_linear(px[0][2]));
-	cl[1] = vec3_create(srgb_to_linear(px[1][0]),
-			srgb_to_linear(px[1][1]), srgb_to_linear(px[1][2]));
-	cl[2] = vec3_create(srgb_to_linear(px[2][0]),
-			srgb_to_linear(px[2][1]), srgb_to_linear(px[2][2]));
-	cl[3] = vec3_create(srgb_to_linear(px[3][0]),
-			srgb_to_linear(px[3][1]), srgb_to_linear(px[3][2]));
+	cl[0] = img_px_linear(it, c[0], c[1]);
+	cl[1] = img_px_linear(it, c[2], c[1]);
+	cl[2] = img_px_linear(it, c[0], c[3]);
+	cl[3] = img_px_linear(it, c[2], c[3]);
+	f[0] = f[0] - floor(f[0]);
+	f[1] = f[1] - floor(f[1]);
 	return (img_bilinear_interp(cl, f[0], f[1]));
 }
 
