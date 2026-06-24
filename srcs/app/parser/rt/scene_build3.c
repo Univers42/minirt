@@ -124,13 +124,14 @@ t_material	*create_material(const t_mat_spec *ms, t_color clr);
 bool	build_mesh_obj(t_hittable_list *world, const t_rt_object *obj)
 {
 	t_material	*mat;
+	t_obj_xform	xf;
 
 	mat = create_material(&obj->mat, obj->data.mesh.color);
 	if (!mat)
 		return (false);
-	return (obj_parse_to_list(obj->data.mesh.path, world, mat,
-			(float)obj->data.mesh.scale,
-			(float)obj->data.mesh.position.x,
-			(float)obj->data.mesh.position.y,
-			(float)obj->data.mesh.position.z));
+	xf.target_size = (float)obj->data.mesh.scale;
+	xf.px = (float)obj->data.mesh.position.x;
+	xf.py = (float)obj->data.mesh.position.y;
+	xf.pz = (float)obj->data.mesh.position.z;
+	return (obj_parse_to_list(obj->data.mesh.path, world, mat, &xf));
 }
