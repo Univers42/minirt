@@ -22,15 +22,14 @@ uint64_t	random_seed(uint64_t seed)
 uint64_t	random_u64(void)
 {
 	static __thread uint64_t	state = 0;
+	uint64_t					t;
+	uint64_t					addr;
+	uint64_t					tid;
 
 	if (state == 0)
 	{
-		uint64_t	t;
-		uint64_t	addr;
-		uint64_t	tid;
-
 		t = (uint64_t)time(NULL);
-		addr = (uint64_t)(uintptr_t)&state;
+		addr = (uint64_t)(uintptr_t)(&state);
 		tid = 0;
 #ifdef _OPENMP
 		tid = (uint64_t)omp_get_thread_num();

@@ -67,7 +67,7 @@ t_vec3	random_in_unit_sphere(void)
 
 	while (1)
 	{
-		p = vec3_random_interval((real_t)-1.0, (real_t)1.0);
+		p = vec3_random_interval((real_t)(-1.0), (real_t)1.0);
 		if (vec3_length_squared(&p) < (real_t)1.0)
 			return (p);
 	}

@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #ifndef INTERVAL_H
-#define INTERVAL_H
+# define INTERVAL_H
 
-#include "types.h"
-#include <stdbool.h>
-#include <math.h>
+# include "types.h"
+# include <stdbool.h>
+# include <math.h>
 
 /* Interval type */
 typedef struct s_interval

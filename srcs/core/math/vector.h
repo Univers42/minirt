@@ -1,29 +1,29 @@
-/* ============================================================================ */
-/*                                                                              */
-/*                                 FILE HEADER                                  */
-/* ---------------------------------------------------------------------------- */
-/*  File:       vector.h                                                        */
-/*  Author:     dlesieur                                                        */
-/*  Email:      dlesieur@student.42.fr                                          */
-/*  Created:    2026/01/04 22:17:01                                             */
-/*  Updated:    2026/03/07 19:00:00                                             */
-/*                                                                              */
-/* ============================================================================ */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/04 22:17:01 by dlesieur          #+#    #+#             */
+/*   Updated: 2026/03/07 19:00:00 by dlesieur         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef VECTOR_H
-#define VECTOR_H
+# define VECTOR_H
 
-#include "types.h"
-#include "settings.h"
-#include <math.h>
-#include <stdbool.h>
+# include "types.h"
+# include "settings.h"
+# include <math.h>
+# include <stdbool.h>
 
 /* 3D vector type */
 typedef struct s_vec3
 {
-	real_t x;
-	real_t y;
-	real_t z;
+	real_t	x;
+	real_t	y;
+	real_t	z;
 }	t_vec3;
 
 /* vector.c */

@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #ifndef POINT_H
-#define POINT_H
+# define POINT_H
 
-#include "types.h"
-#include "vector.h"
+# include "types.h"
+# include "vector.h"
 
 t_point3	point3_create(real_t x, real_t y, real_t z);
 

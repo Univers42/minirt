@@ -11,42 +11,42 @@
 /* ************************************************************************** */
 
 #ifndef COMMON_H
-#define COMMON_H
+# define COMMON_H
 
-#include "settings.h"
-#include "types.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <math.h>
-#include <stdint.h>
-#include "random.h"
-#include "sphere.h"
+# include "settings.h"
+# include "types.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
+# include <math.h>
+# include <stdint.h>
+# include "random.h"
+# include "sphere.h"
 
 /* Include interval early so objects/hittable_list can use t_interval */
-#include "interval.h"
+# include "interval.h"
 
 /* low-level math types and helpers */
-#include "vector.h"
-#include "point.h"
-#include "ray.h"
-#include "hittable.h"
-#include "hittable_list.h"
-#include "quad.h"
+# include "vector.h"
+# include "point.h"
+# include "ray.h"
+# include "hittable.h"
+# include "hittable_list.h"
+# include "quad.h"
 
 /* Texture FIRST (defines t_texture before material.h needs it) */
-#include "texture.h"
+# include "texture.h"
 
 /* Then perlin-related items */
-#include "perlin.h"
-#include "noise_texture.h"
+# include "perlin.h"
+# include "noise_texture.h"
 
 /* Materials after textures are fully defined */
-#include "material.h"
+# include "material.h"
 
 /* color and camera after all dependencies */
-#include "color.h"
-#include "camera.h"
+# include "color.h"
+# include "camera.h"
 
 #endif
