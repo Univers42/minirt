@@ -82,6 +82,7 @@ typedef enum e_obj_type
 	OBJ_DISK,
 	OBJ_PARABOLOID,
 	OBJ_HYPERBOLOID,
+	OBJ_TORUS,
 	OBJ_NONE
 }	t_obj_type;
 
@@ -179,6 +180,15 @@ typedef struct s_rt_hyperboloid
 	t_color		color;
 }	t_rt_hyperboloid;
 
+typedef struct s_rt_torus
+{
+	t_point3	center;
+	t_vec3		axis;
+	double		major;
+	double		minor;
+	t_color		color;
+}	t_rt_torus;
+
 typedef struct s_mat_spec
 {
 	t_mat_type	type;
@@ -202,6 +212,7 @@ typedef union u_obj_data
 	t_rt_disk		disk;
 	t_rt_paraboloid	paraboloid;
 	t_rt_hyperboloid	hyperboloid;
+	t_rt_torus		torus;
 }	t_obj_data;
 
 typedef struct s_rt_object

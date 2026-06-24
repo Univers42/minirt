@@ -34,6 +34,7 @@ bool	parse_triangle(t_scene *sc, t_lexer *lex, t_file_buf *fb);
 bool	parse_disk(t_scene *sc, t_lexer *lex, t_file_buf *fb);
 bool	parse_paraboloid(t_scene *sc, t_lexer *lex, t_file_buf *fb);
 bool	parse_hyperboloid(t_scene *sc, t_lexer *lex, t_file_buf *fb);
+bool	parse_torus(t_scene *sc, t_lexer *lex, t_file_buf *fb);
 
 /* ------------------------------------------------------------------ */
 /*  GNL (gnl.c)                                                       */
@@ -65,6 +66,7 @@ static const t_dispatch	g_dispatch[] = {
 	{"di", parse_disk},
 	{"pb", parse_paraboloid},
 	{"hy", parse_hyperboloid},
+	{"to", parse_torus},
 	{NULL, NULL}
 };
 

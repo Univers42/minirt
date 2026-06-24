@@ -19,6 +19,7 @@
 #include "disk.h"
 #include "paraboloid.h"
 #include "hyperboloid.h"
+#include "torus.h"
 #include "triangle.h"
 #include "material.h"
 #include "camera.h"
@@ -177,6 +178,24 @@ static bool	build_hyperboloid(t_hittable_list *world, const t_rt_object *obj)
 	return (hittable_list_add_hyperboloid(world, &hy));
 }
 
+/* ------------------------------------------------------------------ */
+/*  Build an equation-based torus (donut, quartic) from parsed data    */
+/*  torus_create(center, axis, major_radius, minor_radius, mat) (BONUS)*/
+/* ------------------------------------------------------------------ */
+
+static bool	build_torus(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material	*mat;
+	t_torus		to;
+
+	mat = create_material(&obj->mat, obj->data.torus.color);
+	if (!mat)
+		return (false);
+	to = torus_create(&obj->data.torus.center, &obj->data.torus.axis,
+			obj->data.torus.major, obj->data.torus.minor, mat);
+	return (hittable_list_add_torus(world, &to));
+}
+
 static bool	build_object(t_hittable_list *world, const t_rt_object *obj);
 
 /* ------------------------------------------------------------------ */
@@ -223,6 +242,8 @@ static bool	build_object(t_hittable_list *world, const t_rt_object *obj)
 		return (build_paraboloid(world, obj));
 	if (obj->type == OBJ_HYPERBOLOID)
 		return (build_hyperboloid(world, obj));
+	if (obj->type == OBJ_TORUS)
+		return (build_torus(world, obj));
 	return (true);
 }
 
