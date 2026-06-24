@@ -15,6 +15,8 @@
 #include <string.h>
 #include "libft.h"
 
+void	rt_parse_texture_kw(const char *line, t_mat_spec *mat);
+
 /*
 ** Optional trailing material keyword on an object line, e.g.
 **   sp 0,3,0 5 255,255,255 glass
@@ -22,11 +24,14 @@
 ** leaves the zero-initialised default (lambertian).  Per-type numeric
 ** defaults (ior, roughness) are filled in by create_material().
 ** Keywords are matched against the lexer's 7-char identifier buffer.
+** The raw line is then scanned for tex:/bump:/bumpstr: image tokens, which
+** the limited alpha-only lexer cannot represent (paths carry '/', '.', ':').
 */
 void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat)
 {
 	const char	*kw;
 
+	rt_parse_texture_kw(lex->line, mat);
 	if (idx >= lex->count || lex->tokens[idx].type != TOK_IDENTIFIER)
 		return ;
 	kw = lex->tokens[idx].val.id;

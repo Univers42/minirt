@@ -74,6 +74,7 @@ static t_material	*create_mat_checker(const t_mat_spec *ms, t_color clr)
 }
 
 t_material	*create_mat_noise(const t_mat_spec *ms, t_color clr);
+void		attach_bump_map(const t_mat_spec *ms, t_material *m);
 
 t_material	*create_material(const t_mat_spec *ms, t_color clr)
 {
@@ -97,6 +98,9 @@ t_material	*create_material(const t_mat_spec *ms, t_color clr)
 		m = create_mat_special(ms, clr);
 	else if (!m)
 		m = lambertian_create(clr);
+	if (ms->bump_path[0] && !m)
+		m = lambertian_create(clr);
+	attach_bump_map(ms, m);
 	mat_registry_add(m);
 	return (m);
 }

@@ -15,6 +15,7 @@
 #include "camera_lights.h"
 #include "studio_config.h"
 #include "random.h"
+#include "environment.h"
 
 /*
 ** sky_peak — overall sky energy = brightest background component.
@@ -142,6 +143,8 @@ t_vec3	ray_color_with_background(const t_ray *r,
 		return (vec3_zero());
 	if (!hittable_list_hit(world, r, interval((real_t)1e-4, INFINITY), &rec))
 	{
+		if (get_scene_environment())
+			return (bg_environment_color(r));
 		if (background->x < 0.01 && background->y < 0.01
 			&& background->z < 0.01)
 			return (vec3_zero());

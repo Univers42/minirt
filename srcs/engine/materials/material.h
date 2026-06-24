@@ -38,6 +38,8 @@ typedef struct s_material
 typedef struct s_lambertian
 {
 	t_texture	*tex;
+	t_texture	*bump;
+	real_t		bump_strength;
 }	t_lambertian;
 
 typedef struct s_metal
@@ -115,6 +117,9 @@ void		diffuse_light_destroy(t_material *mat);
 void		isotropic_destroy(t_material *mat);
 t_material	*lambertian_create_texture(t_texture *tex);
 t_material	*lambertian_create(t_color albedo);
+void		lambertian_attach_bump(t_material *mat, t_texture *bump,
+				real_t strength);
+void		bump_perturb_normal(const t_material *mat, t_hit_record *rec);
 t_material	*metal_create_fuzz(t_color albedo, real_t fuzz);
 t_material	*metal_create(t_color albedo);
 t_material	*dielectric_create(real_t refraction_index);

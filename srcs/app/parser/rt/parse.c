@@ -13,6 +13,7 @@
 #include "rt_parser.h"
 #include "rt_lexer.h"
 #include "rt_error.h"
+#include "environment.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -139,11 +140,38 @@ void	scene_cleanup(t_scene *scene)
 {
 	hittable_list_clear(&scene->world);
 	mat_registry_free_all();
+	free_scene_environment();
 }
 
 /* ------------------------------------------------------------------ */
 /*  Main parse loop: open → GNL → lex → dispatch → validate required */
 /* ------------------------------------------------------------------ */
+
+/* ENV <path> — capture an equirectangular environment image. The path
+   may contain '/', '.', etc., which the numeric lexer rejects, so this
+   directive is intercepted as a raw line before tokenization. */
+static bool	parse_env_line(t_scene *sc, const char *line)
+{
+	size_t	i;
+	size_t	len;
+
+	if (ft_strlen(line) < 4 || line[0] != 'E' || line[1] != 'N'
+		|| line[2] != 'V' || (line[3] != ' ' && line[3] != '\t'))
+		return (false);
+	i = 3;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	len = ft_strlen(line + i);
+	while (len > 0 && (line[i + len - 1] == '\n' || line[i + len - 1] == ' '
+			|| line[i + len - 1] == '\t' || line[i + len - 1] == '\r'))
+		len--;
+	if (len == 0 || len >= sizeof(sc->environment))
+		return (false);
+	memcpy(sc->environment, line + i, len);
+	sc->environment[len] = '\0';
+	sc->has_environment = true;
+	return (true);
+}
 
 static bool	read_and_parse(int fd, t_scene *sc, t_file_buf *fb)
 {
@@ -160,6 +188,12 @@ static bool	read_and_parse(int fd, t_scene *sc, t_file_buf *fb)
 	{
 		line_num++;
 		file_buf_add_line(fb, line);
+		if (parse_env_line(sc, line))
+		{
+			free(line);
+			line = rt_get_next_line(fd);
+			continue ;
+		}
 		tok_ret = tokenize_line(&lex, line, line_num);
 		if (tok_ret < 0)
 		{

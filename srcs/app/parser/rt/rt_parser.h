@@ -200,6 +200,8 @@ typedef struct s_mat_spec
 	double		roughness;
 	t_color		color2;
 	char		texture_path[256];
+	char		bump_path[256];
+	double		bump_strength;
 }	t_mat_spec;
 
 typedef union u_obj_data
@@ -257,6 +259,8 @@ typedef struct s_scene
 	int				object_count;
 	bool			has_ambient;
 	bool			has_camera;
+	bool			has_environment;
+	char			environment[256];
 	t_hittable_list	world;
 	t_render_opts	render;
 }	t_scene;

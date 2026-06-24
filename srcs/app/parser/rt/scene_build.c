@@ -24,6 +24,7 @@
 #include "material.h"
 #include "camera.h"
 #include "camera_lights.h"
+#include "environment.h"
 #include "bvh.h"
 #include "settings.h"
 #include <stdlib.h>
@@ -324,5 +325,7 @@ bool	add_scene_lights(t_hittable_list *world, const t_scene *sc)
 		i++;
 	}
 	populate_light_cache(sc);
+	if (sc->has_environment)
+		load_scene_environment(sc->environment);
 	return (true);
 }

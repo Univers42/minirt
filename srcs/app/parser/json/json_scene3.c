@@ -55,6 +55,18 @@ static t_mat_type	mat_type_from_str(const char *s)
 /*    }                                                                */
 /* ------------------------------------------------------------------ */
 
+static void	parse_mat_bump(const t_json_node *m, t_mat_spec *ms)
+{
+	const char	*bump;
+
+	bump = json_str(json_get(m, "bump"), "");
+	if (!bump[0])
+		return ;
+	strncpy(ms->bump_path, bump, sizeof(ms->bump_path) - 1);
+	ms->bump_path[sizeof(ms->bump_path) - 1] = '\0';
+	ms->bump_strength = json_num(json_get(m, "bump_strength"), 1.0);
+}
+
 static void	parse_mat_obj(const t_json_node *m, t_mat_spec *ms)
 {
 	const char	*tex;
@@ -71,6 +83,7 @@ static void	parse_mat_obj(const t_json_node *m, t_mat_spec *ms)
 		strncpy(ms->texture_path, tex, sizeof(ms->texture_path) - 1);
 		ms->texture_path[sizeof(ms->texture_path) - 1] = '\0';
 	}
+	parse_mat_bump(m, ms);
 }
 
 void	parse_mat_spec(const t_json_node *o, t_rt_object *out)

@@ -12,7 +12,24 @@
 
 #include "rt_parser.h"
 #include "material.h"
+#include "texture.h"
 #include "noise_texture.h"
+
+/*
+** Load the bump image named in the spec and attach it to a lambertian
+** material (no-op on other kinds).  Called by create_material so any
+** textured/plain lambertian can gain surface relief from a height image.
+*/
+void	attach_bump_map(const t_mat_spec *ms, t_material *m)
+{
+	t_texture	*bump;
+
+	if (!m || !ms->bump_path[0])
+		return ;
+	bump = image_texture_create_png(ms->bump_path);
+	if (bump)
+		lambertian_attach_bump(m, bump, (real_t)ms->bump_strength);
+}
 
 /*
 ** Procedural lambertian from Perlin noise.  MAT_MARBLE -> tinted marble
