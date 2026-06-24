@@ -28,6 +28,11 @@ typedef struct s_light_info
 	real_t		radius;
 }	t_light_info;
 
+/* Read-only light cache (populated once before render; shared with the
+   deterministic shading engine). */
+extern t_light_info	g_lights[RT_MAX_LIGHTS];
+extern int			g_light_count;
+
 void	set_scene_lights(const t_light_info *infos, int count);
 t_color	sample_direct_lights(const t_hit_record *rec,
 			const t_hittable_list *world);

@@ -107,6 +107,27 @@
 #  define RT_NUM_THREADS		0
 # endif
 
+/* ---- Deterministic (direct) engine ------------------------------- */
+
+/* Recursion cap for the default direct engine.  Bounds mirror/glass     */
+/* bounce depth (glass traces 2 rays per hit, so keep this modest).      */
+/* Range: 1 - 32.                                                        */
+# ifndef RT_FAST_MAX_DEPTH
+#  define RT_FAST_MAX_DEPTH		8
+# endif
+
+/* Blinn-Phong specular strength ("shine effect").  0 = matte.           */
+/* Range: 0.0 - 1.0.                                                     */
+# ifndef RT_SPECULAR_KS
+#  define RT_SPECULAR_KS		0.35
+# endif
+
+/* Specular exponent — higher = tighter, glossier highlight.             */
+/* Range: 1 - 1024.                                                      */
+# ifndef RT_SHININESS
+#  define RT_SHININESS			64.0
+# endif
+
 /* ================================================================== */
 /*  §2  CAMERA DEFAULTS                                               */
 /* ================================================================== */

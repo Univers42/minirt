@@ -19,8 +19,8 @@
 
 /* Light cache — read-only during rendering, safe for concurrent access
    from OpenMP threads.  Populated once before render begins. */
-static t_light_info	g_lights[RT_MAX_LIGHTS];
-static int			g_light_count = 0;
+t_light_info	g_lights[RT_MAX_LIGHTS];
+int				g_light_count = 0;
 
 /* ------------------------------------------------------------------ */
 /*  set_scene_lights — call once per thread before rendering           */
