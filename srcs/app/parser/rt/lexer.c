@@ -47,6 +47,8 @@ static int	g_schema_cy[] = {'V', 'V', 'F', 'F', 'C', 'M', 0};
 static int	g_schema_co[] = {'V', 'V', 'F', 'F', 'C', 'M', 0};
 /* tr – Triangle: v0:V  v1:V  v2:V  color:C  [material] */
 static int	g_schema_tr[] = {'V', 'V', 'V', 'C', 'M', 0};
+/* di – Disk: center:V  normal:V  diameter:F  color:C  [material] */
+static int	g_schema_di[] = {'V', 'V', 'F', 'C', 'M', 0};
 
 static int	*get_schema(const char *id)
 {
@@ -66,6 +68,8 @@ static int	*get_schema(const char *id)
 		return (g_schema_co);
 	if (strcmp(id, "tr") == 0)
 		return (g_schema_tr);
+	if (strcmp(id, "di") == 0)
+		return (g_schema_di);
 	return (NULL);
 }
 

@@ -16,6 +16,7 @@
 #include "cylinder.h"
 #include "quad.h"
 #include "plane.h"
+#include "disk.h"
 #include "triangle.h"
 #include "material.h"
 #include "camera.h"
@@ -63,6 +64,24 @@ static bool	build_plane(t_hittable_list *world, const t_rt_object *obj)
 	p = plane_create(&obj->data.plane.point,
 			&obj->data.plane.normal, mat);
 	return (hittable_list_add_plane(world, &p));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Build a finite flat disk (equation-based) from parsed data.        */
+/*  radius = diameter / 2; owned by the world (scene_cleanup frees it). */
+/* ------------------------------------------------------------------ */
+
+static bool	build_disk(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material	*mat;
+	t_disk		d;
+
+	mat = create_material(&obj->mat, obj->data.disk.color);
+	if (!mat)
+		return (false);
+	d = disk_create(&obj->data.disk.center, &obj->data.disk.normal,
+			obj->data.disk.diameter / 2.0, mat);
+	return (hittable_list_add_disk(world, &d));
 }
 
 /* ------------------------------------------------------------------ */
@@ -158,6 +177,8 @@ static bool	build_object(t_hittable_list *world, const t_rt_object *obj)
 		return (build_mesh_obj(world, obj));
 	if (obj->type == OBJ_TRIANGLE)
 		return (build_triangle_obj(world, obj));
+	if (obj->type == OBJ_DISK)
+		return (build_disk(world, obj));
 	return (true);
 }
 

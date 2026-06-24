@@ -79,6 +79,7 @@ typedef enum e_obj_type
 	OBJ_QUAD,
 	OBJ_MESH,
 	OBJ_TRIANGLE,
+	OBJ_DISK,
 	OBJ_NONE
 }	t_obj_type;
 
@@ -150,6 +151,14 @@ typedef struct s_rt_triangle
 	t_color		color;
 }	t_rt_triangle;
 
+typedef struct s_rt_disk
+{
+	t_point3	center;
+	t_vec3		normal;
+	double		diameter;
+	t_color		color;
+}	t_rt_disk;
+
 typedef struct s_mat_spec
 {
 	t_mat_type	type;
@@ -170,6 +179,7 @@ typedef union u_obj_data
 	t_rt_quad		quad;
 	t_rt_mesh		mesh;
 	t_rt_triangle	triangle;
+	t_rt_disk		disk;
 }	t_obj_data;
 
 typedef struct s_rt_object
