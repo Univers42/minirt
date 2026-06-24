@@ -72,7 +72,11 @@ t_vec3	ray_color_direct(const t_ray *r, const t_hittable_list *world,
 	if (depth <= 0)
 		return (vec3_zero());
 	if (!hittable_list_hit(world, r, interval((real_t)1e-4, INFINITY), &rec))
-		return (*ambient);
+	{
+		if (ambient->x < 0.01 && ambient->y < 0.01 && ambient->z < 0.01)
+			return (*ambient);
+		return (bg_sky_color(r, ambient));
+	}
 	c.r = r;
 	c.rec = &rec;
 	c.world = world;

@@ -382,6 +382,53 @@
 #  define RT_LIGHT_FALLOFF		0
 # endif
 
+/* ---- Sky environment (miss-ray gradient, shared by both engines) - */
+/*                                                                    */
+/* On a miss the ray returns a sky-dome colour: a smooth gradient     */
+/* from a deeper blue zenith (looking up) to a brighter, slightly     */
+/* warm horizon (looking forward).  This is also what reflective and  */
+/* refractive rays see, so it improves metal/glass realism.           */
+/*                                                                    */
+/* The gradient is SCALED by the scene's background (ambient) peak so  */
+/* it never blows out dark scenes — a near-black background yields a   */
+/* near-black sky.  The tints below only set the *hue* of each band.  */
+/* RGB tints, range 0.0 – 1.0.                                        */
+
+/* Zenith (straight up) tint — cool, deep sky blue.                   */
+# ifndef RT_SKY_ZENITH_R
+#  define RT_SKY_ZENITH_R		0.35
+# endif
+# ifndef RT_SKY_ZENITH_G
+#  define RT_SKY_ZENITH_G		0.55
+# endif
+# ifndef RT_SKY_ZENITH_B
+#  define RT_SKY_ZENITH_B		1.0
+# endif
+
+/* Horizon (level) tint — brighter, slightly warm haze.               */
+# ifndef RT_SKY_HORIZON_R
+#  define RT_SKY_HORIZON_R		1.0
+# endif
+# ifndef RT_SKY_HORIZON_G
+#  define RT_SKY_HORIZON_G		0.92
+# endif
+# ifndef RT_SKY_HORIZON_B
+#  define RT_SKY_HORIZON_B		0.80
+# endif
+
+/* Horizon brightness boost over the background peak.  The horizon     */
+/* band is the brightest part of the sky; 1.0 = same as the ambient    */
+/* peak, 2.0 = twice as bright.  Range: 0.5 – 4.0.                     */
+# ifndef RT_SKY_HORIZON_GAIN
+#  define RT_SKY_HORIZON_GAIN	1.6
+# endif
+
+/* Zenith brightness relative to the horizon (the sky darkens toward   */
+/* the top).  Range: 0.2 – 1.0.                                        */
+# ifndef RT_SKY_ZENITH_GAIN
+#  define RT_SKY_ZENITH_GAIN	0.75
+# endif
+
 /* ================================================================== */
 /*  §5  GEOMETRY                                                      */
 /* ================================================================== */
