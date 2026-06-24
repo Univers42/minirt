@@ -16,6 +16,10 @@
 #include "cylinder.h"
 #include "quad.h"
 #include "plane.h"
+#include "disk.h"
+#include "paraboloid.h"
+#include "hyperboloid.h"
+#include "torus.h"
 #include "triangle.h"
 #include "material.h"
 #include "camera.h"
@@ -63,6 +67,24 @@ static bool	build_plane(t_hittable_list *world, const t_rt_object *obj)
 	p = plane_create(&obj->data.plane.point,
 			&obj->data.plane.normal, mat);
 	return (hittable_list_add_plane(world, &p));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Build a finite flat disk (equation-based) from parsed data.        */
+/*  radius = diameter / 2; owned by the world (scene_cleanup frees it). */
+/* ------------------------------------------------------------------ */
+
+static bool	build_disk(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material	*mat;
+	t_disk		d;
+
+	mat = create_material(&obj->mat, obj->data.disk.color);
+	if (!mat)
+		return (false);
+	d = disk_create(&obj->data.disk.center, &obj->data.disk.normal,
+			obj->data.disk.diameter / 2.0, mat);
+	return (hittable_list_add_disk(world, &d));
 }
 
 /* ------------------------------------------------------------------ */
@@ -118,6 +140,62 @@ static bool	build_cone(t_hittable_list *world, const t_rt_object *obj)
 	return (hittable_list_add_cone(world, &c));
 }
 
+/* ------------------------------------------------------------------ */
+/*  Build an equation-based paraboloid from parsed data (BONUS)        */
+/*  paraboloid_create(vertex, axis, diameter, height, mat)             */
+/* ------------------------------------------------------------------ */
+
+static bool	build_paraboloid(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material		*mat;
+	t_paraboloid	pb;
+
+	mat = create_material(&obj->mat, obj->data.paraboloid.color);
+	if (!mat)
+		return (false);
+	pb = paraboloid_create(&obj->data.paraboloid.vertex,
+			&obj->data.paraboloid.axis, obj->data.paraboloid.diameter,
+			obj->data.paraboloid.height, mat);
+	return (hittable_list_add_paraboloid(world, &pb));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Build a one-sheet hyperboloid (cooling-tower) from parsed data     */
+/*  hyperboloid_create(center, axis, diameter, height, mat)  (BONUS)   */
+/* ------------------------------------------------------------------ */
+
+static bool	build_hyperboloid(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material		*mat;
+	t_hyperboloid	hy;
+
+	mat = create_material(&obj->mat, obj->data.hyperboloid.color);
+	if (!mat)
+		return (false);
+	hy = hyperboloid_create(&obj->data.hyperboloid.center,
+			&obj->data.hyperboloid.axis, obj->data.hyperboloid.diameter,
+			obj->data.hyperboloid.height, mat);
+	return (hittable_list_add_hyperboloid(world, &hy));
+}
+
+/* ------------------------------------------------------------------ */
+/*  Build an equation-based torus (donut, quartic) from parsed data    */
+/*  torus_create(center, axis, major_radius, minor_radius, mat) (BONUS)*/
+/* ------------------------------------------------------------------ */
+
+static bool	build_torus(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material	*mat;
+	t_torus		to;
+
+	mat = create_material(&obj->mat, obj->data.torus.color);
+	if (!mat)
+		return (false);
+	to = torus_create(&obj->data.torus.center, &obj->data.torus.axis,
+			obj->data.torus.major, obj->data.torus.minor, mat);
+	return (hittable_list_add_torus(world, &to));
+}
+
 static bool	build_object(t_hittable_list *world, const t_rt_object *obj);
 
 /* ------------------------------------------------------------------ */
@@ -158,6 +236,14 @@ static bool	build_object(t_hittable_list *world, const t_rt_object *obj)
 		return (build_mesh_obj(world, obj));
 	if (obj->type == OBJ_TRIANGLE)
 		return (build_triangle_obj(world, obj));
+	if (obj->type == OBJ_DISK)
+		return (build_disk(world, obj));
+	if (obj->type == OBJ_PARABOLOID)
+		return (build_paraboloid(world, obj));
+	if (obj->type == OBJ_HYPERBOLOID)
+		return (build_hyperboloid(world, obj));
+	if (obj->type == OBJ_TORUS)
+		return (build_torus(world, obj));
 	return (true);
 }
 

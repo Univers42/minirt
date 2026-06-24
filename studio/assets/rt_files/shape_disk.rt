@@ -1,0 +1,23 @@
+# ========================================================================== #
+#  shape_disk.rt — disk primitive demo (token "di")                          #
+#  A coloured flat disk hovering above a matte ground plane, lit by two       #
+#  spots so the disk casts a clear shadow onto the plane.                     #
+#  di <center:V> <normal:V> <diameter:F> <color:C> [material]                 #
+# ========================================================================== #
+
+A 0.2 200,210,255
+
+C 0,6,-16 0,-0.30,1 55
+
+# Two spots from opposite sides -> clear shadow + specular shine
+L -10,14,-6 0.8 255,245,225
+L 9,11,-3 0.5 215,225,255
+
+# Matte ground plane (catches the disk's shadow)
+pl 0,0,0 0,1,0 190,190,195
+
+# Tilted coloured disk hovering over the plane
+di 0,4,4 0,0.25,-1 8 230,90,90
+
+# A second disk, facing the camera, for orientation contrast
+di -6,4,3 0.15,0.2,-1 6 90,160,240

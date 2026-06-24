@@ -1,0 +1,26 @@
+# ========================================================================== #
+#  shape_torus.rt — torus (donut) primitive demo (token "to")                 #
+#  An equation-based QUARTIC surface: a tube of minor radius swept around a    #
+#  circle of major radius.  The axis is tilted toward the camera so the        #
+#  central hole is clearly visible, sitting on a matte ground plane and lit    #
+#  by two spots so the smooth curvature and a specular highlight read well.    #
+#  to <center:V> <axis:V> <major_radius:F> <minor_radius:F> <color:C> [mat]    #
+# ========================================================================== #
+
+A 0.2 200,210,255
+
+C 0,3.5,-14 0,-0.18,1 55
+
+# Two spots from opposite sides -> smooth shading + a specular highlight
+L -10,15,-8 0.85 255,245,225
+L 9,12,-4 0.5 215,225,255
+
+# Matte ground plane (catches the donut's shadow)
+pl 0,0,0 0,1,0 190,190,195
+
+# Tilted donut: axis leans up and toward the camera so the hole shows.
+# major 2.6, minor 0.9 -> a clean ring with an open centre.
+to 0,2.6,2 0,0.55,-1 2.6 0.9 235,120,55
+
+# A smaller upright blue donut beside it for contrast
+to -5,1.4,4 0,1,0.25 1.7 0.55 90,160,240

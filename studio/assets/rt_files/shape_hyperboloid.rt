@@ -1,0 +1,25 @@
+# ========================================================================== #
+#  shape_hyperboloid.rt — hyperboloid of one sheet demo (token "hy")          #
+#  An equation-based cooling-tower shape: narrow waist at mid-height that      #
+#  flares outward toward the top and bottom rims.  It sits on a matte ground   #
+#  plane and is lit by two spots so the smooth curved waist and a specular     #
+#  highlight read clearly (a waist, not a cylinder or cone).                   #
+#  hy <center:V> <axis:V> <diameter:F> <height:F> <color:C> [material]         #
+# ========================================================================== #
+
+A 0.2 200,210,255
+
+C 0,4,-16 0,-0.08,1 60
+
+# Two spots from opposite sides -> smooth shading + a specular highlight
+L -10,16,-8 0.9 255,245,225
+L 9,13,-5 0.5 215,225,255
+
+# Matte ground plane (catches the tower's shadow)
+pl 0,0,0 0,1,0 190,190,195
+
+# Cooling tower: center 4 above ground, waist 4 wide, 8 tall, flares to rims
+hy 0,4,2 0,1,0 4 8 230,120,60
+
+# A smaller teal tower beside it for contrast
+hy -7,3,3 0,1,0 3 6 60,200,180
