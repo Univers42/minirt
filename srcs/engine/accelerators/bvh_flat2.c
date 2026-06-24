@@ -33,8 +33,10 @@ static bool	node_hit(const t_flat_node *n, const t_flat_ray *fr,
 			t0 = t1;
 			t1 = tmp;
 		}
-		tmin = (t0 > tmin) ? t0 : tmin;
-		tmax = (t1 < tmax) ? t1 : tmax;
+		if (t0 > tmin)
+			tmin = t0;
+		if (t1 < tmax)
+			tmax = t1;
 		if (tmax <= tmin)
 			return (false);
 		a++;

@@ -96,7 +96,7 @@ t_texture	*image_texture_create_png(const char *filename)
 {
 	t_texture		*tex;
 	t_image_texture	*it;
-	unsigned		err;
+	unsigned int	err;
 
 	tex = (t_texture *)malloc(sizeof(t_texture));
 	if (!tex)

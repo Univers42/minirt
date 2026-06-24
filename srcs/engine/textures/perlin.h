@@ -38,4 +38,3 @@ real_t	perlin_noise(const t_perlin *perlin, const t_vec3 *p);
 real_t	perlin_turb(const t_perlin *perlin, const t_vec3 *p, int depth);
 
 #endif
-

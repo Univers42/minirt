@@ -49,8 +49,8 @@ typedef struct s_trav
 
 extern __thread int	g_flat_sort_axis;
 
-int	build_prim_cmp(const void *a, const void *b);
-int	build_node(t_build_ctx *ctx, int start, int end);
+int		build_prim_cmp(const void *a, const void *b);
+int		build_node(t_build_ctx *ctx, int start, int end);
 void	fill_prim(t_build_prim *p, const t_hittable_wrapper *w);
 
 #endif
