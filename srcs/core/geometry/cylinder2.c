@@ -115,12 +115,13 @@ static bool	cyl_hit_sides(const t_cylinder *cyl, const t_ray *r,
 bool	cylinder_hit(const t_cylinder *cyl, const t_ray *r,
 		t_interval rayt, t_hit_record *rec)
 {
-	bool		hit_anything;
-	real_t		closest_t;
-	t_vec3		oc;
-	real_t		dots[2];
-	real_t		t;
+	bool			hit_anything;
+	real_t			closest_t;
+	t_vec3			oc;
+	real_t			dots[2];
+	real_t			t;
 	t_hit_record	cap_rec;
+	t_vec3			neg_ax;
 
 	if (!cyl || !r || !rec)
 		return (false);
@@ -133,20 +134,19 @@ bool	cylinder_hit(const t_cylinder *cyl, const t_ray *r,
 	{
 		t = -dots[1] / dots[0];
 		cap_rec.v = 0.0;
-		if (t >= rayt.min && t < closest_t && cyl_check_cap(cyl, r, t, &cap_rec))
+		if (t >= rayt.min && t < closest_t
+			&& cyl_check_cap(cyl, r, t, &cap_rec))
 		{
 			closest_t = t;
-			{
-				t_vec3 neg_ax;
-				neg_ax = vec3_neg(&cyl->axis);
-				set_face_normal(&cap_rec, r, &neg_ax);
-			}
+			neg_ax = vec3_neg(&cyl->axis);
+			set_face_normal(&cap_rec, r, &neg_ax);
 			*rec = cap_rec;
 			hit_anything = true;
 		}
 		t = (cyl->height - dots[1]) / dots[0];
 		cap_rec.v = 1.0;
-		if (t >= rayt.min && t < closest_t && cyl_check_cap(cyl, r, t, &cap_rec))
+		if (t >= rayt.min && t < closest_t
+			&& cyl_check_cap(cyl, r, t, &cap_rec))
 		{
 			closest_t = t;
 			set_face_normal(&cap_rec, r, &cyl->axis);

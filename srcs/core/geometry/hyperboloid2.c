@@ -60,7 +60,8 @@ void	set_current_hyperboloid(const void *obj)
 	g_current_hyperboloid = (const t_hyperboloid *)obj;
 }
 
-bool	hyperboloid_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
+bool	hyperboloid_hit_noobj(const t_ray *r, t_interval rayt,
+		t_hit_record *rec)
 {
 	if (!g_current_hyperboloid)
 		return (false);

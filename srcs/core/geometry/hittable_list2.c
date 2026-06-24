@@ -22,10 +22,10 @@ t_aabb	hittable_list_bounding_box(const t_hittable_list *list)
 bool	hittable_list_hit(const t_hittable_list *list, const t_ray *r,
 		t_interval rayt, t_hit_record *rec)
 {
-	bool					hit_anything;
-	real_t					closest_so_far;
-	t_hit_record			temp_rec;
-	size_t					i;
+	bool						hit_anything;
+	real_t						closest_so_far;
+	t_hit_record				temp_rec;
+	size_t						i;
 	const t_hittable_wrapper	*w;
 
 	if (list->fast_hit)

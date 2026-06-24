@@ -86,10 +86,14 @@ bool	cone_hit(const t_cone *cone, const t_ray *r,
 		{
 			real_t roots[2] = {(-abc[1] - (real_t)sqrt((double)disc)) / abc[0],
 				(-abc[1] + (real_t)sqrt((double)disc)) / abc[0]};
-			for (int i = 0; i < 2; ++i)
+			int i = 0;
+			while (i < 2)
 			{
 				if (roots[i] < rayt.min || roots[i] >= closest_t)
+				{
+					++i;
 					continue;
+				}
 				t_vec3 hp = ray_at((t_ray *)r, roots[i]);
 				t_vec3 th = vec3_sub(&hp, &cone->apex);
 				real_t h = dot(&th, &cone->axis);
@@ -105,6 +109,7 @@ bool	cone_hit(const t_cone *cone, const t_ray *r,
 					closest_normal = vec3_add(&n1, &n2);
 					closest_normal = unit_vector(&closest_normal);
 				}
+				++i;
 			}
 		}
 	}

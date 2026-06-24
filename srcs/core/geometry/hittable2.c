@@ -71,12 +71,18 @@ static void	rotate_y_compute_bbox(t_rotate_y_wrap *rot, const t_aabb *cb)
 						ijk[2] ? cb->z.max : cb->z.min);
 				rotated = rotate_y_vec(&corner,
 						rot->sin_theta, rot->cos_theta);
-				if (rotated.x < minp.x) minp.x = rotated.x;
-				if (rotated.y < minp.y) minp.y = rotated.y;
-				if (rotated.z < minp.z) minp.z = rotated.z;
-				if (rotated.x > maxp.x) maxp.x = rotated.x;
-				if (rotated.y > maxp.y) maxp.y = rotated.y;
-				if (rotated.z > maxp.z) maxp.z = rotated.z;
+				if (rotated.x < minp.x)
+					minp.x = rotated.x;
+				if (rotated.y < minp.y)
+					minp.y = rotated.y;
+				if (rotated.z < minp.z)
+					minp.z = rotated.z;
+				if (rotated.x > maxp.x)
+					maxp.x = rotated.x;
+				if (rotated.y > maxp.y)
+					maxp.y = rotated.y;
+				if (rotated.z > maxp.z)
+					maxp.z = rotated.z;
 			}
 		}
 	}
