@@ -35,5 +35,7 @@ unsigned			lode_image_load_png(t_lode_image *img,
 						const char *filename);
 const unsigned char	*lode_image_pixel_rgb(const t_lode_image *img,
 						int x, int y);
+unsigned int		lode_image_save_png(const char *path,
+						const unsigned char *rgb, int w, int h);
 
 #endif

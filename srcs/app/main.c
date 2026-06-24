@@ -22,6 +22,7 @@
 #include "bvh_flat.h"
 #include "mesh_accel.h"
 #include "shading.h"
+#include "lode_image.h"
 #include "mlx.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,8 +36,20 @@ bool			add_scene_lights(t_hittable_list *world, const t_scene *sc);
 unsigned char	*render_to_buffer(const t_camera *cam,
 					const t_hittable_list *world);
 
-/* Global flag: if true, dump PPM instead of opening MLX window */
+/* Global flags: dump PPM / PNG instead of opening the MLX window. */
 static int	g_ppm_mode;
+static int	g_png_mode;
+
+/* Output path for --png: $RT_PNG_OUT if set, else render.png. */
+static const char	*png_out_path(void)
+{
+	const char	*p;
+
+	p = getenv("RT_PNG_OUT");
+	if (p && *p)
+		return (p);
+	return ("render.png");
+}
 
 static const char	*get_ext(const char *path)
 {
@@ -144,6 +157,21 @@ static int	display_ppm(t_camera *cam, unsigned char *buf)
 	return (ret);
 }
 
+static int	display_png(t_camera *cam, unsigned char *buf)
+{
+	unsigned int	err;
+	const char		*path;
+
+	path = png_out_path();
+	err = lode_image_save_png(path, buf, cam->image_width, cam->image_height);
+	free(buf);
+	if (err)
+		return (fprintf(stderr, "Error\nPNG write failed (%u)\n", err), 1);
+	fprintf(stderr, "PNG saved to %s (%dx%d)\n", path,
+		cam->image_width, cam->image_height);
+	return (0);
+}
+
 static int	display_scene(t_scene *scene)
 {
 	t_camera		cam;
@@ -158,6 +186,8 @@ static int	display_scene(t_scene *scene)
 	if (!buf)
 		return (display_free(&accel, bvh, fbvh),
 			fprintf(stderr, "Error\nRender failed\n"), 1);
+	if (g_png_mode)
+		return (display_free(&accel, bvh, fbvh), display_png(&cam, buf));
 	if (g_ppm_mode)
 		return (display_free(&accel, bvh, fbvh), display_ppm(&cam, buf));
 	display_window(&cam, buf);
@@ -343,6 +373,8 @@ static const char	*parse_args(int argc, char **argv)
 	{
 		if (strcmp(argv[i], "--ppm") == 0)
 			g_ppm_mode = 1;
+		else if (strcmp(argv[i], "--png") == 0)
+			g_png_mode = 1;
 		else if (strcmp(argv[i], "--cinematic") == 0)
 			render_set_engine_mode(ENGINE_CINEMATIC);
 		else if (argv[i][0] == '-' || path)
@@ -361,7 +393,7 @@ static int	dispatch(const char *path)
 	ext = get_ext(path);
 	if (strcasecmp(ext, ".rt") == 0)
 	{
-		if (g_ppm_mode)
+		if (g_ppm_mode || g_png_mode)
 			return (run_rt_display(path));
 		return (rt_run(path));
 	}
