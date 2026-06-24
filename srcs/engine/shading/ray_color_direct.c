@@ -15,6 +15,7 @@
 #include "material.h"
 #include "interval.h"
 #include "studio_config.h"
+#include "environment.h"
 
 /* Render-mode flag: written once before the OpenMP render begins, then
    read-only across threads (same contract as the g_lights cache). */
@@ -73,6 +74,8 @@ t_vec3	ray_color_direct(const t_ray *r, const t_hittable_list *world,
 		return (vec3_zero());
 	if (!hittable_list_hit(world, r, interval((real_t)1e-4, INFINITY), &rec))
 	{
+		if (get_scene_environment())
+			return (bg_environment_color(r));
 		if (ambient->x < 0.01 && ambient->y < 0.01 && ambient->z < 0.01)
 			return (*ambient);
 		return (bg_sky_color(r, ambient));

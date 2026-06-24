@@ -1,0 +1,29 @@
+{
+  "_description": "Equirectangular orientation check: earth.png as the environment, one small matte sphere for scale. The background should show the Earth map upright, no seam tearing.",
+
+  "environment": "studio/assets/textures/earth.png",
+
+  "ambient": { "ratio": 0.25, "color": [200, 210, 230] },
+
+  "render": { "aspect_ratio": 2.0, "spp": 16, "max_depth": 6 },
+
+  "camera": {
+    "position": [0.0, 0.0, 0.0],
+    "direction": [0.0, 0.0, 1.0],
+    "fov": 110
+  },
+
+  "lights": [
+    { "position": [5, 5, -5], "brightness": 0.6, "color": [255, 255, 255] }
+  ],
+
+  "objects": [
+    {
+      "type": "sphere",
+      "center": [0.0, -0.6, 4.0],
+      "diameter": 0.6,
+      "color": [220, 220, 220],
+      "material": "lambertian"
+    }
+  ]
+}

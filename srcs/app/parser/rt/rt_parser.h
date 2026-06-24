@@ -257,6 +257,8 @@ typedef struct s_scene
 	int				object_count;
 	bool			has_ambient;
 	bool			has_camera;
+	bool			has_environment;
+	char			environment[256];
 	t_hittable_list	world;
 	t_render_opts	render;
 }	t_scene;

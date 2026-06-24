@@ -130,6 +130,24 @@ bool	fill_obj(t_rt_object *out, const t_json_node *o)
 }
 
 /* ------------------------------------------------------------------ */
+/*  Parse top-level "environment": "path.png" (equirectangular sky)   */
+/* ------------------------------------------------------------------ */
+
+static void	parse_environment(const t_json_node *node, t_scene *sc)
+{
+	const char	*path;
+
+	if (!node || node->type != JSON_STRING)
+		return ;
+	path = node->val.str;
+	if (!path || !path[0])
+		return ;
+	strncpy(sc->environment, path, sizeof(sc->environment) - 1);
+	sc->environment[sizeof(sc->environment) - 1] = '\0';
+	sc->has_environment = true;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Public entry point                                                */
 /* ------------------------------------------------------------------ */
 
@@ -147,6 +165,7 @@ bool	json_parse_scene(const char *filepath, t_scene *scene)
 	}
 	scene_init(scene);
 	parse_ambient(json_get(root, "ambient"), scene);
+	parse_environment(json_get(root, "environment"), scene);
 	parse_render_block(json_get(root, "render"), scene);
 	if (!parse_camera(json_get(root, "camera"), scene))
 	{
