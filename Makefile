@@ -284,10 +284,10 @@ JSON_OBJ := $(OBJ_DIR)/app/parser/json/json_lexer.o \
 CIE_OBJ  := $(OBJ_DIR)/app/parser/csv/cie_table.o \
             $(OBJ_DIR)/core/math/spectrum.o
 
-$(BIN_DIR)/ppms/test_json_parser: $(SRC_PPM)/test_json_parser.c $(JSON_OBJ) $(LIBRT_A) $(LIBPNG_A) | $(BIN_DIR)/ppms
+$(BIN_DIR)/ppms/test_json_parser: $(SRC_PPM)/test_json_parser.c $(JSON_OBJ) $(LIBRT_A) $(LIBPNG_A) $(LIBFT_A) | $(BIN_DIR)/ppms
 	@printf "\033[33m[test]\033[0m    test_json_parser\n"
 	@$(CC) $(CFLAGS) $(INC_MINIRT) \
-		$< $(JSON_OBJ) $(LIBRT_A) $(LIBPNG_A) \
+		$< $(JSON_OBJ) $(LIBRT_A) $(LIBPNG_A) $(LIBFT_A) \
 		$(LDFLAGS) $(LDLIBS) -o $@
 
 $(BIN_DIR)/ppms/test_cie_spectrum: $(SRC_PPM)/test_cie_spectrum.c $(CIE_OBJ) $(LIBRT_A) $(LIBPNG_A) | $(BIN_DIR)/ppms
