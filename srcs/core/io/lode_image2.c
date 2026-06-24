@@ -28,9 +28,8 @@
 
 extern unsigned long	crc32(unsigned long crc, const unsigned char *buf,
 							unsigned int len);
-extern int				compress2(unsigned char *dst, unsigned long *dlen,
-							const unsigned char *src, unsigned long slen,
-							int level);
+extern int				compress(unsigned char *dst, unsigned long *dlen,
+							const unsigned char *src, unsigned long slen);
 extern unsigned long	compressBound(unsigned long slen);
 
 static void	png_u32(unsigned char *p, unsigned int v)
@@ -113,7 +112,7 @@ unsigned int	lode_image_save_png(const char *path,
 		return (free(filt), (void)(f && fclose(f)), 1);
 	clen = compressBound((unsigned long)flen);
 	comp = malloc(clen);
-	if (!comp || compress2(comp, &clen, filt, (unsigned long)flen, 6) != Z_OK)
+	if (!comp || compress(comp, &clen, filt, (unsigned long)flen) != Z_OK)
 		return (free(filt), free(comp), fclose(f), 1);
 	png_header(f, w, h);
 	png_chunk(f, "IDAT", comp, (unsigned int)clen);

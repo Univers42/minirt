@@ -10,14 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "gnl.h"
 #include <stdlib.h>
 #include <unistd.h>
 
-#ifndef GNL_BUFFER_SIZE
-# define GNL_BUFFER_SIZE 1024
-#endif
-
-static size_t	gnl_strlen(const char *s)
+size_t	gnl_strlen(const char *s)
 {
 	size_t	n;
 
@@ -57,7 +54,7 @@ static char	*gnl_strjoin(char *s1, const char *s2)
 	return (out);
 }
 
-static char	*gnl_has_nl(const char *s)
+char	*gnl_has_nl(const char *s)
 {
 	if (!s)
 		return (NULL);
@@ -93,47 +90,6 @@ static char	*read_until_nl(int fd, char *stash)
 			return (NULL);
 	}
 	return (stash);
-}
-
-static char	*extract_line(char **stash)
-{
-	char	*nl;
-	char	*line;
-	char	*rest;
-	size_t	len;
-	size_t	i;
-
-	if (!*stash || !**stash)
-		return (free(*stash), *stash = NULL, NULL);
-	nl = gnl_has_nl(*stash);
-	if (nl)
-		len = (size_t)(nl - *stash) + 1;
-	else
-		len = gnl_strlen(*stash);
-	line = malloc(len + 1);
-	if (!line)
-		return (NULL);
-	i = -1;
-	while (++i < len)
-		line[i] = (*stash)[i];
-	line[len] = '\0';
-	rest = NULL;
-	if (nl && (*stash)[len])
-	{
-		rest = malloc(gnl_strlen(*stash + len) + 1);
-		if (!rest)
-			return (free(line), NULL);
-		i = 0;
-		while ((*stash)[len + i])
-		{
-			rest[i] = (*stash)[len + i];
-			i++;
-		}
-		rest[i] = '\0';
-	}
-	free(*stash);
-	*stash = rest;
-	return (line);
 }
 
 /*

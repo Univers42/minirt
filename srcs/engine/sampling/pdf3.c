@@ -67,3 +67,12 @@ t_pdf	*mixture_pdf_create(t_pdf *p0, t_pdf *p1)
 	pdf->destroy = mixture_pdf_destroy;
 	return (pdf);
 }
+
+void	cosine_pdf_destroy(t_pdf *pdf)
+{
+	if (pdf && pdf->data)
+	{
+		free(pdf->data);
+		pdf->data = NULL;
+	}
+}

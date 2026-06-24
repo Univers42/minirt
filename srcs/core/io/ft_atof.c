@@ -56,16 +56,10 @@ static double	parse_frac(const char *s, const char **endp)
 	return (frac);
 }
 
-double	rt_atof(const char *s, const char **endp)
+static double	parse_int(const char *s, const char **endp)
 {
-	double		sign;
-	double		integer;
-	const char	*start;
+	double	integer;
 
-	while (rt_is_space(*s))
-		s++;
-	s = skip_sign(s, &sign);
-	start = s;
 	integer = 0.0;
 	while (*s >= '0' && *s <= '9')
 	{
@@ -77,6 +71,21 @@ double	rt_atof(const char *s, const char **endp)
 		s++;
 		integer += parse_frac(s, &s);
 	}
+	*endp = s;
+	return (integer);
+}
+
+double	rt_atof(const char *s, const char **endp)
+{
+	double		sign;
+	double		integer;
+	const char	*start;
+
+	while (rt_is_space(*s))
+		s++;
+	s = skip_sign(s, &sign);
+	start = s;
+	integer = parse_int(s, &s);
 	if (s == start)
 	{
 		if (endp)

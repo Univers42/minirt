@@ -117,8 +117,8 @@ static bool	process_line(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 	fn = dispatch_lookup(id);
 	if (!fn)
 	{
-		rt_error(fb, lex->line_num, lex->tokens[0].col_start,
-			lex->tokens[0].col_end,
+		rt_error(&(t_err_loc){fb, lex->line_num,
+				lex->tokens[0].col_start, lex->tokens[0].col_end},
 			"unknown element type '%s'", id);
 		return (false);
 	}
@@ -197,8 +197,8 @@ static bool	read_and_parse(int fd, t_scene *sc, t_file_buf *fb)
 		tok_ret = tokenize_line(&lex, line, line_num);
 		if (tok_ret < 0)
 		{
-			rt_error(fb, line_num, lex.tokens[0].col_start,
-				lex.tokens[0].col_end,
+			rt_error(&(t_err_loc){fb, line_num,
+					lex.tokens[0].col_start, lex.tokens[0].col_end},
 				"syntax error: %s", lex.tokens[0].val.id);
 			ok = false;
 		}

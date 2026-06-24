@@ -70,13 +70,23 @@ typedef struct s_file_buf
 }	t_file_buf;
 
 /* ------------------------------------------------------------------ */
+/*  Source location for an error/warning report                       */
+/* ------------------------------------------------------------------ */
+
+typedef struct s_err_loc
+{
+	const t_file_buf	*fb;
+	int					line;
+	int					col_start;
+	int					col_end;
+}	t_err_loc;
+
+/* ------------------------------------------------------------------ */
 /*  Error API                                                         */
 /* ------------------------------------------------------------------ */
 
-void	rt_error(const t_file_buf *fb, int line, int col_start,
-			int col_end, const char *fmt, ...);
-void	rt_warning(const t_file_buf *fb, int line, int col_start,
-			int col_end, const char *fmt, ...);
+void	rt_error(const t_err_loc *loc, const char *fmt, ...);
+void	rt_warning(const t_err_loc *loc, const char *fmt, ...);
 void	rt_error_simple(const char *filename, const char *fmt, ...);
 void	rt_print_error(const t_file_buf *fb, const t_parse_error *err);
 void	file_buf_init(t_file_buf *fb, const char *filename);

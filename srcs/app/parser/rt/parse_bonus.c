@@ -52,8 +52,8 @@ bool	parse_triangle(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (sc->object_count >= RT_MAX_OBJECTS)
 	{
-		rt_error(fb, lex->line_num, lex->tokens[0].col_start,
-			lex->tokens[0].col_end,
+		rt_error(&(t_err_loc){fb, lex->line_num,
+				lex->tokens[0].col_start, lex->tokens[0].col_end},
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}
@@ -86,8 +86,8 @@ bool	parse_cone(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (sc->object_count >= RT_MAX_OBJECTS)
 	{
-		rt_error(fb, lex->line_num, lex->tokens[0].col_start,
-			lex->tokens[0].col_end,
+		rt_error(&(t_err_loc){fb, lex->line_num,
+				lex->tokens[0].col_start, lex->tokens[0].col_end},
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}

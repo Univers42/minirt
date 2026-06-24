@@ -58,33 +58,28 @@ real_t	cosine_pdf_value(const t_pdf *pdf, const t_vec3 *direction)
 	return (cosine / (real_t)PI);
 }
 
+static t_vec3	cosine_local_dir(real_t r1, real_t r2)
+{
+	real_t	z;
+	real_t	phi;
+
+	z = (real_t)sqrt((double)r2);
+	phi = 2.0 * PI * r1;
+	return (vec3_create(
+			(real_t)cos((double)phi) * (real_t)sqrt(1.0 - (double)r2),
+			(real_t)sin((double)phi) * (real_t)sqrt(1.0 - (double)r2), z));
+}
+
 t_vec3	cosine_pdf_generate(const t_pdf *pdf)
 {
 	const t_cosine_pdf	*cpdf;
-	real_t				r1;
-	real_t				r2;
-	real_t				z;
-	real_t				phi;
 	t_vec3				local_dir;
+	real_t				r1;
 
 	cpdf = (const t_cosine_pdf *)pdf->data;
 	if (!cpdf)
 		return (vec3_create(0.0, 1.0, 0.0));
 	r1 = random_real();
-	r2 = random_real();
-	z = (real_t)sqrt((double)r2);
-	phi = 2.0 * PI * r1;
-	local_dir = vec3_create(
-			(real_t)cos((double)phi) * (real_t)sqrt(1.0 - (double)r2),
-			(real_t)sin((double)phi) * (real_t)sqrt(1.0 - (double)r2), z);
+	local_dir = cosine_local_dir(r1, random_real());
 	return (onb_local(cpdf->uvw, &local_dir));
-}
-
-void	cosine_pdf_destroy(t_pdf *pdf)
-{
-	if (pdf && pdf->data)
-	{
-		free(pdf->data);
-		pdf->data = NULL;
-	}
 }

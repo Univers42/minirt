@@ -21,13 +21,20 @@
 # include <stdlib.h>
 # include <math.h>
 
-typedef struct s_pdf
+typedef struct s_pdf			t_pdf;
+
+typedef real_t					(*t_pdf_value)(const t_pdf *pdf,
+		const t_vec3 *direction);
+typedef t_vec3					(*t_pdf_generate)(const t_pdf *pdf);
+typedef void					(*t_pdf_destroy)(t_pdf *pdf);
+
+struct s_pdf
 {
-	void	*data;
-	real_t	(*value)(const struct s_pdf *pdf, const t_vec3 *direction);
-	t_vec3	(*generate)(const struct s_pdf *pdf);
-	void	(*destroy)(struct s_pdf *pdf);
-}	t_pdf;
+	void			*data;
+	t_pdf_value		value;
+	t_pdf_generate	generate;
+	t_pdf_destroy	destroy;
+};
 
 typedef struct s_cosine_pdf
 {

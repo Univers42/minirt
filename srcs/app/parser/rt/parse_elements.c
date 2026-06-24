@@ -53,8 +53,8 @@ bool	parse_ambient(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 {
 	if (sc->has_ambient)
 	{
-		rt_error(fb, lex->line_num, lex->tokens[0].col_start,
-			lex->tokens[0].col_end,
+		rt_error(&(t_err_loc){fb, lex->line_num,
+				lex->tokens[0].col_start, lex->tokens[0].col_end},
 			"duplicate ambient light declaration (A)");
 		return (false);
 	}
@@ -79,8 +79,8 @@ bool	parse_camera(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 {
 	if (sc->has_camera)
 	{
-		rt_error(fb, lex->line_num, lex->tokens[0].col_start,
-			lex->tokens[0].col_end,
+		rt_error(&(t_err_loc){fb, lex->line_num,
+				lex->tokens[0].col_start, lex->tokens[0].col_end},
 			"duplicate camera declaration (C)");
 		return (false);
 	}
@@ -108,8 +108,8 @@ bool	parse_light(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 
 	if (sc->light_count >= RT_MAX_LIGHTS)
 	{
-		rt_error(fb, lex->line_num, lex->tokens[0].col_start,
-			lex->tokens[0].col_end,
+		rt_error(&(t_err_loc){fb, lex->line_num,
+				lex->tokens[0].col_start, lex->tokens[0].col_end},
 			"too many lights (max %d)", RT_MAX_LIGHTS);
 		return (false);
 	}

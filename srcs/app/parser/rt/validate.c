@@ -25,7 +25,7 @@ bool	validate_range_f(const t_file_buf *fb, const t_token *tok,
 {
 	if (tok->val.f < lo || tok->val.f > hi)
 	{
-		rt_error(fb, 0, tok->col_start, tok->col_end,
+		rt_error(&(t_err_loc){fb, 0, tok->col_start, tok->col_end},
 			"%s must be in range [%.1f, %.1f], got %.4f",
 			name, lo, hi, tok->val.f);
 		return (false);
@@ -41,7 +41,7 @@ bool	validate_color(const t_file_buf *fb, const t_token *tok)
 	if (c.r < 0 || c.r > 255 || c.g < 0 || c.g > 255
 		|| c.b < 0 || c.b > 255)
 	{
-		rt_error(fb, 0, tok->col_start, tok->col_end,
+		rt_error(&(t_err_loc){fb, 0, tok->col_start, tok->col_end},
 			"color channels must be in [0, 255], got %d,%d,%d",
 			c.r, c.g, c.b);
 		return (false);
@@ -59,14 +59,14 @@ bool	validate_normalized(const t_file_buf *fb, const t_token *tok,
 	if (v.x < -1.0 || v.x > 1.0 || v.y < -1.0 || v.y > 1.0
 		|| v.z < -1.0 || v.z > 1.0)
 	{
-		rt_error(fb, 0, tok->col_start, tok->col_end,
+		rt_error(&(t_err_loc){fb, 0, tok->col_start, tok->col_end},
 			"%s components must be in [-1, 1]", name);
 		return (false);
 	}
 	len = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 	if (len < 0.0001)
 	{
-		rt_error(fb, 0, tok->col_start, tok->col_end,
+		rt_error(&(t_err_loc){fb, 0, tok->col_start, tok->col_end},
 			"%s cannot be a zero vector", name);
 		return (false);
 	}
@@ -78,7 +78,7 @@ bool	validate_positive(const t_file_buf *fb, const t_token *tok,
 {
 	if (tok->val.f <= 0.0)
 	{
-		rt_error(fb, 0, tok->col_start, tok->col_end,
+		rt_error(&(t_err_loc){fb, 0, tok->col_start, tok->col_end},
 			"%s must be positive, got %.4f", name, tok->val.f);
 		return (false);
 	}
