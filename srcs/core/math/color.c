@@ -115,9 +115,11 @@ void	color_post_process(real_t *r, real_t *g, real_t *b)
 	*g = aces_tonemap(*g);
 	*b = aces_tonemap(*b);
 #endif
+#if !(RT_TONE_MAP == 1 && RT_ACES_GAMMA_BAKED)
 	*r = linear_to_gamma(*r);
 	*g = linear_to_gamma(*g);
 	*b = linear_to_gamma(*b);
+#endif
 	*r = apply_contrast(*r, (real_t)RT_CONTRAST);
 	*g = apply_contrast(*g, (real_t)RT_CONTRAST);
 	*b = apply_contrast(*b, (real_t)RT_CONTRAST);

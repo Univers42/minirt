@@ -377,11 +377,14 @@
 #  define RT_AO_MIN				0.4
 # endif
 
-/* Checker texture distance-fade strength (footprint anti-aliasing).        */
-/* Distant checker blends to its average grey to kill grazing-angle moire.  */
-/* Larger = fades nearer the camera.  0 disables.  DEFAULT 0.03.            */
+/* Checker texture footprint-fade strength (grazing-angle anti-aliasing).   */
+/* Footprint = dist * inv_scale * FILTER / cos^2(view,normal); the cos^2 is */
+/* the planar-floor minification rate, so it explodes toward the horizon.   */
+/* Once it spans ~half a tile the checker blends to its average grey,       */
+/* killing the horizon dark bands / moire.  Larger = fades nearer the       */
+/* camera.  0 disables.  DEFAULT 0.18.                                      */
 # ifndef RT_CHECKER_FILTER
-#  define RT_CHECKER_FILTER		0.06
+#  define RT_CHECKER_FILTER		0.18
 # endif
 
 /* Light distance attenuation model.                                  */
@@ -474,6 +477,14 @@
 /* Range: 0 or 1.                                                     */
 # ifndef RT_TONE_MAP
 #  define RT_TONE_MAP			1
+# endif
+
+/* The Narkowicz 2015 ACES fit is display-referred: it already bakes an  */
+/* approximate sRGB transfer into its output.  When 1, the separate      */
+/* gamma stage is skipped while ACES is active, so the curve is not       */
+/* double-encoded (which lifts midtones/blacks and washes the image out).*/
+# ifndef RT_ACES_GAMMA_BAKED
+#  define RT_ACES_GAMMA_BAKED	1
 # endif
 
 /* ---- Gamma -------------------------------------------------------- */
