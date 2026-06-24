@@ -51,6 +51,10 @@ t_ray			get_ray_center(const t_camera *cam, int i, int j);
 t_vec3			ray_color_direct(const t_ray *r, const t_hittable_list *world,
 					int depth, const t_color *ambient);
 
+/* render_aa.c — adaptive edge anti-aliasing (direct engine, pass B) */
+void			render_aa_pass(const t_camera *cam,
+					const t_hittable_list *world, t_vec3 *pixels);
+
 /* ray_color_shade.c */
 t_vec3			shade_matte(const t_shade_ctx *c);
 t_vec3			shade_reflective(const t_shade_ctx *c);

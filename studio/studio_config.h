@@ -128,6 +128,29 @@
 #  define RT_SHININESS			64.0
 # endif
 
+/* ---- Adaptive edge anti-aliasing (direct engine only) ------------ */
+
+/* Anti-aliasing mode for the deterministic (direct) engine.          */
+/*   0 = off  (byte-reproduces the legacy 1-centred-ray output)       */
+/*   1 = adaptive: supersample only silhouette/edge pixels.           */
+/* Has no effect on the cinematic path tracer.                        */
+# ifndef RT_AA_MODE
+#  define RT_AA_MODE			1
+# endif
+
+/* Sub-samples averaged on a flagged edge pixel (fixed rotated grid). */
+/* Implemented as a 2x2 deterministic grid.  Range: 1 - 16.           */
+# ifndef RT_AA_SAMPLES
+#  define RT_AA_SAMPLES			4
+# endif
+
+/* Luma delta (0..1, BT.709) versus the right/down neighbour above    */
+/* which a pixel is treated as an edge and supersampled.              */
+/* Lower = more pixels refined (slower); higher = fewer.              */
+# ifndef RT_AA_EDGE_THRESH
+#  define RT_AA_EDGE_THRESH		0.08
+# endif
+
 /* ================================================================== */
 /*  §2  CAMERA DEFAULTS                                               */
 /* ================================================================== */
