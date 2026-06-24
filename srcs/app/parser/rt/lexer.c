@@ -40,12 +40,13 @@ typedef struct s_elem_schema
 static int	g_schema_a[] = {'F', 'C', 0};
 static int	g_schema_c[] = {'V', 'V', 'F', 0};
 static int	g_schema_l[] = {'V', 'F', 'C', 0};
-static int	g_schema_sp[] = {'V', 'F', 'C', 0};
-static int	g_schema_pl[] = {'V', 'V', 'C', 0};
-static int	g_schema_cy[] = {'V', 'V', 'F', 'F', 'C', 0};
-static int	g_schema_co[] = {'V', 'V', 'F', 'F', 'C', 0};
-/* tr – Triangle: v0:V  v1:V  v2:V  color:C */
-static int	g_schema_tr[] = {'V', 'V', 'V', 'C', 0};
+/* 'M' = optional trailing material keyword (glass, metal, ...) */
+static int	g_schema_sp[] = {'V', 'F', 'C', 'M', 0};
+static int	g_schema_pl[] = {'V', 'V', 'C', 'M', 0};
+static int	g_schema_cy[] = {'V', 'V', 'F', 'F', 'C', 'M', 0};
+static int	g_schema_co[] = {'V', 'V', 'F', 'F', 'C', 'M', 0};
+/* tr – Triangle: v0:V  v1:V  v2:V  color:C  [material] */
+static int	g_schema_tr[] = {'V', 'V', 'V', 'C', 'M', 0};
 
 static int	*get_schema(const char *id)
 {
@@ -114,6 +115,11 @@ static bool	parse_by_schema(t_lexer *lex, int *schema)
 			if (!lexer_parse_color(lex, &val.col))
 				return (false);
 			add_token(lex, TOK_COLOR, val, col);
+		}
+		else if (*schema == 'M')
+		{
+			if (lexer_parse_identifier(lex, val.id, sizeof(val.id)))
+				add_token(lex, TOK_IDENTIFIER, val, col);
 		}
 		schema++;
 	}
