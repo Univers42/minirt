@@ -116,6 +116,15 @@
 #  define RT_FAST_MAX_DEPTH		8
 # endif
 
+/* Use the flattened SAH/median BVH (iterative, float slab test) for the      */
+/* deterministic engine's hot path instead of the recursive wrapper BVH.      */
+/*   1 = flat BVH (default, fastest)                                          */
+/*   0 = legacy wrapper BVH (for A/B correctness comparison)                  */
+/* Has no effect on the cinematic path tracer, which always uses the wrapper. */
+# ifndef RT_FAST_BVH
+#  define RT_FAST_BVH			1
+# endif
+
 /* Blinn-Phong specular strength ("shine effect").  0 = matte.           */
 /* Range: 0.0 - 1.0.                                                     */
 # ifndef RT_SPECULAR_KS

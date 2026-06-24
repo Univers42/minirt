@@ -20,12 +20,20 @@
 # include "aabb.h"
 # include "sphere.h"
 
+/* Optional fast-path override: when fast_hit is set, hittable_list_hit
+   dispatches to it instead of looping wrappers (used by the flat SAH BVH).
+   Stored as opaque void* so core/geometry stays engine-agnostic. */
+typedef bool	(*t_fast_hit_fn)(const void *fast, const t_ray *r,
+					t_interval rayt, t_hit_record *rec);
+
 typedef struct s_hittable_list
 {
 	t_hittable_wrapper	*objects;
 	size_t				count;
 	size_t				capacity;
 	t_aabb				bbox;
+	const void			*fast;
+	t_fast_hit_fn		fast_hit;
 }	t_hittable_list;
 
 void				hittable_list_init(t_hittable_list *list);
