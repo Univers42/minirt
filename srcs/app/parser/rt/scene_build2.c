@@ -67,20 +67,25 @@ static t_material	*create_mat_checker(const t_mat_spec *ms, t_color clr)
 t_material	*create_material(const t_mat_spec *ms, t_color clr)
 {
 	t_texture	*img;
+	t_material	*m;
 
+	m = NULL;
 	if (ms->texture_path[0])
 	{
 		img = image_texture_create_png(ms->texture_path);
 		if (img)
-			return (lambertian_create_texture(img));
+			m = lambertian_create_texture(img);
 	}
-	if (ms->type == MAT_EMISSIVE)
-		return (create_mat_emissive(ms, clr));
-	if (ms->type == MAT_CHECKER)
-		return (create_mat_checker(ms, clr));
-	if (ms->type != MAT_LAMBERTIAN)
-		return (create_mat_special(ms, clr));
-	return (lambertian_create(clr));
+	if (!m && ms->type == MAT_EMISSIVE)
+		m = create_mat_emissive(ms, clr);
+	else if (!m && ms->type == MAT_CHECKER)
+		m = create_mat_checker(ms, clr);
+	else if (!m && ms->type != MAT_LAMBERTIAN)
+		m = create_mat_special(ms, clr);
+	else if (!m)
+		m = lambertian_create(clr);
+	mat_registry_add(m);
+	return (m);
 }
 
 /* ------------------------------------------------------------------ */

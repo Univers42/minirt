@@ -225,6 +225,12 @@ bool	build_scene_objects(t_scene *scene);
 void	scene_init(t_scene *scene);
 void	scene_cleanup(t_scene *scene);
 
+/* Material registry (material_registry.c): records every heap material so
+   scene_cleanup can free them once, even when shared across hittables. */
+void	mat_registry_reset(void);
+void	mat_registry_add(t_material *m);
+void	mat_registry_free_all(void);
+
 /* Full RT pipeline: parse → build → BVH → render → MLX display */
 int		rt_run(const char *filepath);
 

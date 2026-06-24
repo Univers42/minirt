@@ -73,17 +73,25 @@ bool	isotropic_scatter(const t_material *mat, const t_ray *r_in,
 
 void	lambertian_destroy(t_material *mat)
 {
-	if (!mat || !mat->data)
+	t_lambertian	*lam;
+
+	if (!mat)
 		return ;
+	lam = (t_lambertian *)mat->data;
+	if (lam && lam->tex)
+	{
+		if (lam->tex->destroy)
+			lam->tex->destroy(lam->tex);
+		free(lam->tex);
+	}
 	free(mat->data);
-	mat->data = NULL;
+	free(mat);
 }
 
 void	metal_destroy(t_material *mat)
 {
-	if (mat && mat->data)
-	{
-		free(mat->data);
-		mat->data = NULL;
-	}
+	if (!mat)
+		return ;
+	free(mat->data);
+	free(mat);
 }
