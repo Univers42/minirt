@@ -97,21 +97,21 @@ static bool	build_disk(t_hittable_list *world, const t_rt_object *obj)
 
 static bool	build_cylinder(t_hittable_list *world, const t_rt_object *obj)
 {
-	t_material	*mat;
-	t_vec3		axis_unit;
-	t_vec3		offset;
-	t_point3	base;
-	t_cylinder	c;
+	t_material		*mat;
+	t_vec3			axis_unit;
+	t_point3		base;
+	t_cylinder		c;
+	t_shape_dims	dims;
 
 	mat = create_material(&obj->mat, obj->data.cylinder.color);
 	if (!mat)
 		return (false);
 	axis_unit = unit_vector(&obj->data.cylinder.axis);
-	offset = vec3_mul_scalar(&axis_unit, obj->data.cylinder.height / 2.0);
-	base = vec3_sub(&obj->data.cylinder.center, &offset);
-	c = cylinder_create(&base, &axis_unit,
-			obj->data.cylinder.diameter / 2.0,
-			obj->data.cylinder.height, mat);
+	base = vec3_mul_scalar(&axis_unit, obj->data.cylinder.height / 2.0);
+	base = vec3_sub(&obj->data.cylinder.center, &base);
+	dims.size = obj->data.cylinder.diameter / 2.0;
+	dims.height = obj->data.cylinder.height;
+	c = cylinder_create(&base, &axis_unit, &dims, mat);
 	return (hittable_list_add_cylinder(world, &c));
 }
 
@@ -124,20 +124,20 @@ static bool	build_cylinder(t_hittable_list *world, const t_rt_object *obj)
 
 static bool	build_cone(t_hittable_list *world, const t_rt_object *obj)
 {
-	t_material	*mat;
-	t_vec3		axis_unit;
-	double		radius;
-	double		angle_deg;
-	t_cone		c;
+	t_material		*mat;
+	t_vec3			axis_unit;
+	double			radius;
+	t_cone			c;
+	t_shape_dims	dims;
 
 	mat = create_material(&obj->mat, obj->data.cone.color);
 	if (!mat)
 		return (false);
 	axis_unit = unit_vector(&obj->data.cone.axis);
 	radius = obj->data.cone.diameter / 2.0;
-	angle_deg = atan(radius / obj->data.cone.height) * (180.0 / PI);
-	c = cone_create(&obj->data.cone.apex, &axis_unit,
-			angle_deg, obj->data.cone.height, mat);
+	dims.size = atan(radius / obj->data.cone.height) * (180.0 / PI);
+	dims.height = obj->data.cone.height;
+	c = cone_create(&obj->data.cone.apex, &axis_unit, &dims, mat);
 	return (hittable_list_add_cone(world, &c));
 }
 
@@ -169,13 +169,15 @@ static bool	build_hyperboloid(t_hittable_list *world, const t_rt_object *obj)
 {
 	t_material		*mat;
 	t_hyperboloid	hy;
+	t_shape_dims	dims;
 
 	mat = create_material(&obj->mat, obj->data.hyperboloid.color);
 	if (!mat)
 		return (false);
+	dims.size = obj->data.hyperboloid.diameter;
+	dims.height = obj->data.hyperboloid.height;
 	hy = hyperboloid_create(&obj->data.hyperboloid.center,
-			&obj->data.hyperboloid.axis, obj->data.hyperboloid.diameter,
-			obj->data.hyperboloid.height, mat);
+			&obj->data.hyperboloid.axis, &dims, mat);
 	return (hittable_list_add_hyperboloid(world, &hy));
 }
 

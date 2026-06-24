@@ -21,8 +21,6 @@ static void	cone_compute_bbox(t_cone *cone, const t_point3 *apex)
 	t_vec3		to_base;
 	t_point3	bc;
 	real_t		e[3];
-	t_point3	low;
-	t_point3	high;
 
 	br = cone->height * (real_t)tan((double)cone->angle);
 	to_base = vec3_mul_scalar(&cone->axis, cone->height);
@@ -30,148 +28,85 @@ static void	cone_compute_bbox(t_cone *cone, const t_point3 *apex)
 	e[0] = br * (real_t)sqrt(1.0 - (double)(cone->axis.x * cone->axis.x));
 	e[1] = br * (real_t)sqrt(1.0 - (double)(cone->axis.y * cone->axis.y));
 	e[2] = br * (real_t)sqrt(1.0 - (double)(cone->axis.z * cone->axis.z));
-	low = point3_create(fmin(apex->x, bc.x - e[0]),
-			fmin(apex->y, bc.y - e[1]), fmin(apex->z, bc.z - e[2]));
-	high = point3_create(fmax(apex->x, bc.x + e[0]),
-			fmax(apex->y, bc.y + e[1]), fmax(apex->z, bc.z + e[2]));
-	cone->bbox = aabb_from_points(&low, &high);
+	cone->bbox = aabb_from_points(
+			&(t_point3){fmin(apex->x, bc.x - e[0]), fmin(apex->y, bc.y - e[1]),
+			fmin(apex->z, bc.z - e[2])},
+			&(t_point3){fmax(apex->x, bc.x + e[0]), fmax(apex->y, bc.y + e[1]),
+			fmax(apex->z, bc.z + e[2])});
 }
 
 t_cone	cone_create(const t_point3 *apex, const t_vec3 *axis,
-		real_t angle_deg, real_t height, t_material *mat)
+		const t_shape_dims *dims, t_material *mat)
 {
 	t_cone	cone;
 
 	cone.apex = *apex;
 	cone.axis = unit_vector(axis);
-	cone.angle = degrees_to_radians(angle_deg);
-	cone.height = height;
-	if (height <= 0)
+	cone.angle = degrees_to_radians(dims->size);
+	cone.height = dims->height;
+	if (dims->height <= 0)
 		cone.height = (real_t)1.0;
 	cone.mat = mat;
 	cone_compute_bbox(&cone, apex);
 	return (cone);
 }
 
+static t_vec3	cone_lateral_normal(t_cone_hit *ctx, const t_vec3 *th, real_t h)
+{
+	t_vec3	ap;
+	t_vec3	rad;
+	t_vec3	n1;
+	t_vec3	n2;
+
+	ap = vec3_mul_scalar(&ctx->cone->axis, h);
+	rad = vec3_sub(th, &ap);
+	rad = unit_vector(&rad);
+	n1 = vec3_mul_scalar(&rad, ctx->trig[0]);
+	n2 = vec3_mul_scalar(&ctx->cone->axis, -ctx->trig[1]);
+	n1 = vec3_add(&n1, &n2);
+	return (unit_vector(&n1));
+}
+
+static void	cone_test_sides(t_cone_hit *ctx, const real_t *roots, int i)
+{
+	t_vec3	hp;
+	t_vec3	th;
+	real_t	h;
+
+	if (roots[i] < ctx->rayt.min || roots[i] >= ctx->closest_t)
+		return ;
+	hp = ray_at((t_ray *)ctx->r, roots[i]);
+	th = vec3_sub(&hp, &ctx->cone->apex);
+	h = dot(&th, &ctx->cone->axis);
+	if (h < 0 || h > ctx->cone->height)
+		return ;
+	ctx->hit_anything = true;
+	ctx->closest_t = roots[i];
+	ctx->closest_normal = cone_lateral_normal(ctx, &th, h);
+}
+
 bool	cone_hit(const t_cone *cone, const t_ray *r,
 		t_interval rayt, t_hit_record *rec)
 {
-	t_vec3	co;
-	real_t	trig[2];
-	real_t	dv[2];
-	real_t	tan2;
-	real_t	abc[3];
-	bool	hit_anything;
-	real_t	closest_t;
-	t_vec3	closest_normal;
-	real_t	disc;
+	t_cone_hit	ctx;
+	real_t		abc[3];
+	real_t		roots[2];
 
 	if (!cone || !r || !rec)
 		return (false);
-	co = vec3_sub(&r->orig, &cone->apex);
-	trig[0] = (real_t)cos((double)cone->angle);
-	trig[1] = (real_t)sin((double)cone->angle);
-	dv[0] = dot(&r->dir, &cone->axis);
-	dv[1] = dot(&co, &cone->axis);
-	tan2 = (trig[1] * trig[1]) / (trig[0] * trig[0]);
-	abc[0] = dot(&r->dir, &r->dir) - (1 + tan2) * dv[0] * dv[0];
-	abc[1] = dot(&r->dir, &co) - (1 + tan2) * dv[0] * dv[1];
-	abc[2] = dot(&co, &co) - (1 + tan2) * dv[1] * dv[1];
-	hit_anything = false;
-	closest_t = rayt.max;
-	if (fabsl((long double)abc[0]) > (long double)1e-8)
+	ctx.cone = cone;
+	ctx.r = r;
+	ctx.rayt = rayt;
+	ctx.closest_t = rayt.max;
+	ctx.hit_anything = false;
+	if (cone_coeffs(&ctx, abc, roots))
 	{
-		disc = abc[1] * abc[1] - abc[0] * abc[2];
-		if (disc >= 0)
-		{
-			real_t roots[2] = {(-abc[1] - (real_t)sqrt((double)disc)) / abc[0],
-				(-abc[1] + (real_t)sqrt((double)disc)) / abc[0]};
-			int i = 0;
-			while (i < 2)
-			{
-				if (roots[i] < rayt.min || roots[i] >= closest_t)
-				{
-					++i;
-					continue;
-				}
-				t_vec3 hp = ray_at((t_ray *)r, roots[i]);
-				t_vec3 th = vec3_sub(&hp, &cone->apex);
-				real_t h = dot(&th, &cone->axis);
-				if (h >= 0 && h <= cone->height)
-				{
-					hit_anything = true;
-					closest_t = roots[i];
-					t_vec3 ap = vec3_mul_scalar(&cone->axis, h);
-					t_vec3 rad = vec3_sub(&th, &ap);
-					t_vec3 ru = unit_vector(&rad);
-					t_vec3 n1 = vec3_mul_scalar(&ru, trig[0]);
-					t_vec3 n2 = vec3_mul_scalar(&cone->axis, -trig[1]);
-					closest_normal = vec3_add(&n1, &n2);
-					closest_normal = unit_vector(&closest_normal);
-				}
-				++i;
-			}
-		}
+		cone_test_sides(&ctx, roots, 0);
+		cone_test_sides(&ctx, roots, 1);
 	}
-	if (fabsl((long double)dv[0]) > (long double)1e-8)
-	{
-		real_t t = (cone->height - dv[1]) / dv[0];
-		if (t >= rayt.min && t < closest_t)
-		{
-			t_vec3 hp = ray_at((t_ray *)r, t);
-			t_vec3 bac = vec3_mul_scalar(&cone->axis, cone->height);
-			t_vec3 bc = vec3_add(&cone->apex, &bac);
-			t_vec3 th = vec3_sub(&hp, &bc);
-			real_t br = cone->height * (real_t)tan((double)cone->angle);
-			if (vec3_length_squared(&th) <= br * br)
-			{
-				hit_anything = true;
-				closest_t = t;
-				closest_normal = cone->axis;
-			}
-		}
-	}
-	if (!hit_anything)
+	cone_test_cap(&ctx);
+	if (!ctx.hit_anything)
 		return (false);
-	rec->t = closest_t;
-	rec->p = ray_at((t_ray *)r, closest_t);
-	rec->u = 0;
-	rec->v = 0;
-	rec->mat = cone->mat;
-	rec->albedo = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
-	set_face_normal(rec, r, &closest_normal);
+	cone_set_record(&ctx, rec);
 	return (true);
-}
-
-static __thread const t_cone	*g_current_cone = NULL;
-
-void	set_current_cone(const void *obj)
-{
-	g_current_cone = (const t_cone *)obj;
-}
-
-bool	cone_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
-{
-	if (!g_current_cone)
-		return (false);
-	return (cone_hit(g_current_cone, r, rayt, rec));
-}
-
-bool	hittable_list_add_cone(t_hittable_list *list, const t_cone *cone)
-{
-	t_cone				*copy;
-	t_hittable_wrapper	wrap;
-
-	if (!list || !cone)
-		return (false);
-	copy = (t_cone *)malloc(sizeof(t_cone));
-	if (!copy)
-		return (false);
-	*copy = *cone;
-	wrap.object = copy;
-	wrap.owned = true;
-	wrap.set_current = set_current_cone;
-	wrap.hit_noobj = cone_hit_noobj;
-	wrap.bbox = cone->bbox;
-	return (hittable_list_add_wrapper(list, &wrap));
 }

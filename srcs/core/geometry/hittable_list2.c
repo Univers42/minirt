@@ -19,14 +19,22 @@ t_aabb	hittable_list_bounding_box(const t_hittable_list *list)
 	return (list->bbox);
 }
 
+static bool	hit_one_wrapper(const t_hittable_wrapper *w, const t_ray *r,
+		t_interval rayt, t_hit_record *out)
+{
+	if (!w->set_current || !w->hit_noobj)
+		return (false);
+	w->set_current(w->object);
+	return (w->hit_noobj(r, rayt, out));
+}
+
 bool	hittable_list_hit(const t_hittable_list *list, const t_ray *r,
 		t_interval rayt, t_hit_record *rec)
 {
-	bool						hit_anything;
-	real_t						closest_so_far;
-	t_hit_record				temp_rec;
-	size_t						i;
-	const t_hittable_wrapper	*w;
+	bool			hit_anything;
+	real_t			closest_so_far;
+	size_t			i;
+	t_hit_record	temp_rec;
 
 	if (list->fast_hit)
 		return (list->fast_hit(list->fast, r, rayt, rec));
@@ -35,17 +43,13 @@ bool	hittable_list_hit(const t_hittable_list *list, const t_ray *r,
 	i = 0;
 	while (i < list->count)
 	{
-		w = &list->objects[i];
-		if (w->set_current && w->hit_noobj)
+		if (hit_one_wrapper(&list->objects[i], r,
+				interval(rayt.min, closest_so_far), &temp_rec))
 		{
-			w->set_current(w->object);
-			if (w->hit_noobj(r, interval(rayt.min, closest_so_far), &temp_rec))
-			{
-				hit_anything = true;
-				closest_so_far = (real_t)temp_rec.t;
-				if (rec)
-					*rec = temp_rec;
-			}
+			hit_anything = true;
+			closest_so_far = (real_t)temp_rec.t;
+			if (rec)
+				*rec = temp_rec;
 		}
 		i++;
 	}
@@ -65,19 +69,4 @@ bool	hittable_list_hit_noobj(const t_ray *r, t_interval rayt,
 	if (!g_current_list)
 		return (false);
 	return (hittable_list_hit(g_current_list, r, rayt, rec));
-}
-
-t_hittable_wrapper	hittable_list_wrapper(const t_hittable_list *list)
-{
-	t_hittable_wrapper	w;
-
-	w.object = (void *)list;
-	w.owned = false;
-	w.set_current = set_current_hlist;
-	w.hit_noobj = hittable_list_hit_noobj;
-	if (list)
-		w.bbox = list->bbox;
-	else
-		w.bbox = aabb_empty();
-	return (w);
 }

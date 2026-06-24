@@ -34,8 +34,7 @@ static bool	add_quad(t_hittable_list *w, t_point3 q,
 	if (!qp)
 		return (false);
 	*qp = quad_create(&q, &u, &v, m);
-	return (hittable_list_add_nonowned(w, qp,
-			set_current_quad, quad_hit_noobj, &qp->bbox));
+	return (hittable_list_add_nonowned(w, &(t_nonowned){qp, set_current_quad, quad_hit_noobj, &qp->bbox}));
 }
 
 /* ------------------------------------------------------------------ */
@@ -128,7 +127,7 @@ static void	add_queen(t_hittable_list *w, real_t px,
 	hittable_list_add_cylinder(w, &body);
 	crown = cone_create(
 			&(t_point3){px + 0.5, 0.75, pz + 0.5},
-			&(t_vec3){0, 1, 0}, 25.0, 0.35, mat);
+			&(t_vec3){0, 1, 0}, &(t_shape_dims){25.0, 0.35}, mat);
 	hittable_list_add_cone(w, &crown);
 	h = point3_create(px + 0.5, 1.12, pz + 0.5);
 	head = create_sphere(&h, 0.1, vec3_create(1, 1, 1), mat);
@@ -236,8 +235,7 @@ static void	build_haze(t_hittable_list *w)
 	fog = constant_medium_create_color(&bw, 0.006,
 			vec3_create(0.85, 0.82, 0.75));
 	if (fog)
-		hittable_list_add_nonowned(w, fog,
-			set_current_medium, constant_medium_hit_noobj, &fog->bbox);
+		hittable_list_add_nonowned(w, &(t_nonowned){fog, set_current_medium, constant_medium_hit_noobj, &fog->bbox});
 }
 
 int	main(void)

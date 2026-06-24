@@ -39,6 +39,15 @@ typedef struct s_hittable_wrapper
 	t_aabb				bbox;
 }	t_hittable_wrapper;
 
+/* Trailing (size, height) pair for quadric constructors (keeps arg count
+   within the 42-norm 4-arg cap).  "size" is radius / angle_deg / diameter
+   depending on the primitive. */
+typedef struct s_shape_dims
+{
+	real_t	size;
+	real_t	height;
+}	t_shape_dims;
+
 /* Hit record: store intersection point, normal, material and t. */
 struct s_hit_record
 {

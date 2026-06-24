@@ -119,7 +119,7 @@ void scene_cylinder_triangle(void)
 	if (mirror_copy)
 	{
 		*mirror_copy = mirror_q;
-		hittable_list_add_nonowned(&world, mirror_copy, set_current_quad, quad_hit_noobj, &mirror_q.bbox);
+		hittable_list_add_nonowned(&world, &(t_nonowned){mirror_copy, set_current_quad, quad_hit_noobj, &mirror_q.bbox});
 	}
 
 	/* Add colored LEDs around the mirror - must match mirror dimensions */

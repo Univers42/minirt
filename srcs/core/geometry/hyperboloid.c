@@ -41,7 +41,7 @@ static void	hyperboloid_init_bbox(t_hyperboloid *hy)
 }
 
 t_hyperboloid	hyperboloid_create(const t_point3 *center, const t_vec3 *axis,
-		real_t diameter, real_t height, t_material *mat)
+		const t_shape_dims *dims, t_material *mat)
 {
 	t_hyperboloid	hy;
 	real_t			a;
@@ -49,11 +49,11 @@ t_hyperboloid	hyperboloid_create(const t_point3 *center, const t_vec3 *axis,
 
 	hy.center = *center;
 	hy.axis = unit_vector(axis);
-	if (height > (real_t)0.0)
-		hy.half_h = height / (real_t)2.0;
+	if (dims->height > (real_t)0.0)
+		hy.half_h = dims->height / (real_t)2.0;
 	else
 		hy.half_h = (real_t)0.5;
-	a = diameter / (real_t)2.0;
+	a = dims->size / (real_t)2.0;
 	if (a <= (real_t)0.0)
 		a = (real_t)0.5;
 	c = hy.half_h;

@@ -124,6 +124,5 @@ bool	build_quad_obj(t_hittable_list *world, const t_rt_object *obj)
 	if (!qp)
 		return (false);
 	*qp = q;
-	return (hittable_list_add_nonowned(world, qp,
-			set_current_quad, quad_hit_noobj, &q.bbox));
+	return (hittable_list_add_nonowned(world, &(t_nonowned){qp, set_current_quad, quad_hit_noobj, &q.bbox}));
 }

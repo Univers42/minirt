@@ -37,8 +37,7 @@ static void	box_add_face(t_hittable_list *world, const t_point3 *pos,
 	if (cpy)
 	{
 		*cpy = q;
-		hittable_list_add_nonowned(world, cpy, set_current_quad,
-			quad_hit_noobj, &q.bbox);
+		hittable_list_add_nonowned(world, &(t_nonowned){cpy, set_current_quad, quad_hit_noobj, &q.bbox});
 	}
 }
 

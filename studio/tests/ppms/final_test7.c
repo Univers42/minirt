@@ -30,8 +30,7 @@ static bool	add_quad(t_hittable_list *w, t_point3 q,
 	if (!qp)
 		return (false);
 	*qp = quad_create(&q, &u, &v, m);
-	return (hittable_list_add_nonowned(w, qp,
-			set_current_quad, quad_hit_noobj, &qp->bbox));
+	return (hittable_list_add_nonowned(w, &(t_nonowned){qp, set_current_quad, quad_hit_noobj, &qp->bbox}));
 }
 
 /* ------------------------------------------------------------------ */
@@ -91,8 +90,8 @@ static void	build_columns(t_hittable_list *w)
 	cyl = cylinder_create_y(&base, 0.4, 7.0, marble);
 	hittable_list_add_cylinder(w, &cyl);
 	base = point3_create(2.5, 7.0, 4.0);
-	cn = cone_create(&base, &(t_vec3){0, -1, 0}, 22.0, 0.8,
-			lambertian_create(vec3_create(0.85, 0.82, 0.75)));
+	cn = cone_create(&base, &(t_vec3){0, -1, 0}, &(t_shape_dims){22.0,
+			0.8}, lambertian_create(vec3_create(0.85, 0.82, 0.75)));
 	hittable_list_add_cone(w, &cn);
 	/* Right column */
 	marble = lambertian_create_texture(noise_texture_create_turb(4.0, 7));
@@ -100,8 +99,8 @@ static void	build_columns(t_hittable_list *w)
 	cyl = cylinder_create_y(&base, 0.4, 7.0, marble);
 	hittable_list_add_cylinder(w, &cyl);
 	base = point3_create(9.5, 7.0, 4.0);
-	cn = cone_create(&base, &(t_vec3){0, -1, 0}, 22.0, 0.8,
-			lambertian_create(vec3_create(0.85, 0.82, 0.75)));
+	cn = cone_create(&base, &(t_vec3){0, -1, 0}, &(t_shape_dims){22.0,
+			0.8}, lambertian_create(vec3_create(0.85, 0.82, 0.75)));
 	hittable_list_add_cone(w, &cn);
 	/* Center back column */
 	marble = lambertian_create_texture(noise_texture_create_turb(4.0, 7));
@@ -109,8 +108,8 @@ static void	build_columns(t_hittable_list *w)
 	cyl = cylinder_create_y(&base, 0.5, 8.0, marble);
 	hittable_list_add_cylinder(w, &cyl);
 	base = point3_create(6.0, 8.0, 1.5);
-	cn = cone_create(&base, &(t_vec3){0, -1, 0}, 25.0, 1.0,
-			lambertian_create(vec3_create(0.85, 0.82, 0.75)));
+	cn = cone_create(&base, &(t_vec3){0, -1, 0}, &(t_shape_dims){25.0,
+			1.0}, lambertian_create(vec3_create(0.85, 0.82, 0.75)));
 	hittable_list_add_cone(w, &cn);
 }
 

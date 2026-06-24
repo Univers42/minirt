@@ -76,7 +76,7 @@ void build_lamp_shade(t_hittable_list *world, const t_point3 *apex,
 					  real_t angle, real_t height, t_material *mat)
 {
 	t_vec3 down = vec3_create(0.0, -1.0, 0.0);
-	t_cone shade = cone_create(apex, &down, angle, height, mat);
+	t_cone shade = cone_create(apex, &down, &(t_shape_dims){angle, height}, mat);
 	hittable_list_add_cone(world, &shade);
 }
 
@@ -130,7 +130,7 @@ void build_tv_corner(t_hittable_list *world, const t_point3 *center,
 	if (screen_copy)
 	{
 		*screen_copy = screen_q;
-		hittable_list_add_nonowned(world, screen_copy, set_current_quad, quad_hit_noobj, &screen_q.bbox);
+		hittable_list_add_nonowned(world, &(t_nonowned){screen_copy, set_current_quad, quad_hit_noobj, &screen_q.bbox});
 	}
 
 	/* RESTORED: Back panel to block light from behind TV */
@@ -143,7 +143,7 @@ void build_tv_corner(t_hittable_list *world, const t_point3 *center,
 	if (back_copy)
 	{
 		*back_copy = back_q;
-		hittable_list_add_nonowned(world, back_copy, set_current_quad, quad_hit_noobj, &back_q.bbox);
+		hittable_list_add_nonowned(world, &(t_nonowned){back_copy, set_current_quad, quad_hit_noobj, &back_q.bbox});
 	}
 
 	/* TV frame bezel */
@@ -154,16 +154,16 @@ void build_tv_corner(t_hittable_list *world, const t_point3 *center,
 	corners[2] = vec3_add(&corners[1], &screen_v);
 	corners[3] = vec3_add(&screen_p, &screen_v);
 
-	t_cylinder top_cyl = cylinder_create(&corners[3], &screen_right, bezel_r, width, frame_mat);
+	t_cylinder top_cyl = cylinder_create(&corners[3], &screen_right, &(t_shape_dims){bezel_r, width}, frame_mat);
 	hittable_list_add_cylinder(world, &top_cyl);
 
-	t_cylinder bot_cyl = cylinder_create(&corners[0], &screen_right, bezel_r, width, frame_mat);
+	t_cylinder bot_cyl = cylinder_create(&corners[0], &screen_right, &(t_shape_dims){bezel_r, width}, frame_mat);
 	hittable_list_add_cylinder(world, &bot_cyl);
 
-	t_cylinder left_cyl = cylinder_create(&corners[0], &screen_up, bezel_r, height, frame_mat);
+	t_cylinder left_cyl = cylinder_create(&corners[0], &screen_up, &(t_shape_dims){bezel_r, height}, frame_mat);
 	hittable_list_add_cylinder(world, &left_cyl);
 
-	t_cylinder right_cyl = cylinder_create(&corners[1], &screen_up, bezel_r, height, frame_mat);
+	t_cylinder right_cyl = cylinder_create(&corners[1], &screen_up, &(t_shape_dims){bezel_r, height}, frame_mat);
 	hittable_list_add_cylinder(world, &right_cyl);
 }
 
@@ -176,27 +176,27 @@ void build_large_window(t_hittable_list *world, const t_point3 *center,
 	t_vec3 horiz = vec3_create(0.0, 0.0, 1.0);
 
 	t_point3 left_bar = point3_create(center->x, center->y - height / 2, center->z - width / 2);
-	t_cylinder left_cyl = cylinder_create(&left_bar, &up, bar_r, height, frame_mat);
+	t_cylinder left_cyl = cylinder_create(&left_bar, &up, &(t_shape_dims){bar_r, height}, frame_mat);
 	hittable_list_add_cylinder(world, &left_cyl);
 
 	t_point3 right_bar = point3_create(center->x, center->y - height / 2, center->z + width / 2);
-	t_cylinder right_cyl = cylinder_create(&right_bar, &up, bar_r, height, frame_mat);
+	t_cylinder right_cyl = cylinder_create(&right_bar, &up, &(t_shape_dims){bar_r, height}, frame_mat);
 	hittable_list_add_cylinder(world, &right_cyl);
 
 	t_point3 top_bar = point3_create(center->x, center->y + height / 2, center->z - width / 2);
-	t_cylinder top_cyl = cylinder_create(&top_bar, &horiz, bar_r, width, frame_mat);
+	t_cylinder top_cyl = cylinder_create(&top_bar, &horiz, &(t_shape_dims){bar_r, width}, frame_mat);
 	hittable_list_add_cylinder(world, &top_cyl);
 
 	t_point3 bot_bar = point3_create(center->x, center->y - height / 2, center->z - width / 2);
-	t_cylinder bot_cyl = cylinder_create(&bot_bar, &horiz, bar_r, width, frame_mat);
+	t_cylinder bot_cyl = cylinder_create(&bot_bar, &horiz, &(t_shape_dims){bar_r, width}, frame_mat);
 	hittable_list_add_cylinder(world, &bot_cyl);
 
 	t_point3 vcenter_bar = point3_create(center->x, center->y - height / 2, center->z);
-	t_cylinder vcenter_cyl = cylinder_create(&vcenter_bar, &up, bar_r * 0.6, height, frame_mat);
+	t_cylinder vcenter_cyl = cylinder_create(&vcenter_bar, &up, &(t_shape_dims){bar_r * 0.6, height}, frame_mat);
 	hittable_list_add_cylinder(world, &vcenter_cyl);
 
 	t_point3 hcenter_bar = point3_create(center->x, center->y, center->z - width / 2);
-	t_cylinder hcenter_cyl = cylinder_create(&hcenter_bar, &horiz, bar_r * 0.6, width, frame_mat);
+	t_cylinder hcenter_cyl = cylinder_create(&hcenter_bar, &horiz, &(t_shape_dims){bar_r * 0.6, width}, frame_mat);
 	hittable_list_add_cylinder(world, &hcenter_cyl);
 
 	if (!glass_mat)
@@ -210,7 +210,7 @@ void build_large_window(t_hittable_list *world, const t_point3 *center,
 	if (glass_copy)
 	{
 		*glass_copy = glass_q;
-		hittable_list_add_nonowned(world, glass_copy, set_current_quad, quad_hit_noobj, &glass_q.bbox);
+		hittable_list_add_nonowned(world, &(t_nonowned){glass_copy, set_current_quad, quad_hit_noobj, &glass_q.bbox});
 	}
 }
 
@@ -254,7 +254,7 @@ void build_moonlight(t_hittable_list *world, const t_point3 *window_center,
 	if (copy)
 	{
 		*copy = q;
-		hittable_list_add_nonowned(world, copy, set_current_quad, quad_hit_noobj, &q.bbox);
+		hittable_list_add_nonowned(world, &(t_nonowned){copy, set_current_quad, quad_hit_noobj, &q.bbox});
 	}
 }
 
@@ -282,7 +282,8 @@ void build_side_table(t_hittable_list *world, const t_point3 *pos,
 
 	t_point3 shade_apex = point3_create(pos->x, pos->y + 85.0, pos->z);
 	t_vec3 down = vec3_create(0.0, -1.0, 0.0);
-	t_cone shade = cone_create(&shade_apex, &down, 22.0, 15.0, lamp_shade_mat);
+	t_cone shade = cone_create(&shade_apex, &down,
+		&(t_shape_dims){22.0, 15.0}, lamp_shade_mat);
 	hittable_list_add_cone(world, &shade);
 
 	t_point3 bulb_center = point3_create(pos->x, pos->y + 75.0, pos->z);

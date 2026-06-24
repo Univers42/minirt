@@ -36,8 +36,7 @@ static bool	add_quad(t_hittable_list *w, t_point3 q,
 	if (!qp)
 		return (false);
 	*qp = quad_create(&q, &u, &v, m);
-	return (hittable_list_add_nonowned(w, qp,
-			set_current_quad, quad_hit_noobj, &qp->bbox));
+	return (hittable_list_add_nonowned(w, &(t_nonowned){qp, set_current_quad, quad_hit_noobj, &qp->bbox}));
 }
 
 /* ------------------------------------------------------------------ */
@@ -262,8 +261,8 @@ static void	build_structures(t_hittable_list *w)
 			metal_create_fuzz(vec3_create(0.92, 0.78, 0.35), 0.01));
 	hittable_list_add_cylinder(w, &cyl);
 	base = point3_create(-10.0, 4.5, 5.0);
-	cn = cone_create(&base, &(t_vec3){0, -1, 0}, 30.0, 1.5,
-			glossy_create(vec3_create(0.85, 0.1, 0.1), 0.04, 0.9));
+	cn = cone_create(&base, &(t_vec3){0, -1, 0}, &(t_shape_dims){30.0,
+			1.5}, glossy_create(vec3_create(0.85, 0.1, 0.1), 0.04, 0.9));
 	hittable_list_add_cone(w, &cn);
 	base = point3_create(10.0, 0.0, -5.0);
 	cyl = cylinder_create_y(&base, 0.6, 3.5, dielectric_create(1.5));
@@ -294,8 +293,7 @@ static void	build_fog(t_hittable_list *w)
 	fog = constant_medium_create_color(&bw, 0.03,
 			vec3_create(0.9, 0.9, 1.0));
 	if (fog)
-		hittable_list_add_nonowned(w, fog,
-			set_current_medium, constant_medium_hit_noobj, &fog->bbox);
+		hittable_list_add_nonowned(w, &(t_nonowned){fog, set_current_medium, constant_medium_hit_noobj, &fog->bbox});
 }
 
 /* ------------------------------------------------------------------ */

@@ -31,8 +31,7 @@ static bool	add_quad(t_hittable_list *w, t_point3 q,
 	if (!qp)
 		return (false);
 	*qp = quad_create(&q, &u, &v, m);
-	return (hittable_list_add_nonowned(w, qp,
-			set_current_quad, quad_hit_noobj, &qp->bbox));
+	return (hittable_list_add_nonowned(w, &(t_nonowned){qp, set_current_quad, quad_hit_noobj, &qp->bbox}));
 }
 
 /* ------------------------------------------------------------------ */
@@ -68,7 +67,7 @@ static void	add_crystal(t_hittable_list *w, t_point3 base,
 	t_cone		cn;
 	t_cylinder	stem;
 
-	cn = cone_create(&base, &axis, angle, h,
+	cn = cone_create(&base, &axis, &(t_shape_dims){angle, h},
 			diffuse_light_create_scaled(col, emit));
 	hittable_list_add_cone(w, &cn);
 	stem = cylinder_create_y(&base, h * 0.08, h * 0.4,
@@ -126,7 +125,7 @@ static void	build_stalagmites(t_hittable_list *w)
 			lambertian_create(vec3_create(0.25, 0.2, 0.15)));
 	hittable_list_add_cylinder(w, &cyl);
 	tip = cone_create(&(t_point3){-3.0, 2.5, 5.0},
-		&(t_vec3){0, 1, 0}, 20.0, 1.0,
+		&(t_vec3){0, 1, 0}, &(t_shape_dims){20.0, 1.0},
 		lambertian_create(vec3_create(0.2, 0.18, 0.12)));
 	hittable_list_add_cone(w, &tip);
 	base = point3_create(4.0, 0.0, 6.0);
@@ -134,7 +133,7 @@ static void	build_stalagmites(t_hittable_list *w)
 			lambertian_create(vec3_create(0.2, 0.18, 0.14)));
 	hittable_list_add_cylinder(w, &cyl);
 	tip = cone_create(&(t_point3){4.0, 1.8, 6.0},
-		&(t_vec3){0, 1, 0}, 18.0, 0.8,
+		&(t_vec3){0, 1, 0}, &(t_shape_dims){18.0, 0.8},
 		lambertian_create(vec3_create(0.18, 0.15, 0.1)));
 	hittable_list_add_cone(w, &tip);
 	base = point3_create(-7.0, 0.0, -5.0);
@@ -201,8 +200,7 @@ static void	build_cave_fog(t_hittable_list *w)
 	fog = constant_medium_create_color(&bw, 0.008,
 			vec3_create(0.5, 0.6, 0.9));
 	if (fog)
-		hittable_list_add_nonowned(w, fog,
-			set_current_medium, constant_medium_hit_noobj, &fog->bbox);
+		hittable_list_add_nonowned(w, &(t_nonowned){fog, set_current_medium, constant_medium_hit_noobj, &fog->bbox});
 }
 
 int	main(void)

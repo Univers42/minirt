@@ -42,8 +42,7 @@ static inline bool	cornell_box_lights(t_hittable_list *world)
 	if (!lp)
 		return (false);
 	*lp = light;
-	return (hittable_list_add_nonowned(world, lp,
-			set_current_quad, quad_hit_noobj, &light.bbox));
+	return (hittable_list_add_nonowned(world, &(t_nonowned){lp, set_current_quad, quad_hit_noobj, &light.bbox}));
 }
 
 #endif

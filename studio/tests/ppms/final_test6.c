@@ -32,8 +32,7 @@ static bool	add_quad(t_hittable_list *w, t_point3 q,
 	if (!qp)
 		return (false);
 	*qp = quad_create(&q, &u, &v, m);
-	return (hittable_list_add_nonowned(w, qp,
-			set_current_quad, quad_hit_noobj, &qp->bbox));
+	return (hittable_list_add_nonowned(w, &(t_nonowned){qp, set_current_quad, quad_hit_noobj, &qp->bbox}));
 }
 
 /* ------------------------------------------------------------------ */
@@ -99,8 +98,7 @@ static void	build_venus(t_hittable_list *w)
 	atm = constant_medium_create_color(&bw, 0.6,
 			vec3_create(0.95, 0.8, 0.4));
 	if (atm)
-		hittable_list_add_nonowned(w, atm,
-			set_current_medium, constant_medium_hit_noobj, &atm->bbox);
+		hittable_list_add_nonowned(w, &(t_nonowned){atm, set_current_medium, constant_medium_hit_noobj, &atm->bbox});
 }
 
 /* ------------------------------------------------------------------ */

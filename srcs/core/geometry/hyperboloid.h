@@ -39,7 +39,7 @@ typedef struct s_hyperboloid
 }	t_hyperboloid;
 
 t_hyperboloid	hyperboloid_create(const t_point3 *center, const t_vec3 *axis,
-					real_t diameter, real_t height, t_material *mat);
+					const t_shape_dims *dims, t_material *mat);
 bool			hyperboloid_hit(const t_hyperboloid *hy, const t_ray *r,
 					t_interval rayt, t_hit_record *rec);
 void			set_current_hyperboloid(const void *obj);

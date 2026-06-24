@@ -84,16 +84,14 @@ bool	hittable_list_add_sphere(t_hittable_list *list, const t_sphere *s)
 	return (hittable_list_add_wrapper(list, &wrap));
 }
 
-bool	hittable_list_add_nonowned(t_hittable_list *list, void *obj,
-		t_set_current_fn set_current, t_hit_noobj_fn hit_noobj,
-		const t_aabb *bbox)
+bool	hittable_list_add_nonowned(t_hittable_list *list, const t_nonowned *n)
 {
 	t_hittable_wrapper	wrap;
 
-	wrap.object = obj;
+	wrap.object = n->obj;
 	wrap.owned = false;
-	wrap.set_current = set_current;
-	wrap.hit_noobj = hit_noobj;
-	wrap.bbox = *bbox;
+	wrap.set_current = n->set_current;
+	wrap.hit_noobj = n->hit_noobj;
+	wrap.bbox = *n->bbox;
 	return (hittable_list_add_wrapper(list, &wrap));
 }

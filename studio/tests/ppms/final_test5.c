@@ -30,8 +30,7 @@ static bool	add_quad(t_hittable_list *w, t_point3 q,
 	if (!qp)
 		return (false);
 	*qp = quad_create(&q, &u, &v, m);
-	return (hittable_list_add_nonowned(w, qp,
-			set_current_quad, quad_hit_noobj, &qp->bbox));
+	return (hittable_list_add_nonowned(w, &(t_nonowned){qp, set_current_quad, quad_hit_noobj, &qp->bbox}));
 }
 
 static void	add_box_rt(t_hittable_list *w, t_point3 a, t_point3 b,
@@ -195,8 +194,7 @@ static void	build_alley_fog(t_hittable_list *w)
 	fog = constant_medium_create_color(&bw, 0.015,
 			vec3_create(0.7, 0.7, 0.85));
 	if (fog)
-		hittable_list_add_nonowned(w, fog,
-			set_current_medium, constant_medium_hit_noobj, &fog->bbox);
+		hittable_list_add_nonowned(w, &(t_nonowned){fog, set_current_medium, constant_medium_hit_noobj, &fog->bbox});
 }
 
 int	main(void)

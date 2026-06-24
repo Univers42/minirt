@@ -24,7 +24,7 @@ void cornell_box(void)
 	if (q1_copy)
 	{
 		*q1_copy = q1;
-		hittable_list_add_nonowned(&world, q1_copy, set_current_quad, quad_hit_noobj, &q1.bbox);
+		hittable_list_add_nonowned(&world, &(t_nonowned){q1_copy, set_current_quad, quad_hit_noobj, &q1.bbox});
 	}
 
 	/* Left wall (red): (0,0,555) + u*(0,0,-555) + v*(0,555,0) */
@@ -36,7 +36,7 @@ void cornell_box(void)
 	if (q2_copy)
 	{
 		*q2_copy = q2;
-		hittable_list_add_nonowned(&world, q2_copy, set_current_quad, quad_hit_noobj, &q2.bbox);
+		hittable_list_add_nonowned(&world, &(t_nonowned){q2_copy, set_current_quad, quad_hit_noobj, &q2.bbox});
 	}
 
 	/* Top wall (white): (0,555,0) + u*(555,0,0) + v*(0,0,555) */
@@ -48,7 +48,7 @@ void cornell_box(void)
 	if (q3_copy)
 	{
 		*q3_copy = q3;
-		hittable_list_add_nonowned(&world, q3_copy, set_current_quad, quad_hit_noobj, &q3.bbox);
+		hittable_list_add_nonowned(&world, &(t_nonowned){q3_copy, set_current_quad, quad_hit_noobj, &q3.bbox});
 	}
 
 	/* Bottom wall (white): (0,0,555) + u*(555,0,0) + v*(0,0,-555) */
@@ -60,7 +60,7 @@ void cornell_box(void)
 	if (q4_copy)
 	{
 		*q4_copy = q4;
-		hittable_list_add_nonowned(&world, q4_copy, set_current_quad, quad_hit_noobj, &q4.bbox);
+		hittable_list_add_nonowned(&world, &(t_nonowned){q4_copy, set_current_quad, quad_hit_noobj, &q4.bbox});
 	}
 
 	/* Back wall (white): (555,0,555) + u*(-555,0,0) + v*(0,555,0) */
@@ -72,7 +72,7 @@ void cornell_box(void)
 	if (q5_copy)
 	{
 		*q5_copy = q5;
-		hittable_list_add_nonowned(&world, q5_copy, set_current_quad, quad_hit_noobj, &q5.bbox);
+		hittable_list_add_nonowned(&world, &(t_nonowned){q5_copy, set_current_quad, quad_hit_noobj, &q5.bbox});
 	}
 
 	/* Light quad: (213,554,227) + u*(130,0,0) + v*(0,0,105) */
@@ -84,7 +84,7 @@ void cornell_box(void)
 	if (light_q_copy)
 	{
 		*light_q_copy = light_q;
-		hittable_list_add_nonowned(&world, light_q_copy, set_current_quad, quad_hit_noobj, &light_q.bbox);
+		hittable_list_add_nonowned(&world, &(t_nonowned){light_q_copy, set_current_quad, quad_hit_noobj, &light_q.bbox});
 	}
 
 	/* Box 1: tall box (165x330x165) rotated 15° and translated to (265,0,295) */

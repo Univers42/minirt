@@ -36,6 +36,16 @@ typedef struct s_hittable_list
 	t_fast_hit_fn		fast_hit;
 }	t_hittable_list;
 
+/* Bundles the loose wrapper fields for hittable_list_add_nonowned so the
+   call stays within the 42-norm 4-argument cap. */
+typedef struct s_nonowned
+{
+	void				*obj;
+	t_set_current_fn	set_current;
+	t_hit_noobj_fn		hit_noobj;
+	const t_aabb		*bbox;
+}	t_nonowned;
+
 void				hittable_list_init(t_hittable_list *list);
 void				hittable_list_clear(t_hittable_list *list);
 bool				hittable_list_add_wrapper(t_hittable_list *list,
@@ -43,8 +53,7 @@ bool				hittable_list_add_wrapper(t_hittable_list *list,
 bool				hittable_list_add_sphere(t_hittable_list *list,
 						const t_sphere *s);
 bool				hittable_list_add_nonowned(t_hittable_list *list,
-						void *obj, t_set_current_fn set_current,
-						t_hit_noobj_fn hit_noobj, const t_aabb *bbox);
+						const t_nonowned *n);
 t_aabb				hittable_list_bounding_box(const t_hittable_list *list);
 bool				hittable_list_hit(const t_hittable_list *list,
 						const t_ray *r, t_interval rayt, t_hit_record *rec);

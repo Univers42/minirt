@@ -54,7 +54,7 @@ void build_floor(t_hittable_list *world, t_material *floor_mat)
 	if (floor_copy)
 	{
 		*floor_copy = floor_q;
-		hittable_list_add_nonowned(world, floor_copy, set_current_quad, quad_hit_noobj, &floor_q.bbox);
+		hittable_list_add_nonowned(world, &(t_nonowned){floor_copy, set_current_quad, quad_hit_noobj, &floor_q.bbox});
 	}
 }
 
@@ -480,6 +480,6 @@ void build_rug(t_hittable_list *world, const t_point3 *center,
 	if (rug_copy)
 	{
 		*rug_copy = rug_q;
-		hittable_list_add_nonowned(world, rug_copy, set_current_quad, quad_hit_noobj, &rug_q.bbox);
+		hittable_list_add_nonowned(world, &(t_nonowned){rug_copy, set_current_quad, quad_hit_noobj, &rug_q.bbox});
 	}
 }
