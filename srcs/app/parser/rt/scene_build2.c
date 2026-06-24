@@ -24,14 +24,23 @@
 
 static t_material	*create_mat_special(const t_mat_spec *ms, t_color clr)
 {
+	double	ior;
+	double	rough;
+
+	ior = ms->ior;
+	if (ior <= 1.0)
+		ior = 1.5;
+	rough = ms->roughness;
+	if (rough <= 0.0)
+		rough = 0.3;
 	if (ms->type == MAT_METAL)
 		return (metal_create_fuzz(clr, ms->fuzz));
 	if (ms->type == MAT_DIELECTRIC)
-		return (dielectric_create(ms->ior));
+		return (dielectric_create(ior));
 	if (ms->type == MAT_GLOSSY)
-		return (glossy_create(clr, ms->roughness, ms->fuzz));
+		return (glossy_create(clr, rough, ms->fuzz));
 	if (ms->type == MAT_TINTED_GLASS)
-		return (tinted_glass_create(ms->ior, clr));
+		return (tinted_glass_create(ior, clr));
 	if (ms->type == MAT_ISOTROPIC)
 		return (isotropic_create(clr));
 	return (NULL);

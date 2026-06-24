@@ -1,0 +1,17 @@
+# Metal reflection test: a near-mirror sphere in the centre should reflect
+# the surrounding coloured objects (red sphere left, blue sphere right,
+# yellow cone behind) and the grey floor.
+A 0.2 150,170,210
+
+C 0,4,-15 0,-0.15,1 52
+
+L -6,14,-5 0.9 255,250,235
+L 7,11,0 0.5 220,230,255
+
+pl 0,0,0 0,1,0 200,200,205
+
+sp 0,3.5,0 6 240,240,245 metal
+
+sp -6,2,3 3 230,70,70
+sp 6,2,3 3 70,120,230
+co 0,0,8 0,1,0 3 5 240,200,70
