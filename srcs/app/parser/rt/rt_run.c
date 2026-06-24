@@ -117,4 +117,3 @@ int	rt_run(const char *filepath)
 	scene_cleanup(&scene);
 	return (0);
 }
-

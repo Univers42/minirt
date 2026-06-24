@@ -21,9 +21,9 @@ void	*ft_memset(void *b, int c, size_t len);
 void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat);
 bool	validate_color(const t_file_buf *fb, const t_token *tok);
 bool	validate_normalized(const t_file_buf *fb, const t_token *tok,
-				const char *name);
+			const char *name);
 bool	validate_positive(const t_file_buf *fb, const t_token *tok,
-				const char *name);
+			const char *name);
 
 static t_color	color_from_tok(const t_token *tok)
 {

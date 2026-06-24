@@ -19,12 +19,12 @@
 /* ------------------------------------------------------------------ */
 
 bool	validate_range_f(const t_file_buf *fb, const t_token *tok,
-				double lo, double hi, const char *name);
+			double lo, double hi, const char *name);
 bool	validate_color(const t_file_buf *fb, const t_token *tok);
 bool	validate_normalized(const t_file_buf *fb, const t_token *tok,
-				const char *name);
+			const char *name);
 bool	validate_positive(const t_file_buf *fb, const t_token *tok,
-				const char *name);
+			const char *name);
 
 /* ------------------------------------------------------------------ */
 /*  Convert a color token (0-255 ints) to engine color (0.0-1.0)     */

@@ -206,17 +206,17 @@ typedef struct s_mat_spec
 
 typedef union u_obj_data
 {
-	t_rt_sphere		sphere;
-	t_rt_plane		plane;
-	t_rt_cylinder	cylinder;
-	t_rt_cone		cone;
-	t_rt_quad		quad;
-	t_rt_mesh		mesh;
-	t_rt_triangle	triangle;
-	t_rt_disk		disk;
-	t_rt_paraboloid	paraboloid;
+	t_rt_sphere			sphere;
+	t_rt_plane			plane;
+	t_rt_cylinder		cylinder;
+	t_rt_cone			cone;
+	t_rt_quad			quad;
+	t_rt_mesh			mesh;
+	t_rt_triangle		triangle;
+	t_rt_disk			disk;
+	t_rt_paraboloid		paraboloid;
 	t_rt_hyperboloid	hyperboloid;
-	t_rt_torus		torus;
+	t_rt_torus			torus;
 }	t_obj_data;
 
 typedef struct s_rt_object
