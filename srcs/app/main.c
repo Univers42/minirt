@@ -19,6 +19,7 @@
 #include "material.h"
 #include "texture.h"
 #include "bvh.h"
+#include "shading.h"
 #include "mlx.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,6 +48,18 @@ static const char	*get_ext(const char *path)
 /*  PPM output: dump the render buffer to a file                      */
 /* ------------------------------------------------------------------ */
 
+/* Output path for --ppm: $RT_PPM_OUT if set, else render.ppm.        */
+/* Lets parallel headless renders write to distinct files.            */
+static const char	*ppm_out_path(void)
+{
+	const char	*p;
+
+	p = getenv("RT_PPM_OUT");
+	if (p && *p)
+		return (p);
+	return ("render.ppm");
+}
+
 static int	save_ppm(const unsigned char *buf, int w, int h, const char *path)
 {
 	FILE	*fp;
@@ -73,7 +86,7 @@ static void	wrap_bvh(t_hittable_list *accel, t_bvh_node *bvh)
 	t_hittable_wrapper	w;
 
 	w.object = bvh;
-	w.owned = true;
+	w.owned = false;
 	w.set_current = set_current_bvh;
 	w.hit_noobj = bvh_node_hit;
 	w.bbox = bvh->bbox;
@@ -98,21 +111,24 @@ static int	display_scene(t_scene *scene)
 	if (!buf)
 	{
 		hittable_list_clear(&accel);
+		bvh_node_destroy(bvh);
 		return (fprintf(stderr, "Error\nRender failed\n"), 1);
 	}
 	if (g_ppm_mode)
 	{
 		ret = save_ppm(buf, cam.image_width, cam.image_height,
-				"render.ppm");
+				ppm_out_path());
 		free(buf);
 		hittable_list_clear(&accel);
+		bvh_node_destroy(bvh);
 		return (ret);
 	}
 	if (mlx_ctx_init(&ctx, cam.image_width, cam.image_height,
-			"miniRT") < 0)
+			"rt") < 0)
 	{
 		free(buf);
 		hittable_list_clear(&accel);
+		bvh_node_destroy(bvh);
 		return (fprintf(stderr, "Error\nDisplay init failed\n"), 1);
 	}
 	mlx_display_rgb(&ctx, buf);
@@ -125,6 +141,7 @@ static int	display_scene(t_scene *scene)
 	mlx_loop(ctx.mlx);
 	mlx_ctx_destroy(&ctx);
 	hittable_list_clear(&accel);
+	bvh_node_destroy(bvh);
 	return (0);
 }
 
@@ -243,6 +260,7 @@ static int	run_obj(const char *filepath)
 	mat = obj_make_material();
 	if (!mat)
 		return (fprintf(stderr, "Error\nMaterial alloc failed\n"), 1);
+	mat_registry_add(mat);
 	if (!obj_parse_to_list(filepath, &scene.world, mat,
 			RT_OBJ_TARGET_SIZE, 0.0f, 0.0f, 0.0f))
 	{
@@ -269,9 +287,36 @@ static int	run_obj(const char *filepath)
 static void	usage(const char *prog)
 {
 	fprintf(stderr,
-		"Usage: %s [--ppm] <scene.rt | scene.json | scene.obj>\n"
-		"  --ppm  Save render to render.ppm instead of MLX window\n",
+		"Usage: %s [--ppm] [--cinematic] "
+		"<scene.rt | scene.json | scene.obj>\n"
+		"  --ppm        Save render to render.ppm instead of MLX window\n"
+		"  --cinematic  Use the Monte-Carlo path tracer (slow, photoreal)\n"
+		"               instead of the default fast deterministic engine\n",
 		prog);
+}
+
+/* Scan argv for flags (--ppm, --cinematic) and the single scene path.
+   Returns the scene path, or NULL on a malformed command line. */
+static const char	*parse_args(int argc, char **argv)
+{
+	const char	*path;
+	int			i;
+
+	path = NULL;
+	i = 1;
+	while (i < argc)
+	{
+		if (strcmp(argv[i], "--ppm") == 0)
+			g_ppm_mode = 1;
+		else if (strcmp(argv[i], "--cinematic") == 0)
+			render_set_engine_mode(ENGINE_CINEMATIC);
+		else if (argv[i][0] == '-' || path)
+			return (NULL);
+		else
+			path = argv[i];
+		i++;
+	}
+	return (path);
 }
 
 static int	dispatch(const char *path)
@@ -298,14 +343,9 @@ int	main(int argc, char **argv)
 	const char	*scene_path;
 
 	g_ppm_mode = 0;
-	if (argc == 3 && strcmp(argv[1], "--ppm") == 0)
-	{
-		g_ppm_mode = 1;
-		scene_path = argv[2];
-	}
-	else if (argc == 2)
-		scene_path = argv[1];
-	else
+	render_set_engine_mode(ENGINE_DIRECT);
+	scene_path = parse_args(argc, argv);
+	if (!scene_path)
 	{
 		usage(argv[0]);
 		return (1);

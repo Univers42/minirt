@@ -14,52 +14,58 @@
 
 void	dielectric_destroy(t_material *mat)
 {
-	if (mat && mat->data)
-	{
-		free(mat->data);
-		mat->data = NULL;
-	}
+	if (!mat)
+		return ;
+	free(mat->data);
+	free(mat);
 }
 
 void	tinted_glass_destroy(t_material *mat)
 {
-	if (mat && mat->data)
-	{
-		free(mat->data);
-		mat->data = NULL;
-	}
+	if (!mat)
+		return ;
+	free(mat->data);
+	free(mat);
 }
 
 void	glossy_destroy(t_material *mat)
 {
-	if (mat && mat->data)
-	{
-		free(mat->data);
-		mat->data = NULL;
-	}
+	if (!mat)
+		return ;
+	free(mat->data);
+	free(mat);
 }
 
 void	diffuse_light_destroy(t_material *mat)
 {
 	t_diffuse_light	*light;
 
-	if (!mat || !mat->data)
+	if (!mat)
 		return ;
 	light = (t_diffuse_light *)mat->data;
-	if (light->tex && light->tex->destroy)
+	if (light && light->tex)
 	{
-		light->tex->destroy(light->tex);
+		if (light->tex->destroy)
+			light->tex->destroy(light->tex);
 		free(light->tex);
-		light->tex = NULL;
 	}
 	free(mat->data);
-	mat->data = NULL;
+	free(mat);
 }
 
 void	isotropic_destroy(t_material *mat)
 {
-	if (!mat || !mat->data)
+	t_isotropic	*iso;
+
+	if (!mat)
 		return ;
+	iso = (t_isotropic *)mat->data;
+	if (iso && iso->tex)
+	{
+		if (iso->tex->destroy)
+			iso->tex->destroy(iso->tex);
+		free(iso->tex);
+	}
 	free(mat->data);
-	mat->data = NULL;
+	free(mat);
 }

@@ -119,11 +119,13 @@ void	scene_init(t_scene *scene)
 {
 	memset(scene, 0, sizeof(*scene));
 	hittable_list_init(&scene->world);
+	mat_registry_reset();
 }
 
 void	scene_cleanup(t_scene *scene)
 {
 	hittable_list_clear(&scene->world);
+	mat_registry_free_all();
 }
 
 /* ------------------------------------------------------------------ */

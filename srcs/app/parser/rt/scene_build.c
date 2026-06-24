@@ -15,6 +15,7 @@
 #include "sphere.h"
 #include "cylinder.h"
 #include "quad.h"
+#include "plane.h"
 #include "triangle.h"
 #include "material.h"
 #include "camera.h"
@@ -47,60 +48,21 @@ static bool	build_sphere(t_hittable_list *world, const t_rt_object *obj)
 }
 
 /* ------------------------------------------------------------------ */
-/*  Build a plane as a very large quad from parsed data                */
-/*  No plane primitive — synthesize from point + normal               */
-/*  Tangent vectors computed via cross product with a non-parallel     */
-/*  reference vector.                                                 */
+/*  Build a true infinite plane (equation-based) from parsed data.     */
+/*  Owned by the world, so scene_cleanup frees it.                     */
 /* ------------------------------------------------------------------ */
-
-static t_vec3	compute_tangent(const t_vec3 *normal)
-{
-	t_vec3	ref;
-	t_vec3	tangent;
-	double	len;
-
-	if (fabs(normal->x) < 0.9)
-		ref = vec3_create(1.0, 0.0, 0.0);
-	else
-		ref = vec3_create(0.0, 1.0, 0.0);
-	tangent = cross(normal, &ref);
-	len = vec3_length(&tangent);
-	if (len < 1e-10)
-		return (vec3_create(1.0, 0.0, 0.0));
-	return (vec3_mul_scalar(&tangent, 1.0 / len));
-}
 
 static bool	build_plane(t_hittable_list *world, const t_rt_object *obj)
 {
 	t_material	*mat;
-	t_vec3		n;
-	t_vec3		u_dir;
-	t_vec3		v_dir;
-	t_vec3		u_vec;
-	t_vec3		v_vec;
-	t_point3	corner;
-	t_quad		q;
-	t_quad		*qp;
+	t_plane		p;
 
 	mat = create_material(&obj->mat, obj->data.plane.color);
 	if (!mat)
 		return (false);
-	n = unit_vector(&obj->data.plane.normal);
-	u_dir = compute_tangent(&n);
-	v_dir = cross(&n, &u_dir);
-	u_vec = vec3_mul_scalar(&u_dir, RT_PLANE_SIZE);
-	v_vec = vec3_mul_scalar(&v_dir, RT_PLANE_SIZE);
-	corner = vec3_sub(&obj->data.plane.point, &u_vec);
-	corner = vec3_sub(&corner, &v_vec);
-	u_vec = vec3_mul_scalar(&u_dir, RT_PLANE_SIZE * 2.0);
-	v_vec = vec3_mul_scalar(&v_dir, RT_PLANE_SIZE * 2.0);
-	q = quad_create(&corner, &u_vec, &v_vec, mat);
-	qp = (t_quad *)malloc(sizeof(t_quad));
-	if (!qp)
-		return (false);
-	*qp = q;
-	return (hittable_list_add_nonowned(world, qp,
-			set_current_quad, quad_hit_noobj, &q.bbox));
+	p = plane_create(&obj->data.plane.point,
+			&obj->data.plane.normal, mat);
+	return (hittable_list_add_plane(world, &p));
 }
 
 /* ------------------------------------------------------------------ */
@@ -268,6 +230,7 @@ bool	add_scene_lights(t_hittable_list *world, const t_scene *sc)
 		mat = diffuse_light_create(emit);
 		if (!mat)
 			return (false);
+		mat_registry_add(mat);
 		s = create_sphere(&sc->lights[i].pos, RT_LIGHT_RADIUS,
 				sc->lights[i].color, mat);
 		if (!hittable_list_add_sphere(world, &s))
