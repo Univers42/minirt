@@ -25,8 +25,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Declarations from scene_build.c / render.c */
+/* Declarations from scene_build.c / scene_build3.c / render.c */
 void			setup_camera(t_camera *cam, const t_scene *sc, int width);
+int				rt_render_width(void);
 bool			add_scene_lights(t_hittable_list *world, const t_scene *sc);
 unsigned char	*render_to_buffer(const t_camera *cam,
 					const t_hittable_list *world);
@@ -102,7 +103,7 @@ static int	display_scene(t_scene *scene)
 	t_mlx_ctx		ctx;
 	int				ret;
 
-	setup_camera(&cam, scene, RT_IMAGE_WIDTH);
+	setup_camera(&cam, scene, rt_render_width());
 	bvh = bvh_node_create(&scene->world);
 	hittable_list_init(&accel);
 	if (bvh)

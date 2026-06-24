@@ -18,6 +18,33 @@
 #include "hittable_list.h"
 #include "../obj/obj_parser.h"
 #include <stdio.h>
+#include <stdlib.h>
+
+/* ------------------------------------------------------------------ */
+/*  Runtime resolution overrides via env vars (no recompile needed).   */
+/*  RT_WIDTH  : render width, clamped 16..7680, else RT_IMAGE_WIDTH.   */
+/*  RT_HEIGHT : forced height, clamped 16..4320, else 0 (derive from   */
+/*  aspect ratio as before). Returns fallback when unset/invalid.     */
+/* ------------------------------------------------------------------ */
+
+int	rt_env_int(const char *name, int lo, int hi, int fallback)
+{
+	const char	*val;
+	int			n;
+
+	val = getenv(name);
+	if (!val || !*val)
+		return (fallback);
+	n = atoi(val);
+	if (n < lo || n > hi)
+		return (fallback);
+	return (n);
+}
+
+int	rt_render_width(void)
+{
+	return (rt_env_int("RT_WIDTH", 16, 7680, RT_IMAGE_WIDTH));
+}
 
 /* ------------------------------------------------------------------ */
 /*  Resolve render quality: config defaults → JSON overrides          */
@@ -41,7 +68,7 @@ void	setup_cam_quality(t_camera *cam, const t_scene *sc, int width)
 	cam->aspect_ratio = rt_clampd(RT_ASPECT_RATIO, 0.25, 4.0);
 	if (sc->render.has_aspect)
 		cam->aspect_ratio = rt_clampd(sc->render.aspect_ratio, 0.25, 4.0);
-	cam->image_width = rt_clampi(w, 64, 7680);
+	cam->image_width = rt_clampi(w, 16, 7680);
 	cam->samples_per_pixel = rt_clampi(spp, 1, 16384);
 	cam->max_depth = rt_clampi(depth, 1, 500);
 #if RT_IMAGE_HEIGHT > 0
@@ -49,6 +76,7 @@ void	setup_cam_quality(t_camera *cam, const t_scene *sc, int width)
 #else
 	cam->image_height = 0;
 #endif
+	cam->image_height = rt_env_int("RT_HEIGHT", 16, 4320, cam->image_height);
 }
 
 /* ------------------------------------------------------------------ */

@@ -24,6 +24,7 @@
 /* ------------------------------------------------------------------ */
 
 void			setup_camera(t_camera *cam, const t_scene *sc, int width);
+int				rt_render_width(void);
 bool			add_scene_lights(t_hittable_list *world, const t_scene *sc);
 
 /* ------------------------------------------------------------------ */
@@ -65,7 +66,7 @@ int	rt_run(const char *filepath)
 		scene_cleanup(&scene);
 		return (1);
 	}
-	setup_camera(&cam, &scene, RT_IMAGE_WIDTH);
+	setup_camera(&cam, &scene, rt_render_width());
 	bvh = bvh_node_create(&scene.world);
 	hittable_list_init(&accel);
 	if (bvh)
