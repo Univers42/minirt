@@ -12,6 +12,7 @@
 
 #include "json_helpers.h"
 #include <string.h>
+#include "libft.h"
 
 /* ------------------------------------------------------------------ */
 /*  Object field lookup                                               */
@@ -26,7 +27,7 @@ t_json_node	*json_get(const t_json_node *obj, const char *key)
 	i = 0;
 	while (i < obj->val.obj.count)
 	{
-		if (strncmp(obj->val.obj.pairs[i].key, key, JSON_STR_MAX) == 0)
+		if (ft_strncmp(obj->val.obj.pairs[i].key, key, JSON_STR_MAX) == 0)
 			return (obj->val.obj.pairs[i].value);
 		i++;
 	}

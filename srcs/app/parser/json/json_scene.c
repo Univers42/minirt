@@ -14,6 +14,7 @@
 #include "json_helpers.h"
 #include <stdio.h>
 #include <string.h>
+#include "libft.h"
 
 /* Forward declarations for json_scene2.c */
 bool	parse_json_objects(const t_json_node *arr, t_scene *sc);
@@ -109,14 +110,14 @@ bool	fill_obj(t_rt_object *out, const t_json_node *o)
 	const char	*type;
 
 	type = json_str(json_get(o, "type"), "");
-	if (strcmp(type, "sphere") == 0)
+	if (ft_strcmp(type, "sphere") == 0)
 	{
 		out->type = OBJ_SPHERE;
 		out->data.sphere.center = json_to_vec3(json_get(o, "center"));
 		out->data.sphere.diameter = json_num(json_get(o, "diameter"), 1);
 		out->data.sphere.color = json_to_color255(json_get(o, "color"));
 	}
-	else if (strcmp(type, "plane") == 0)
+	else if (ft_strcmp(type, "plane") == 0)
 	{
 		out->type = OBJ_PLANE;
 		out->data.plane.point = json_to_vec3(json_get(o, "point"));

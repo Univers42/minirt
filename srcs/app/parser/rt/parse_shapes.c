@@ -15,6 +15,9 @@
 #include "rt_error.h"
 #include <string.h>
 
+/* libft prototype (rt_error.h collides with libft.h's ft_stddef.h) */
+void	*ft_memset(void *b, int c, size_t len);
+
 void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat);
 bool	validate_color(const t_file_buf *fb, const t_token *tok);
 bool	validate_normalized(const t_file_buf *fb, const t_token *tok,
@@ -58,7 +61,7 @@ bool	parse_disk(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}
-	memset(&obj, 0, sizeof(obj));
+	ft_memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_DISK;
 	obj.data.disk.center = vec3_from_tok(&lex->tokens[1]);
 	obj.data.disk.normal = vec3_from_tok(&lex->tokens[2]);
@@ -102,7 +105,7 @@ bool	parse_paraboloid(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}
-	memset(&obj, 0, sizeof(obj));
+	ft_memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_PARABOLOID;
 	obj.data.paraboloid.vertex = vec3_from_tok(&lex->tokens[1]);
 	obj.data.paraboloid.axis = vec3_from_tok(&lex->tokens[2]);
