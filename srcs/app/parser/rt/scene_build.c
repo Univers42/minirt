@@ -17,6 +17,7 @@
 #include "quad.h"
 #include "plane.h"
 #include "disk.h"
+#include "paraboloid.h"
 #include "triangle.h"
 #include "material.h"
 #include "camera.h"
@@ -137,6 +138,25 @@ static bool	build_cone(t_hittable_list *world, const t_rt_object *obj)
 	return (hittable_list_add_cone(world, &c));
 }
 
+/* ------------------------------------------------------------------ */
+/*  Build an equation-based paraboloid from parsed data (BONUS)        */
+/*  paraboloid_create(vertex, axis, diameter, height, mat)             */
+/* ------------------------------------------------------------------ */
+
+static bool	build_paraboloid(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material		*mat;
+	t_paraboloid	pb;
+
+	mat = create_material(&obj->mat, obj->data.paraboloid.color);
+	if (!mat)
+		return (false);
+	pb = paraboloid_create(&obj->data.paraboloid.vertex,
+			&obj->data.paraboloid.axis, obj->data.paraboloid.diameter,
+			obj->data.paraboloid.height, mat);
+	return (hittable_list_add_paraboloid(world, &pb));
+}
+
 static bool	build_object(t_hittable_list *world, const t_rt_object *obj);
 
 /* ------------------------------------------------------------------ */
@@ -179,6 +199,8 @@ static bool	build_object(t_hittable_list *world, const t_rt_object *obj)
 		return (build_triangle_obj(world, obj));
 	if (obj->type == OBJ_DISK)
 		return (build_disk(world, obj));
+	if (obj->type == OBJ_PARABOLOID)
+		return (build_paraboloid(world, obj));
 	return (true);
 }
 

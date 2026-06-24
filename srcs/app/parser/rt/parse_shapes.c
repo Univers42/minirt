@@ -69,3 +69,48 @@ bool	parse_disk(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 	sc->object_count++;
 	return (true);
 }
+
+/* ------------------------------------------------------------------ */
+/*  pb – Paraboloid  (BONUS)                                          */
+/*  Schema: pb <vertex:V> <axis:V> <diameter:F> <height:F> <color:C>  */
+/*  Tokens: [0]=ID [1]=vertex [2]=axis [3]=diam [4]=height [5]=color  */
+/* ------------------------------------------------------------------ */
+
+static bool	paraboloid_validate(t_file_buf *fb, t_lexer *lex)
+{
+	if (!validate_normalized(fb, &lex->tokens[2], "paraboloid axis"))
+		return (false);
+	if (!validate_positive(fb, &lex->tokens[3], "paraboloid diameter"))
+		return (false);
+	if (!validate_positive(fb, &lex->tokens[4], "paraboloid height"))
+		return (false);
+	if (!validate_color(fb, &lex->tokens[5]))
+		return (false);
+	return (true);
+}
+
+bool	parse_paraboloid(t_scene *sc, t_lexer *lex, t_file_buf *fb)
+{
+	t_rt_object	obj;
+
+	if (!paraboloid_validate(fb, lex))
+		return (false);
+	if (sc->object_count >= RT_MAX_OBJECTS)
+	{
+		rt_error(fb, lex->line_num, lex->tokens[0].col_start,
+			lex->tokens[0].col_end,
+			"too many objects (max %d)", RT_MAX_OBJECTS);
+		return (false);
+	}
+	memset(&obj, 0, sizeof(obj));
+	obj.type = OBJ_PARABOLOID;
+	obj.data.paraboloid.vertex = vec3_from_tok(&lex->tokens[1]);
+	obj.data.paraboloid.axis = vec3_from_tok(&lex->tokens[2]);
+	obj.data.paraboloid.diameter = lex->tokens[3].val.f;
+	obj.data.paraboloid.height = lex->tokens[4].val.f;
+	obj.data.paraboloid.color = color_from_tok(&lex->tokens[5]);
+	rt_parse_material_kw(lex, 6, &obj.mat);
+	sc->objects[sc->object_count] = obj;
+	sc->object_count++;
+	return (true);
+}

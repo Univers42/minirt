@@ -1,0 +1,24 @@
+# ========================================================================== #
+#  shape_paraboloid.rt — paraboloid (bowl) primitive demo (token "pb")        #
+#  An equation-based parabolic dish opening upward from its vertex, sitting    #
+#  on a matte ground plane and lit by two spots so the smooth curvature and    #
+#  a specular highlight are clearly visible (a bowl, not a cone or sphere).    #
+#  pb <vertex:V> <axis:V> <diameter:F> <height:F> <color:C> [material]         #
+# ========================================================================== #
+
+A 0.2 200,210,255
+
+C 0,3.2,-15 0,-0.12,1 60
+
+# Two spots from opposite sides -> smooth shading + a specular highlight
+L -10,15,-7 0.85 255,245,225
+L 9,12,-4 0.5 215,225,255
+
+# Matte ground plane (catches the bowl's shadow)
+pl 0,0,0 0,1,0 190,190,195
+
+# Parabolic bowl opening upward: vertex on the ground, rim 7 wide, 4 tall
+pb 0,0,2 0,1,0 7 4 230,120,60
+
+# A smaller blue bowl beside it for contrast
+pb -6,0,3 0,1,0 4 3 90,160,240
