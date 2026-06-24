@@ -55,6 +55,7 @@ int	live_state_init(t_live *lv, t_scene *scene)
 	lv->scene = scene;
 	lv->dirty = 1;
 	lv->running = 1;
+	lv->selected = -1;
 	setup_camera(&lv->cam, scene, LIVE_PREVIEW_W);
 	live_build_accel(lv);
 	if (mlx_ctx_init(&lv->ctx, lv->cam.image_width,

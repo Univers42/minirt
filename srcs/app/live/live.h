@@ -40,6 +40,14 @@
 # define LK_UP		65362
 # define LK_RIGHT	65363
 # define LK_DOWN	65364
+# define LK_TAB		65289
+# define LK_R		114
+# define LK_LBRACK	91
+# define LK_RBRACK	93
+# define LK_F2		65471
+# define LK_P		112
+# define LK_1		49
+# define LK_9		57
 
 /* Movement / rotation step per frame an action key is held. */
 # define LIVE_MOVE_STEP		0.35
@@ -81,6 +89,8 @@ typedef struct s_live
 	t_live_keys		keys;
 	int				dirty;
 	int				running;
+	int				obj_mode;
+	int				selected;
 }	t_live;
 
 /* live_state.c */
@@ -102,5 +112,17 @@ int		live_key_press(int keycode, t_live *lv);
 int		live_key_release(int keycode, t_live *lv);
 int		live_close(t_live *lv);
 int		live_expose(t_live *lv);
+
+/* live_select.c */
+int		live_select_object(t_live *lv, int keycode);
+void	live_rebuild_world(t_live *lv);
+
+/* live_object_edit.c */
+int		live_object_move(t_live *lv);
+int		live_object_rotate(t_live *lv);
+int		live_object_edit(t_live *lv);
+
+/* live_save.c */
+int		live_save_png(t_live *lv);
 
 #endif

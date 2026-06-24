@@ -50,7 +50,10 @@ int	live_frame(t_live *lv)
 {
 	if (!lv->running)
 		return (0);
-	live_apply_keys(lv);
+	if (lv->obj_mode && lv->selected >= 0)
+		live_object_edit(lv);
+	else
+		live_apply_keys(lv);
 	if (lv->dirty)
 	{
 		if (live_render(lv) < 0)
@@ -82,8 +85,9 @@ int	rt_live_run(t_scene *scene)
 
 	if (live_state_init(&lv, scene) < 0)
 		return (fprintf(stderr, "Error\nLive editor init failed\n"), 1);
-	fprintf(stderr, "Live editor: WASD move, QE down/up, "
-		"arrows/IJKL rotate, ESC quit.\n");
+	fprintf(stderr, "Live editor: WASD move, QE down/up, arrows/IJKL "
+		"rotate cam.\n  1-9 select, Tab=object mode, F2/p save PNG, "
+		"ESC quit.\n");
 	live_hooks(&lv);
 	mlx_loop(lv.ctx.mlx);
 	mlx_do_key_autorepeaton(lv.ctx.mlx);
