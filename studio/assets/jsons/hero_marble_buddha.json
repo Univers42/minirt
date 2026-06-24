@@ -1,0 +1,55 @@
+{
+  "_description": "Marble Buddha — a seated Happy Buddha carved in pale cream-white polished marble, resting on a softly reflective grey stone floor. Bright museum lighting: a strong warm key from the upper left, a soft cool fill from the right, and a back rim. Centered, grounded, well-exposed hero.",
+
+  "ambient": {
+    "ratio": 0.3,
+    "color": [220, 216, 210]
+  },
+  "camera": {
+    "position": [0, 2.8, -9.2],
+    "direction": [0, 0.04, 1],
+    "fov": 43
+  },
+  "lights": [
+    {
+      "position": [-5, 6, -9],
+      "brightness": 1.2,
+      "color": [255, 247, 232]
+    },
+    {
+      "position": [6, 4, -9],
+      "brightness": 0.95,
+      "color": [232, 236, 246]
+    },
+    {
+      "position": [0, 9, 6],
+      "brightness": 0.55,
+      "color": [255, 240, 222]
+    }
+  ],
+  "objects": [
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [168, 168, 172],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.22,
+        "fuzz": 0.05
+      }
+    },
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/buddha.obj",
+      "position": [0, 3.5, 0],
+      "scale": 7,
+      "color": [240, 236, 226],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.35,
+        "fuzz": 0.08
+      }
+    }
+  ]
+}

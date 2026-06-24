@@ -1,0 +1,57 @@
+{
+  "_description": "Hero shot: polished gold Stanford dragon on a soft reflective light floor against a graded sky. Strong warm key upper-left, cool fill from the right, rim light behind. Centered 3/4 hero angle.",
+
+  "ambient": {
+    "ratio": 0.24,
+    "color": [220, 210, 200]
+  },
+
+  "camera": {
+    "position": [6.5, 4.6, -11.0],
+    "direction": [-0.46, -0.22, 1],
+    "fov": 44
+  },
+
+  "lights": [
+    {
+      "position": [-12, 15, -7],
+      "brightness": 1.1,
+      "color": [255, 235, 200]
+    },
+    {
+      "position": [11, 7, -6],
+      "brightness": 0.85,
+      "color": [210, 220, 255]
+    },
+    {
+      "position": [2, 9, 12],
+      "brightness": 0.8,
+      "color": [255, 240, 215]
+    }
+  ],
+
+  "objects": [
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [178, 176, 182],
+      "material": {
+        "type": "glossy",
+        "roughness": 0.08,
+        "fuzz": 0.02
+      }
+    },
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/dragon.obj",
+      "position": [0, 2.65, 0],
+      "scale": 7.5,
+      "color": [255, 202, 95],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.04
+      }
+    }
+  ]
+}

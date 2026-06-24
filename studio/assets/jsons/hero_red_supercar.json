@@ -1,0 +1,16 @@
+{
+  "_description": "Hero shot — glossy red sports car on a dark polished showroom floor, dynamic 3/4 front angle, cool studio key+fill with subtle warm accent.",
+  "ambient": { "ratio": 0.28, "color": [205, 215, 235] },
+  "camera": { "position": [5.2, 2.5, -6.9], "direction": [-0.56, -0.20, 0.80], "fov": 52 },
+  "lights": [
+    { "position": [9, 16, -10], "brightness": 1.15, "color": [255, 250, 245] },
+    { "position": [-11, 10, -4], "brightness": 0.9, "color": [230, 238, 255] },
+    { "position": [-3, 9, -17], "brightness": 0.85, "color": [255, 238, 215] }
+  ],
+  "objects": [
+    { "type": "plane", "point": [0, 0, 0], "normal": [0, 1, 0], "color": [165, 168, 175],
+      "material": { "type": "glossy", "roughness": 0.06 } },
+    { "type": "mesh", "path": "studio/assets/obj_files/sportsCar.obj", "position": [0, 0.836, 0],
+      "scale": 7, "color": [205, 28, 28], "material": { "type": "lambertian" } }
+  ]
+}
