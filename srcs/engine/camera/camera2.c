@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "camera.h"
-#include <sys/stat.h>
-#include <sys/types.h>
 
 t_vec3	defocus_disk_sample(const t_camera *cam)
 {
@@ -28,21 +26,28 @@ t_vec3	defocus_disk_sample(const t_camera *cam)
 	return (vec3_add(&cam->center, &offset));
 }
 
-t_ray	get_ray_stratified(const t_camera *cam, int i, int j,
-			int s_i, int s_j)
+/* Pixel-sample world location for stratified sub-sample (px->s_i, px->s_j). */
+static t_vec3	pixel_sample_loc(const t_camera *cam, const t_pix *px)
 {
 	t_vec3	offset;
 	t_vec3	tmp_u;
 	t_vec3	tmp_v;
+	t_vec3	loc;
+
+	offset = sample_square_stratified(px->s_i, px->s_j, cam->recip_sqrt_spp);
+	tmp_u = vec3_mul_scalar(&cam->pixel_delta_u, (real_t)(px->i + offset.x));
+	tmp_v = vec3_mul_scalar(&cam->pixel_delta_v, (real_t)(px->j + offset.y));
+	loc = vec3_add(&cam->pixel00_loc, &tmp_u);
+	return (vec3_add(&loc, &tmp_v));
+}
+
+t_ray	get_ray_stratified(const t_camera *cam, const t_pix *px)
+{
 	t_vec3	pixel_sample;
 	t_vec3	ray_origin;
 	t_vec3	ray_direction;
 
-	offset = sample_square_stratified(s_i, s_j, cam->recip_sqrt_spp);
-	tmp_u = vec3_mul_scalar(&cam->pixel_delta_u, (real_t)(i + offset.x));
-	tmp_v = vec3_mul_scalar(&cam->pixel_delta_v, (real_t)(j + offset.y));
-	pixel_sample = vec3_add(&cam->pixel00_loc, &tmp_u);
-	pixel_sample = vec3_add(&pixel_sample, &tmp_v);
+	pixel_sample = pixel_sample_loc(cam, px);
 	if (cam->defocus_angle <= (real_t)0.0)
 		ray_origin = cam->center;
 	else
@@ -53,22 +58,8 @@ t_ray	get_ray_stratified(const t_camera *cam, int i, int j,
 
 t_ray	get_ray(const t_camera *cam, int i, int j)
 {
-	return (get_ray_stratified(cam, i, j, 0, 0));
-}
+	t_pix	px;
 
-void	ensure_output_dir(void)
-{
-	const char	*output_dir;
-	struct stat	st;
-
-	output_dir = "images";
-	if (stat(output_dir, &st) == -1)
-		mkdir(output_dir, 0755);
-}
-
-void	get_output_filename(char *filename, size_t size,
-			const char *base_name)
-{
-	ensure_output_dir();
-	snprintf(filename, size, "images/%s.ppm", base_name);
+	px = (t_pix){i, j, 0, 0};
+	return (get_ray_stratified(cam, &px));
 }

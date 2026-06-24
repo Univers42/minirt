@@ -19,63 +19,34 @@
 #endif
 #include <stdlib.h>
 
-/* Linear BT.709 luma of a pixel colour (matches color.c saturation). */
-static real_t	aa_luma(const t_vec3 *p)
+/* Refine one interior pixel from its flat edge-grid index. */
+static void	aa_refine_index(const t_aa_job *job, int idx)
 {
-	return ((real_t)0.2126 * p->x + (real_t)0.7152 * p->y
-		+ (real_t)0.0722 * p->z);
+	int	w;
+	int	x;
+	int	y;
+
+	w = job->cam->image_width;
+	x = idx % (w - 1);
+	y = idx / (w - 1);
+	if (aa_is_edge(job->lum, x, y, w))
+		job->pixels[y * w + x] = aa_supersample(job->cam, job->world, x, y);
 }
 
-/* Primary ray through pixel (i,j) offset by (dx,dy) sub-pixel units.  */
-static t_ray	aa_offset_ray(const t_camera *cam, int i, int j, t_vec3 off)
+/* One worker: grab interior-pixel indices via an atomic shared counter
+   (self-scheduling, equivalent to schedule(dynamic, 1)). */
+static void	aa_worker(t_aa_job *job)
 {
-	t_vec3	u;
-	t_vec3	v;
-	t_vec3	sample;
-	t_vec3	dir;
+	int	idx;
 
-	u = vec3_mul_scalar(&cam->pixel_delta_u, (real_t)i + off.x);
-	v = vec3_mul_scalar(&cam->pixel_delta_v, (real_t)j + off.y);
-	sample = vec3_add(&cam->pixel00_loc, &u);
-	sample = vec3_add(&sample, &v);
-	dir = vec3_sub(&sample, &cam->center);
-	return (ray_create(cam->center, dir, (real_t)0.0));
-}
-
-/* Average a fixed rotated 2x2 grid of deterministic sub-samples.      */
-static t_vec3	aa_supersample(const t_camera *cam,
-			const t_hittable_list *world, int x, int y)
-{
-	static const t_vec3	off[4] = {{0.375, 0.125, 0.0}, {0.875, 0.375, 0.0},
-	{0.125, 0.625, 0.0}, {0.625, 0.875, 0.0}};
-	t_vec3				acc;
-	t_vec3				sc;
-	t_ray				r;
-	int					k;
-
-	acc = vec3_zero();
-	k = 0;
-	while (k < 4)
+	while (1)
 	{
-		r = aa_offset_ray(cam, x, y, off[k]);
-		sc = ray_color_direct(&r, world, RT_FAST_MAX_DEPTH, &cam->background);
-		acc = vec3_add(&acc, &sc);
-		k++;
+		_Pragma("omp atomic capture")
+		idx = job->next++;
+		if (idx >= job->total)
+			break ;
+		aa_refine_index(job, idx);
 	}
-	return (vec3_mul_scalar(&acc, (real_t)0.25));
-}
-
-/* True if pixel luma differs from right/down neighbour past threshold. */
-static int	aa_is_edge(const real_t *lum, int x, int y, int w)
-{
-	real_t	c;
-
-	c = lum[y * w + x];
-	if (fabs(c - lum[y * w + x + 1]) > (real_t)RT_AA_EDGE_THRESH)
-		return (1);
-	if (fabs(c - lum[(y + 1) * w + x]) > (real_t)RT_AA_EDGE_THRESH)
-		return (1);
-	return (0);
 }
 
 /* Pass B: refine only silhouette pixels.  Edge flags use a read-only   */
@@ -83,28 +54,24 @@ static int	aa_is_edge(const real_t *lum, int x, int y, int w)
 void	render_aa_pass(const t_camera *cam, const t_hittable_list *world,
 			t_vec3 *pixels)
 {
-	real_t	*lum;
-	int		w;
-	int		h;
-	int		n;
+	t_aa_job	job;
+	int			n;
 
 	if (RT_AA_MODE == 0 || render_get_engine_mode() != ENGINE_DIRECT)
 		return ;
-	w = cam->image_width;
-	h = cam->image_height;
-	lum = (real_t *)malloc((size_t)w * (size_t)h * sizeof(real_t));
-	if (!lum)
+	job.cam = cam;
+	job.world = world;
+	job.pixels = pixels;
+	job.next = 0;
+	job.total = (cam->image_width - 1) * (cam->image_height - 1);
+	job.lum = malloc((size_t)cam->image_width * cam->image_height
+			* sizeof(real_t));
+	if (!job.lum)
 		return ;
-	n = 0;
-	while (n < w * h)
-	{
-		lum[n] = aa_luma(&pixels[n]);
-		n++;
-	}
-#pragma omp parallel for schedule(dynamic, 1)
-	for (int y = 0; y < h - 1; ++y)
-		for (int x = 0; x < w - 1; ++x)
-			if (aa_is_edge(lum, x, y, w))
-				pixels[y * w + x] = aa_supersample(cam, world, x, y);
-	free(lum);
+	n = -1;
+	while (++n < cam->image_width * cam->image_height)
+		job.lum[n] = aa_luma(&pixels[n]);
+	_Pragma("omp parallel")
+	aa_worker(&job);
+	free(job.lum);
 }

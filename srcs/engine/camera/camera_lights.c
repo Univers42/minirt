@@ -15,119 +15,88 @@
 #include "interval.h"
 #include "studio_config.h"
 #include <math.h>
-#include <string.h>
 
 /* Light cache — read-only during rendering, safe for concurrent access
    from OpenMP threads.  Populated once before render begins. */
 t_light_info	g_lights[RT_MAX_LIGHTS];
 int				g_light_count = 0;
 
-/* ------------------------------------------------------------------ */
-/*  set_scene_lights — call once per thread before rendering           */
-/* ------------------------------------------------------------------ */
-
-void	set_scene_lights(const t_light_info *infos, int count)
+/* Distance attenuation: RT_LIGHT_FALLOFF==1 → physical (1/d^2), else
+   artistic linear (1/d).  RT_LIGHT_FALLOFF is a compile constant. */
+static real_t	light_falloff(real_t nl, real_t dist_center)
 {
-	if (count > RT_MAX_LIGHTS)
-		count = RT_MAX_LIGHTS;
-	g_light_count = count;
-	if (count > 0)
-		memcpy(g_lights, infos, (size_t)count * sizeof(t_light_info));
+	if (RT_LIGHT_FALLOFF == 1)
+		return (nl / (dist_center * dist_center));
+	return (nl / dist_center);
 }
 
-/* ------------------------------------------------------------------ */
-/*  shadow_ray_blocked — test if a single shadow ray is occluded       */
-/* ------------------------------------------------------------------ */
-
-static int	shadow_ray_blocked(const t_point3 *origin,
-				const t_vec3 *dir, real_t max_dist,
-				const t_hittable_list *world)
+/* Pick one sample point on the light surface (jittered when soft). */
+static t_point3	light_target(int idx)
 {
-	t_ray	shadow;
+	t_vec3	jitter;
 
-	shadow = ray_create(*origin, *dir, (real_t)0.0);
-	return (hittable_list_hit(world, &shadow,
-			interval((real_t)0.001, max_dist), NULL));
+	if (RT_SHADOW_SAMPLES > 1)
+	{
+		jitter = random_unit_vector();
+		jitter = vec3_mul_scalar(&jitter, g_lights[idx].radius);
+		return (vec3_add(&g_lights[idx].pos, &jitter));
+	}
+	return (g_lights[idx].pos);
 }
 
-/* ------------------------------------------------------------------ */
-/*  sample_one_light — multi-sample jittered shadow rays               */
-/*                                                                     */
-/*  RT_SHADOW_SAMPLES controls how many rays per light:                */
-/*    1  = hard shadows (single ray toward light centre)               */
-/*    N  = soft shadows (N jittered rays across light sphere surface)  */
-/*                                                                     */
-/*  RT_LIGHT_FALLOFF selects attenuation:                              */
-/*    0 = artistic  (NdotL / dist)                                    */
-/*    1 = physical  (NdotL / dist²)                                   */
-/* ------------------------------------------------------------------ */
+/* Contribution of one shadow ray toward a sampled light point (zero if it
+   faces away or is occluded). */
+static t_color	one_sample(const t_ls *ls, t_point3 target)
+{
+	t_vec3	to_light;
+	real_t	dist;
+	real_t	nl;
+	real_t	shadow_max;
+	real_t	f;
 
+	to_light = vec3_sub(&target, &ls->rec->p);
+	dist = vec3_length(&to_light);
+	if (dist < (real_t)1e-6)
+		return (vec3_zero());
+	to_light = vec3_div_scalar(&to_light, dist);
+	nl = dot(&ls->rec->normal, &to_light);
+	if (nl <= (real_t)0.0)
+		return (vec3_zero());
+	shadow_max = ls->dist_center - g_lights[ls->idx].radius - (real_t)0.01;
+	if (shadow_max < (real_t)0.002)
+		shadow_max = (real_t)0.002;
+	if (shadow_ray_blocked(&ls->rec->p, &to_light, shadow_max, ls->world))
+		return (vec3_zero());
+	f = light_falloff(nl, ls->dist_center);
+	return (vec3_mul_scalar(&g_lights[ls->idx].emission, f));
+}
+
+/*
+** sample_one_light — multi-sample jittered shadow rays for one light.
+** RT_SHADOW_SAMPLES: 1 = hard shadow (ray to centre), N = soft shadow
+** (N jittered rays across the light sphere), averaged.
+*/
 static t_color	sample_one_light(const t_hit_record *rec, int idx,
 					const t_hittable_list *world)
 {
-	t_color		accum;
-	int			s;
-	int			valid;
-	t_vec3		target;
-	t_vec3		to_light;
-	real_t		dist;
-	real_t		nl;
-	real_t		shadow_max;
-	real_t		falloff;
-	t_vec3		to_center;
-	real_t		dist_center;
-	t_vec3		jitter;
+	t_ls	ls;
+	t_color	accum;
+	t_vec3	to_center;
+	int		s;
 
-	accum = vec3_zero();
-	valid = 0;
 	to_center = vec3_sub(&g_lights[idx].pos, &rec->p);
-	dist_center = vec3_length(&to_center);
-	if (dist_center < g_lights[idx].radius + (real_t)0.01)
+	ls = (t_ls){rec, world, idx, vec3_length(&to_center)};
+	accum = vec3_zero();
+	if (ls.dist_center < g_lights[idx].radius + (real_t)0.01)
 		return (accum);
 	s = 0;
 	while (s < RT_SHADOW_SAMPLES)
 	{
-		if (RT_SHADOW_SAMPLES > 1)
-		{
-			jitter = random_unit_vector();
-			jitter = vec3_mul_scalar(&jitter, g_lights[idx].radius);
-			target = vec3_add(&g_lights[idx].pos, &jitter);
-		}
-		else
-			target = g_lights[idx].pos;
-		to_light = vec3_sub(&target, &rec->p);
-		dist = vec3_length(&to_light);
-		if (dist < (real_t)1e-6)
-		{
-			s++;
-			continue ;
-		}
-		to_light = vec3_div_scalar(&to_light, dist);
-		nl = dot(&rec->normal, &to_light);
-		if (nl <= (real_t)0.0)
-		{
-			s++;
-			continue ;
-		}
-		shadow_max = dist_center - g_lights[idx].radius - (real_t)0.01;
-		if (shadow_max < (real_t)0.002)
-			shadow_max = (real_t)0.002;
-		if (!shadow_ray_blocked(&rec->p, &to_light, shadow_max, world))
-		{
-#if RT_LIGHT_FALLOFF == 1
-			falloff = nl / (dist_center * dist_center);
-#else
-			falloff = nl / dist_center;
-#endif
-			accum = vec3_add(&accum,
-					&(t_color){g_lights[idx].emission.x * falloff,
-					g_lights[idx].emission.y * falloff,
-					g_lights[idx].emission.z * falloff});
-			valid++;
-		}
+		to_center = one_sample(&ls, light_target(idx));
+		accum = vec3_add(&accum, &to_center);
 		s++;
 	}
-	if (valid > 0 && RT_SHADOW_SAMPLES > 1)
+	if (RT_SHADOW_SAMPLES > 1)
 		accum = vec3_div_scalar(&accum, (real_t)RT_SHADOW_SAMPLES);
 	return (accum);
 }

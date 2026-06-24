@@ -17,13 +17,6 @@
 #include "studio_config.h"
 #include <math.h>
 
-typedef struct s_lctx
-{
-	const t_hit_record		*rec;
-	const t_vec3			*view;
-	const t_hittable_list	*world;
-}	t_lctx;
-
 /* Blinn-Phong specular weight for one light (white-tinted highlight). */
 static real_t	blinn_phong(const t_vec3 *n, const t_vec3 *l, const t_vec3 *v)
 {
@@ -43,7 +36,6 @@ static void	add_light(const t_lctx *lc, int i, t_color acc[2])
 	t_vec3	l;
 	real_t	d;
 	real_t	nl;
-	real_t	s;
 	real_t	vis;
 	t_color	tmp;
 
@@ -60,8 +52,8 @@ static void	add_light(const t_lctx *lc, int i, t_color acc[2])
 		return ;
 	tmp = vec3_mul_scalar(&g_lights[i].emission, vis * nl / d);
 	acc[0] = vec3_add(&acc[0], &tmp);
-	s = blinn_phong(&lc->rec->normal, &l, lc->view) * RT_SPECULAR_KS * vis / d;
-	tmp = vec3_mul_scalar(&g_lights[i].emission, s);
+	nl = blinn_phong(&lc->rec->normal, &l, lc->view) * RT_SPECULAR_KS * vis / d;
+	tmp = vec3_mul_scalar(&g_lights[i].emission, nl);
 	acc[1] = vec3_add(&acc[1], &tmp);
 }
 

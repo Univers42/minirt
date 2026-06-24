@@ -11,11 +11,7 @@
 /* ************************************************************************** */
 
 #include "camera.h"
-#include "material.h"
-#include "camera_lights.h"
 #include "studio_config.h"
-#include "random.h"
-#include "environment.h"
 
 /*
 ** sky_peak — overall sky energy = brightest background component.
@@ -66,104 +62,6 @@ t_vec3	bg_sky_color(const t_ray *r, const t_color *background)
 	zenith = vec3_create((real_t)RT_SKY_ZENITH_R * peak,
 			(real_t)RT_SKY_ZENITH_G * peak, (real_t)RT_SKY_ZENITH_B * peak);
 	return (vec3_lerp(&horizon, &zenith, t));
-}
-
-static t_color	compute_lighting(const t_hit_record *rec,
-					const t_hittable_list *world, int depth,
-					const t_color *bg, const t_color *att,
-					const t_ray *scattered)
-{
-	t_color	direct;
-	t_color	indirect;
-	t_color	total;
-
-	direct = vec3_zero();
-#if RT_DIRECT_LIGHT_ENABLED
-	direct = sample_direct_lights(rec, world);
-	direct = vec3_mul_elem(att, &direct);
-#endif
-	indirect = ray_color_with_background(scattered, world,
-			depth - 1, bg);
-	indirect = vec3_mul_elem(att, &indirect);
-	total = vec3_add(&direct, &indirect);
-	return (total);
-}
-
-/*
-** russian_roulette — probabilistic path termination for unbiased
-** speedup.  After RT_RR_START_DEPTH bounces, paths with low
-** attenuation have a proportional chance of being terminated.
-** Surviving paths are boosted by 1/p_continue to keep the
-** estimator unbiased.
-**
-** Returns: 1 if the path survives (att is scaled), 0 if terminated.
-*/
-static int	russian_roulette(int depth, int max_depth, t_color *att)
-{
-#if RT_RR_START_DEPTH > 0
-	real_t	p_max;
-	real_t	p_continue;
-	int		bounces;
-
-	bounces = max_depth - depth;
-	if (bounces < RT_RR_START_DEPTH)
-		return (1);
-	p_max = att->x;
-	if (att->y > p_max)
-		p_max = att->y;
-	if (att->z > p_max)
-		p_max = att->z;
-	p_continue = p_max;
-	if (p_continue < (real_t)0.05)
-		p_continue = (real_t)0.05;
-	if (p_continue > (real_t)0.95)
-		p_continue = (real_t)0.95;
-	if (random_real() > p_continue)
-		return (0);
-	*att = vec3_div_scalar(att, p_continue);
-#else
-	(void)depth;
-	(void)max_depth;
-	(void)att;
-#endif
-	return (1);
-}
-
-t_vec3	ray_color_with_background(const t_ray *r,
-			const t_hittable_list *world, int depth,
-			const t_color *background)
-{
-	t_hit_record	rec;
-	t_ray			scattered;
-	t_color			attenuation;
-	t_color			emission;
-	t_color			lit;
-
-	if (depth <= 0)
-		return (vec3_zero());
-	if (!hittable_list_hit(world, r, interval((real_t)1e-4, INFINITY), &rec))
-	{
-		if (get_scene_environment())
-			return (bg_environment_color(r));
-		if (background->x < 0.01 && background->y < 0.01
-			&& background->z < 0.01)
-			return (vec3_zero());
-		return (bg_sky_color(r, background));
-	}
-	emission = vec3_zero();
-	if (rec.mat && rec.mat->emitted)
-		emission = rec.mat->emitted(&(t_emit){rec.mat, rec.u, rec.v,
-				&rec.p, rec.front_face});
-	if (rec.mat && rec.mat->scatter(&(t_scatter){rec.mat, r,
-			&rec, &attenuation, &scattered}))
-	{
-		if (!russian_roulette(depth, RT_MAX_DEPTH, &attenuation))
-			return (emission);
-		lit = compute_lighting(&rec, world, depth, background,
-				&attenuation, &scattered);
-		return (vec3_add(&emission, &lit));
-	}
-	return (emission);
 }
 
 unsigned char	*write_color_to_buf_bin(unsigned char *dst,

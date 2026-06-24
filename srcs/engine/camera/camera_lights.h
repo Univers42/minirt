@@ -28,6 +28,15 @@ typedef struct s_light_info
 	real_t		radius;
 }	t_light_info;
 
+/* Per-light shadow-sampling context (camera_lights.c). */
+typedef struct s_ls
+{
+	const t_hit_record		*rec;
+	const t_hittable_list	*world;
+	int						idx;
+	real_t					dist_center;
+}	t_ls;
+
 /* Read-only light cache (populated once before render; shared with the
    deterministic shading engine). */
 extern t_light_info	g_lights[RT_MAX_LIGHTS];
@@ -36,5 +45,7 @@ extern int			g_light_count;
 void	set_scene_lights(const t_light_info *infos, int count);
 t_color	sample_direct_lights(const t_hit_record *rec,
 			const t_hittable_list *world);
+int		shadow_ray_blocked(const t_point3 *origin, const t_vec3 *dir,
+			real_t max_dist, const t_hittable_list *world);
 
 #endif

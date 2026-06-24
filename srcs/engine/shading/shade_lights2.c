@@ -75,32 +75,44 @@ static t_point3	sample_point(int s, int idx, const t_vec3 *t, const t_vec3 *b)
 	return (vec3_add(&g_lights[idx].pos, &off));
 }
 
-real_t	soft_shadow_visibility(const t_point3 *p, const t_vec3 *l,
-			int idx, const t_hittable_list *world)
+/* Count how many of the q->count stratified disk samples reach the light. */
+static int	count_visible(const t_shadow_q *q)
 {
 	t_vec3		t;
 	t_vec3		b;
 	t_point3	target;
-	int			n[2];
+	int			vis;
 	int			s;
-	real_t		maxd;
+
+	light_basis(q->l, &t, &b);
+	vis = 0;
+	s = -1;
+	while (++s < q->count)
+	{
+		target = sample_point(s, q->idx, &t, &b);
+		vis += !occluded(q->p, &target, q->maxd, q->world);
+	}
+	return (vis);
+}
+
+real_t	soft_shadow_visibility(const t_point3 *p, const t_vec3 *l,
+			int idx, const t_hittable_list *world)
+{
+	t_shadow_q	q;
+	t_point3	target;
 
 	target = vec3_sub(&g_lights[idx].pos, p);
-	maxd = vec3_length(&target) - g_lights[idx].radius - (real_t)0.01;
-	n[0] = rt_clampi(RT_SOFT_SHADOW_SAMPLES, 1, 16);
-	if (n[0] == 1 || g_lights[idx].radius < (real_t)1e-4)
+	q.p = p;
+	q.l = l;
+	q.world = world;
+	q.idx = idx;
+	q.maxd = vec3_length(&target) - g_lights[idx].radius - (real_t)0.01;
+	q.count = rt_clampi(RT_SOFT_SHADOW_SAMPLES, 1, 16);
+	if (q.count == 1 || g_lights[idx].radius < (real_t)1e-4)
 	{
-		if (occluded(p, &g_lights[idx].pos, maxd, world))
+		if (occluded(p, &g_lights[idx].pos, q.maxd, world))
 			return ((real_t)0.0);
 		return ((real_t)1.0);
 	}
-	light_basis(l, &t, &b);
-	n[1] = 0;
-	s = -1;
-	while (++s < n[0])
-	{
-		target = sample_point(s, idx, &t, &b);
-		n[1] += !occluded(p, &target, maxd, world);
-	}
-	return ((real_t)n[1] / (real_t)n[0]);
+	return ((real_t)count_visible(&q) / (real_t)q.count);
 }

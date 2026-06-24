@@ -93,7 +93,7 @@ static void	render_pixel(const t_camera *cam, const t_hittable_list *world,
 		si = 0;
 		while (si < cam->sqrt_spp)
 		{
-			r = get_ray_stratified(cam, x, y, si, sj);
+			r = get_ray_stratified(cam, &(t_pix){x, y, si, sj});
 			sc = ray_color_with_background(&r, world,
 					cam->max_depth, &cam->background);
 			pc = vec3_add(&pc, &sc);
