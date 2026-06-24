@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 /* Declarations from scene_build.c / scene_build3.c / render.c */
 void			setup_camera(t_camera *cam, const t_scene *sc, int width);
@@ -358,15 +359,15 @@ static int	dispatch(const char *path)
 	const char	*ext;
 
 	ext = get_ext(path);
-	if (strcmp(ext, ".rt") == 0)
+	if (strcasecmp(ext, ".rt") == 0)
 	{
 		if (g_ppm_mode)
 			return (run_rt_display(path));
 		return (rt_run(path));
 	}
-	if (strcmp(ext, ".json") == 0)
+	if (strcasecmp(ext, ".json") == 0)
 		return (run_json(path));
-	if (strcmp(ext, ".obj") == 0)
+	if (strcasecmp(ext, ".obj") == 0)
 		return (run_obj(path));
 	fprintf(stderr, "Error\nUnsupported file extension: %s\n", ext);
 	return (1);

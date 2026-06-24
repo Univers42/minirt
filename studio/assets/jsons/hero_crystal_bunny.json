@@ -1,0 +1,56 @@
+{
+  "_description": "Crystal Bunny — the Stanford bunny as clear glass on a pale checker floor, back-lit and side-lit so light transmits through the glass with bright Fresnel edges and a soft caustic-ish shadow. Calm, bright, elegant. Eye-level camera framing the whole bunny.",
+
+  "ambient": {
+    "ratio": 0.2,
+    "color": [210, 220, 238]
+  },
+  "camera": {
+    "position": [0.6, 3.3, -10],
+    "direction": [-0.05, -0.045, 1],
+    "fov": 40
+  },
+  "lights": [
+    {
+      "_comment": "Key back-light behind the bunny, high and slightly to the right — transmits through glass, lights the Fresnel rim",
+      "position": [6, 13, 8],
+      "brightness": 0.95,
+      "color": [255, 248, 236]
+    },
+    {
+      "_comment": "Side rim-light from the left, lower — picks out the silhouette edges",
+      "position": [-9, 4, 1],
+      "brightness": 0.55,
+      "color": [220, 230, 255]
+    },
+    {
+      "_comment": "Soft front fill so the body doesn't go murky",
+      "position": [-2, 6, -7],
+      "brightness": 0.38,
+      "color": [255, 252, 245]
+    }
+  ],
+  "objects": [
+    {"_comment": "=== PALE CHECKER FLOOR — soft, bright, gives caustic-ish shadow contrast ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [235, 238, 245],
+      "material": { "type": "glossy", "roughness": 0.06 }
+    },
+
+    {"_comment": "=== CRYSTAL BUNNY — clear glass, scale 6, centered at y=3 so it rests on the floor (spans ~0..6) ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/bunny.obj",
+      "position": [0, 3.0, 0],
+      "scale": 6,
+      "color": [235, 245, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.52
+      }
+    }
+  ]
+}

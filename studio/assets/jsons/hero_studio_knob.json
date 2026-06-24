@@ -1,0 +1,38 @@
+{
+  "_description": "Hero studio material-study of the smooth knob in polished glossy metal, three-point lighting, neutral mid-grey floor, soft gradient backdrop.",
+
+  "ambient": { "ratio": 0.24, "color": [205, 212, 230] },
+
+  "camera": {
+    "position": [0, 4.6, -15.5],
+    "direction": [0, -0.17, 0.985],
+    "fov": 31
+  },
+
+  "lights": [
+    { "_comment": "KEY light, upper-left front, warm", "position": [-30, 50, -50], "brightness": 1.1, "color": [255, 244, 225] },
+    { "_comment": "FILL light, right front, lifts shadows", "position": [38, 28, -45], "brightness": 0.85, "color": [228, 234, 250] },
+    { "_comment": "RIM/back light, crisp edge", "position": [10, 45, 35], "brightness": 0.9, "color": [255, 253, 250] }
+  ],
+
+  "objects": [
+    {"_comment": "=== NEUTRAL MID-GREY STUDIO FLOOR, gently glossy ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [150, 152, 158],
+      "material": { "type": "glossy", "roughness": 0.28, "fuzz": 0.14 }
+    },
+
+    {"_comment": "=== THE KNOB+BACKDROP CARD — big scale so the test ball reads as hero ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/testObj.obj",
+      "position": [0, 15.0, 0],
+      "scale": 44.0,
+      "color": [232, 222, 205],
+      "material": { "type": "lambertian" }
+    }
+  ]
+}
