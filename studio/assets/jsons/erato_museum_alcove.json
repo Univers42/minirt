@@ -1,0 +1,165 @@
+{
+  "_description": "Erato museum alcove — the Erato Muse (cool polished marble / glossy) shown in an elegant 3/4 hero portrait that reads her FACE and her lyre. Front-left camera. Deep-teal matte backdrop wall behind the figure, a warm accent panel + a soft cool key shaping the face, on a dark polished floor that gives a clean reflection. Full statue resting on a dark stone pedestal.",
+
+  "ambient": {
+    "ratio": 0.06,
+    "color": [170, 188, 208]
+  },
+  "render": {
+    "aspect_ratio": 1.7777,
+    "spp": 160,
+    "max_depth": 12
+  },
+  "camera": {
+    "_comment": "Front-left 3/4 hero angle — sees the face and the lyre. Looks from -X/+Z toward the statue center [0,4.2,0].",
+    "position": [-9.0, 5.4, 9.2],
+    "direction": [9.0, -0.7, -9.2],
+    "fov": 42
+  },
+  "lights": [
+    {
+      "_comment": "Warm key — high front-left, camera side, rakes the face for a clear warm/cool split",
+      "position": [-8, 12, 10],
+      "brightness": 1.2,
+      "color": [255, 236, 206]
+    },
+    {
+      "_comment": "Cool fill from front-right, soft, models the marble form",
+      "position": [9, 6, 7],
+      "brightness": 0.35,
+      "color": [190, 210, 255]
+    },
+    {
+      "_comment": "Bright rim from behind (far side, +X/-Z) to separate the figure from the backdrop; high and far so its emissive-sphere stays above frame",
+      "position": [9, 17, -12],
+      "brightness": 1.0,
+      "color": [255, 250, 240]
+    }
+  ],
+  "objects": [
+    {"_comment": "=== DARK POLISHED FLOOR — clean reflection of the statue ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [22, 25, 31],
+      "material": { "type": "glossy", "roughness": 0.05 }
+    },
+
+    {"_comment": "=== ENCLOSING ALCOVE — oversized walls + ceiling so no void enters the wide 16:9 frame. Backdrop sits on the FAR side (+X/-Z) behind the figure. ==="},
+    {
+      "_comment": "DEEP-TEAL MATTE BACKDROP — far side, faces the camera (normal toward -X/+Z). Deep teal so lighting doesn't blow it to flat cyan.",
+      "type": "quad",
+      "position": [13, -2, 16],
+      "u": [0, 0, -40],
+      "v": [0, 44, 0],
+      "color": [12, 46, 52],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "Darker-teal back wall (far -Z side) to frame, faces +Z toward camera",
+      "type": "quad",
+      "position": [-18, -2, -16],
+      "u": [38, 0, 0],
+      "v": [0, 44, 0],
+      "color": [12, 40, 46],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "Warm burgundy side wall (camera-left, faces +X) — warm half of the split",
+      "type": "quad",
+      "position": [-15, -2, 20],
+      "u": [0, 0, -38],
+      "v": [0, 44, 0],
+      "color": [86, 38, 32],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "Cool-teal side wall (camera-right, faces -X) — large, pulled toward camera (+z) to close the right void",
+      "type": "quad",
+      "position": [11.0, -4, -28],
+      "u": [0, 0, 64],
+      "v": [0, 50, 0],
+      "color": [12, 42, 50],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "Dim ceiling cap so the top corners never see void",
+      "type": "quad",
+      "position": [-24, 30, -24],
+      "u": [48, 0, 0],
+      "v": [0, 0, 48],
+      "color": [26, 36, 46],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== OVERHEAD WARM SOFTBOX KEY — bright emissive panel above front-left, kept out of frame ==="},
+    {
+      "type": "quad",
+      "position": [-10, 14.0, 4],
+      "u": [9, 0, 0],
+      "v": [0, 0, 9],
+      "color": [255, 247, 232],
+      "material": { "type": "emissive", "scale": 4.0 }
+    },
+
+    {"_comment": "=== COOL ACCENT SOFTBOX — front-right, low and far out, cool glow on the marble (cool half) ==="},
+    {
+      "type": "quad",
+      "position": [11.5, 0.4, 8],
+      "u": [0, 0, -6],
+      "v": [0, 7, 0],
+      "color": [206, 224, 255],
+      "material": { "type": "emissive", "scale": 3.5 }
+    },
+
+    {"_comment": "=== WARM ACCENT SOFTBOX — camera-left, low, throws warm glow onto the drape (warm half) ==="},
+    {
+      "type": "quad",
+      "position": [-11, 0.4, 3],
+      "u": [0, 0, 6],
+      "v": [0, 6, 0],
+      "color": [255, 196, 138],
+      "material": { "type": "emissive", "scale": 3.5 }
+    },
+
+    {"_comment": "=== PEDESTAL — low dark stone block grounding the statue, centered under it ==="},
+    {
+      "_comment": "front face toward camera (-X/+Z corner), faces +Z",
+      "type": "quad",
+      "position": [-2.4, 0.0, 2.4],
+      "u": [4.8, 0, 0],
+      "v": [0, 0.8, 0],
+      "color": [30, 33, 38],
+      "material": { "type": "glossy", "roughness": 0.25 }
+    },
+    {
+      "_comment": "left face toward camera, faces -X",
+      "type": "quad",
+      "position": [-2.4, 0.0, 2.4],
+      "u": [0, 0, -4.8],
+      "v": [0, 0.8, 0],
+      "color": [26, 29, 34],
+      "material": { "type": "glossy", "roughness": 0.25 }
+    },
+    {
+      "_comment": "top cap of the pedestal",
+      "type": "quad",
+      "position": [-2.4, 0.8, -2.4],
+      "u": [4.8, 0, 0],
+      "v": [0, 0, 4.8],
+      "color": [34, 37, 42],
+      "material": { "type": "glossy", "roughness": 0.18 }
+    },
+
+    {"_comment": "=== ERATO STATUE — cool marble. Lambertian on the stone (clean, reads as matte polished marble); the glossy floor below supplies the 'polished' reflection cue without glossy-firefly noise on the figure. ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/erato.obj",
+      "position": [0, 4.2, 0],
+      "scale": 7,
+      "color": [230, 233, 240],
+      "material": "lambertian"
+    }
+  ]
+}
