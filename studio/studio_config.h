@@ -371,6 +371,12 @@
 #  define RT_AO_RADIUS			1.5
 # endif
 
+/* Minimum ambient kept even when fully occluded, so contact/crease         */
+/* darkening never crushes to pure black.  Range 0 - 1.  DEFAULT 0.4.       */
+# ifndef RT_AO_MIN
+#  define RT_AO_MIN				0.4
+# endif
+
 /* Light distance attenuation model.                                  */
 /*  0 = artistic / linear  (NdotL / distance) — smoother falloff      */
 /*  1 = physically correct (NdotL / distance²) — realistic inverse    */

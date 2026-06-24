@@ -82,5 +82,6 @@ real_t	ambient_occlusion(const t_hit_record *rec, const t_hittable_list *world)
 		n[1] += !hittable_list_hit(world, &probe,
 				interval((real_t)1e-3, RT_AO_RADIUS), NULL);
 	}
-	return ((real_t)n[1] / (real_t)n[0]);
+	return ((real_t)RT_AO_MIN + ((real_t)1.0 - (real_t)RT_AO_MIN)
+		* ((real_t)n[1] / (real_t)n[0]));
 }
