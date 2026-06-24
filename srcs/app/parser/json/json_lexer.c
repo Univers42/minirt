@@ -13,6 +13,7 @@
 #include "json_lexer.h"
 #include <string.h>
 #include <stdlib.h>
+#include "libft.h"
 
 void	jlexer_init(t_jlexer *lex, const char *src, size_t len)
 {
@@ -113,7 +114,7 @@ static bool	jlex_keyword(t_jlexer *lex, t_jtok *tok,
 {
 	size_t	wlen;
 
-	wlen = strlen(word);
+	wlen = ft_strlen(word);
 	if (lex->pos + wlen > lex->len)
 		return (false);
 	if (memcmp(lex->src + lex->pos, word, wlen) != 0)
@@ -161,7 +162,7 @@ bool	jlexer_next(t_jlexer *lex, t_jtok *tok)
 {
 	char	c;
 
-	memset(tok, 0, sizeof(*tok));
+	ft_memset(tok, 0, sizeof(*tok));
 	jlex_skip_ws(lex);
 	tok->line = lex->line;
 	tok->col = lex->col;

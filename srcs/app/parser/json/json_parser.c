@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "libft.h"
 
 /* Forward declaration for recursive parsing */
 static t_json_node	*parse_value(t_jlexer *lex);
@@ -29,7 +30,7 @@ static t_json_node	*node_new(t_json_type type)
 	n = (t_json_node *)malloc(sizeof(t_json_node));
 	if (!n)
 		return (NULL);
-	memset(n, 0, sizeof(*n));
+	ft_memset(n, 0, sizeof(*n));
 	n->type = type;
 	return (n);
 }
@@ -53,7 +54,7 @@ static bool	obj_add_pair(t_json_object *obj, const char *key,
 		obj->pairs = tmp;
 		obj->capacity = newcap;
 	}
-	memset(obj->pairs[obj->count].key, 0, JSON_STR_MAX);
+	ft_memset(obj->pairs[obj->count].key, 0, JSON_STR_MAX);
 	strncpy(obj->pairs[obj->count].key, key, JSON_STR_MAX - 1);
 	obj->pairs[obj->count].value = val;
 	obj->count++;

@@ -15,6 +15,9 @@
 #include "rt_error.h"
 #include <string.h>
 
+/* libft prototype (rt_error.h collides with libft.h's ft_stddef.h) */
+void	*ft_memset(void *b, int c, size_t len);
+
 void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat);
 bool	validate_color(const t_file_buf *fb, const t_token *tok);
 bool	validate_normalized(const t_file_buf *fb, const t_token *tok,
@@ -54,7 +57,7 @@ bool	parse_hyperboloid(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}
-	memset(&obj, 0, sizeof(obj));
+	ft_memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_HYPERBOLOID;
 	obj.data.hyperboloid.center = vec3_create(lex->tokens[1].val.vec.x,
 			lex->tokens[1].val.vec.y, lex->tokens[1].val.vec.z);
@@ -104,7 +107,7 @@ bool	parse_torus(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}
-	memset(&obj, 0, sizeof(obj));
+	ft_memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_TORUS;
 	obj.data.torus.center = vec3_create(lex->tokens[1].val.vec.x,
 			lex->tokens[1].val.vec.y, lex->tokens[1].val.vec.z);

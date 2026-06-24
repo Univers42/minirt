@@ -15,6 +15,9 @@
 #include "rt_error.h"
 #include <string.h>
 
+/* libft prototype (rt_error.h collides with libft.h's ft_stddef.h) */
+void	*ft_memset(void *b, int c, size_t len);
+
 void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat);
 bool	validate_range_f(const t_file_buf *fb, const t_token *tok,
 				double lo, double hi, const char *name);
@@ -70,7 +73,7 @@ bool	parse_sphere(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (!validate_color(fb, &lex->tokens[3]))
 		return (false);
-	memset(&obj, 0, sizeof(obj));
+	ft_memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_SPHERE;
 	obj.data.sphere.center = vec3_from_tok(&lex->tokens[1]);
 	obj.data.sphere.diameter = lex->tokens[2].val.f;
@@ -93,7 +96,7 @@ bool	parse_plane(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (!validate_color(fb, &lex->tokens[3]))
 		return (false);
-	memset(&obj, 0, sizeof(obj));
+	ft_memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_PLANE;
 	obj.data.plane.point = vec3_from_tok(&lex->tokens[1]);
 	obj.data.plane.normal = vec3_from_tok(&lex->tokens[2]);
@@ -120,7 +123,7 @@ bool	parse_cylinder(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (!validate_color(fb, &lex->tokens[5]))
 		return (false);
-	memset(&obj, 0, sizeof(obj));
+	ft_memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_CYLINDER;
 	obj.data.cylinder.center = vec3_from_tok(&lex->tokens[1]);
 	obj.data.cylinder.axis = vec3_from_tok(&lex->tokens[2]);

@@ -12,6 +12,7 @@
 
 #include "rt_lexer.h"
 #include <string.h>
+#include "libft.h"
 
 /*
 ** Single-line tokenizer for the .rt format.
@@ -58,29 +59,29 @@ static int	g_schema_to[] = {'V', 'V', 'F', 'F', 'C', 'M', 0};
 
 static int	*get_schema(const char *id)
 {
-	if (strcmp(id, "A") == 0)
+	if (ft_strcmp(id, "A") == 0)
 		return (g_schema_a);
-	if (strcmp(id, "C") == 0)
+	if (ft_strcmp(id, "C") == 0)
 		return (g_schema_c);
-	if (strcmp(id, "L") == 0)
+	if (ft_strcmp(id, "L") == 0)
 		return (g_schema_l);
-	if (strcmp(id, "sp") == 0)
+	if (ft_strcmp(id, "sp") == 0)
 		return (g_schema_sp);
-	if (strcmp(id, "pl") == 0)
+	if (ft_strcmp(id, "pl") == 0)
 		return (g_schema_pl);
-	if (strcmp(id, "cy") == 0)
+	if (ft_strcmp(id, "cy") == 0)
 		return (g_schema_cy);
-	if (strcmp(id, "co") == 0)
+	if (ft_strcmp(id, "co") == 0)
 		return (g_schema_co);
-	if (strcmp(id, "tr") == 0)
+	if (ft_strcmp(id, "tr") == 0)
 		return (g_schema_tr);
-	if (strcmp(id, "di") == 0)
+	if (ft_strcmp(id, "di") == 0)
 		return (g_schema_di);
-	if (strcmp(id, "pb") == 0)
+	if (ft_strcmp(id, "pb") == 0)
 		return (g_schema_pb);
-	if (strcmp(id, "hy") == 0)
+	if (ft_strcmp(id, "hy") == 0)
 		return (g_schema_hy);
-	if (strcmp(id, "to") == 0)
+	if (ft_strcmp(id, "to") == 0)
 		return (g_schema_to);
 	return (NULL);
 }
@@ -107,7 +108,7 @@ static bool	parse_by_schema(t_lexer *lex, int *schema)
 	{
 		lexer_skip_spaces(lex);
 		col = lex->pos;
-		memset(&val, 0, sizeof(val));
+		ft_memset(&val, 0, sizeof(val));
 		if (*schema == 'F')
 		{
 			if (!lexer_parse_float(lex, &val.f))
@@ -168,7 +169,7 @@ int	tokenize_line(t_lexer *lex, const char *line, int line_num)
 		return (0);
 	lexer_skip_spaces(lex);
 	col = lex->pos;
-	memset(&val, 0, sizeof(val));
+	ft_memset(&val, 0, sizeof(val));
 	if (!lexer_parse_identifier(lex, val.id, sizeof(val.id)))
 		return (-1);
 	add_token(lex, TOK_IDENTIFIER, val, col);

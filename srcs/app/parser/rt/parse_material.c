@@ -13,6 +13,7 @@
 #include "rt_parser.h"
 #include "rt_lexer.h"
 #include <string.h>
+#include "libft.h"
 
 /*
 ** Optional trailing material keyword on an object line, e.g.
@@ -29,22 +30,22 @@ void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat)
 	if (idx >= lex->count || lex->tokens[idx].type != TOK_IDENTIFIER)
 		return ;
 	kw = lex->tokens[idx].val.id;
-	if (!strncmp(kw, "glass", 8))
+	if (!ft_strncmp(kw, "glass", 8))
 		mat->type = MAT_DIELECTRIC;
-	else if (!strncmp(kw, "metal", 8) || !strncmp(kw, "mirror", 8))
+	else if (!ft_strncmp(kw, "metal", 8) || !ft_strncmp(kw, "mirror", 8))
 		mat->type = MAT_METAL;
-	else if (!strncmp(kw, "glossy", 8))
+	else if (!ft_strncmp(kw, "glossy", 8))
 		mat->type = MAT_GLOSSY;
-	else if (!strncmp(kw, "tglass", 8) || !strncmp(kw, "tinted", 8))
+	else if (!ft_strncmp(kw, "tglass", 8) || !ft_strncmp(kw, "tinted", 8))
 		mat->type = MAT_TINTED_GLASS;
-	else if (!strncmp(kw, "light", 8) || !strncmp(kw, "lamp", 8))
+	else if (!ft_strncmp(kw, "light", 8) || !ft_strncmp(kw, "lamp", 8))
 		mat->type = MAT_EMISSIVE;
-	else if (!strncmp(kw, "checker", 8))
+	else if (!ft_strncmp(kw, "checker", 8))
 		mat->type = MAT_CHECKER;
-	else if (!strncmp(kw, "iso", 8) || !strncmp(kw, "fog", 8))
+	else if (!ft_strncmp(kw, "iso", 8) || !ft_strncmp(kw, "fog", 8))
 		mat->type = MAT_ISOTROPIC;
-	else if (!strncmp(kw, "marble", 8) || !strncmp(kw, "noise", 8))
+	else if (!ft_strncmp(kw, "marble", 8) || !ft_strncmp(kw, "noise", 8))
 		mat->type = MAT_MARBLE;
-	else if (!strncmp(kw, "wood", 8))
+	else if (!ft_strncmp(kw, "wood", 8))
 		mat->type = MAT_WOOD;
 }

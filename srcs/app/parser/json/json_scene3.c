@@ -13,6 +13,7 @@
 #include "json_scene.h"
 #include "json_helpers.h"
 #include <string.h>
+#include "libft.h"
 
 /* ------------------------------------------------------------------ */
 /*  Map a material name string to t_mat_type                          */
@@ -22,19 +23,19 @@
 
 static t_mat_type	mat_type_from_str(const char *s)
 {
-	if (strcmp(s, "metal") == 0)
+	if (ft_strcmp(s, "metal") == 0)
 		return (MAT_METAL);
-	if (strcmp(s, "dielectric") == 0 || strcmp(s, "glass") == 0)
+	if (ft_strcmp(s, "dielectric") == 0 || ft_strcmp(s, "glass") == 0)
 		return (MAT_DIELECTRIC);
-	if (strcmp(s, "tinted_glass") == 0)
+	if (ft_strcmp(s, "tinted_glass") == 0)
 		return (MAT_TINTED_GLASS);
-	if (strcmp(s, "emissive") == 0 || strcmp(s, "light") == 0)
+	if (ft_strcmp(s, "emissive") == 0 || ft_strcmp(s, "light") == 0)
 		return (MAT_EMISSIVE);
-	if (strcmp(s, "checker") == 0)
+	if (ft_strcmp(s, "checker") == 0)
 		return (MAT_CHECKER);
-	if (strcmp(s, "glossy") == 0)
+	if (ft_strcmp(s, "glossy") == 0)
 		return (MAT_GLOSSY);
-	if (strcmp(s, "isotropic") == 0)
+	if (ft_strcmp(s, "isotropic") == 0)
 		return (MAT_ISOTROPIC);
 	return (MAT_LAMBERTIAN);
 }

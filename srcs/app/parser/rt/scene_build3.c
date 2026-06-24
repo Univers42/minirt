@@ -19,6 +19,7 @@
 #include "../obj/obj_parser.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "libft.h"
 
 /* ------------------------------------------------------------------ */
 /*  Runtime resolution overrides via env vars (no recompile needed).   */
@@ -35,7 +36,7 @@ int	rt_env_int(const char *name, int lo, int hi, int fallback)
 	val = getenv(name);
 	if (!val || !*val)
 		return (fallback);
-	n = atoi(val);
+	n = ft_atoi(val);
 	if (n < lo || n > hi)
 		return (fallback);
 	return (n);

@@ -18,6 +18,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* libft prototypes (rt_error.h collides with libft.h's ft_stddef.h) */
+int		ft_strcmp(const char *s1, const char *s2);
+size_t	ft_strlen(const char *s);
+void	*ft_memset(void *b, int c, size_t len);
+
 /* ------------------------------------------------------------------ */
 /*  External parse handlers (parse_elements.c / parse_objects.c /     */
 /*  parse_bonus.c)                                                    */
@@ -77,7 +82,7 @@ static t_parse_fn	dispatch_lookup(const char *id)
 	i = 0;
 	while (g_dispatch[i].id)
 	{
-		if (strcmp(id, g_dispatch[i].id) == 0)
+		if (ft_strcmp(id, g_dispatch[i].id) == 0)
 			return (g_dispatch[i].fn);
 		i++;
 	}
@@ -92,10 +97,10 @@ static bool	valid_extension(const char *path)
 {
 	size_t	len;
 
-	len = strlen(path);
+	len = ft_strlen(path);
 	if (len < 4)
 		return (false);
-	return (strcmp(path + len - 3, ".rt") == 0);
+	return (ft_strcmp(path + len - 3, ".rt") == 0);
 }
 
 /* ------------------------------------------------------------------ */
@@ -125,7 +130,7 @@ static bool	process_line(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 
 void	scene_init(t_scene *scene)
 {
-	memset(scene, 0, sizeof(*scene));
+	ft_memset(scene, 0, sizeof(*scene));
 	hittable_list_init(&scene->world);
 	mat_registry_reset();
 }

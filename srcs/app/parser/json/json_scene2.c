@@ -14,6 +14,7 @@
 #include "json_helpers.h"
 #include <stdio.h>
 #include <string.h>
+#include "libft.h"
 
 /* scene_build2.c (json_scene3.c) */
 void	parse_mat_spec(const t_json_node *o, t_rt_object *out);
@@ -72,13 +73,13 @@ static bool	fill_quad(t_rt_object *out, const t_json_node *o)
 static bool	fill_extra(t_rt_object *out, const t_json_node *o,
 		const char *type)
 {
-	if (strcmp(type, "cylinder") == 0)
+	if (ft_strcmp(type, "cylinder") == 0)
 		return (fill_cylinder(out, o));
-	if (strcmp(type, "cone") == 0)
+	if (ft_strcmp(type, "cone") == 0)
 		return (fill_cone(out, o));
-	if (strcmp(type, "quad") == 0)
+	if (ft_strcmp(type, "quad") == 0)
 		return (fill_quad(out, o));
-	if (strcmp(type, "mesh") == 0 || strcmp(type, "obj") == 0)
+	if (ft_strcmp(type, "mesh") == 0 || ft_strcmp(type, "obj") == 0)
 		return (fill_mesh(out, o));
 	fprintf(stderr, "Warning: unknown object type \"%s\"\n", type);
 	return (false);

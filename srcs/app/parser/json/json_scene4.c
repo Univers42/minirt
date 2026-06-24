@@ -13,6 +13,7 @@
 #include "json_scene.h"
 #include "json_helpers.h"
 #include <string.h>
+#include "libft.h"
 
 /* ------------------------------------------------------------------ */
 /*  Fill a mesh (OBJ) object from JSON                                */
@@ -55,7 +56,7 @@ static void	parse_render_cspace(const t_json_node *obj, t_scene *sc)
 	if (!json_get(obj, "color_space"))
 		return ;
 	cs = json_str(json_get(obj, "color_space"), "srgb");
-	if (strcmp(cs, "spectrum") == 0)
+	if (ft_strcmp(cs, "spectrum") == 0)
 		sc->render.color_space = 1;
 	else
 		sc->render.color_space = 0;
