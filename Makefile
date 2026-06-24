@@ -59,7 +59,7 @@ endif
 DEPFLAGS     = -MMD -MP
 
 LDFLAGS     := -flto -fopenmp
-LDLIBS      := -lm
+LDLIBS      := -lm -lz
 
 # X11 / MLX link flags
 XLIBS       := -lXext -lX11
