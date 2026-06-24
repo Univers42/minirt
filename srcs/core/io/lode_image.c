@@ -31,12 +31,12 @@ void	lode_image_cleanup(t_lode_image *img)
 	lode_image_init(img);
 }
 
-unsigned	lode_image_load_png(t_lode_image *img, const char *filename)
+unsigned int	lode_image_load_png(t_lode_image *img, const char *filename)
 {
 	unsigned char	*data;
-	unsigned		w;
-	unsigned		h;
-	unsigned		err;
+	unsigned int	w;
+	unsigned int	h;
+	unsigned int	err;
 
 	data = NULL;
 	w = 0;

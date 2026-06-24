@@ -24,7 +24,8 @@
 
 /* zlib, declared locally: the build's -I path carries the vendored
    png_writer/zlib.h which would shadow the real system <zlib.h>. */
-# define Z_OK 0
+#define Z_OK 0
+
 extern unsigned long	crc32(unsigned long crc, const unsigned char *buf,
 							unsigned int len);
 extern int				compress2(unsigned char *dst, unsigned long *dlen,

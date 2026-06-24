@@ -14,7 +14,7 @@
 
 t_pdf	*cosine_pdf_create(const t_vec3 *normal)
 {
-	t_pdf		*pdf;
+	t_pdf			*pdf;
 	t_cosine_pdf	*cpdf;
 
 	pdf = (t_pdf *)malloc(sizeof(t_pdf));
