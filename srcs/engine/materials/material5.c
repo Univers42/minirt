@@ -26,6 +26,8 @@ t_material	*lambertian_create_texture(t_texture *tex)
 	if (!lamb)
 		return (free(mat), NULL);
 	lamb->tex = tex;
+	lamb->bump = NULL;
+	lamb->bump_strength = (real_t)0.0;
 	mat->data = lamb;
 	mat->emitted = default_emitted;
 	mat->scatter = lambertian_scatter;
@@ -52,6 +54,8 @@ t_material	*lambertian_create(t_color albedo)
 		free(mat);
 		return (NULL);
 	}
+	lamb->bump = NULL;
+	lamb->bump_strength = (real_t)0.0;
 	mat->data = lamb;
 	mat->emitted = default_emitted;
 	mat->scatter = lambertian_scatter;

@@ -80,6 +80,7 @@ t_vec3	ray_color_direct(const t_ray *r, const t_hittable_list *world,
 			return (*ambient);
 		return (bg_sky_color(r, ambient));
 	}
+	bump_perturb_normal(rec.mat, &rec);
 	c.r = r;
 	c.rec = &rec;
 	c.world = world;

@@ -200,6 +200,8 @@ typedef struct s_mat_spec
 	double		roughness;
 	t_color		color2;
 	char		texture_path[256];
+	char		bump_path[256];
+	double		bump_strength;
 }	t_mat_spec;
 
 typedef union u_obj_data

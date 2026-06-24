@@ -84,6 +84,12 @@ void	lambertian_destroy(t_material *mat)
 			lam->tex->destroy(lam->tex);
 		free(lam->tex);
 	}
+	if (lam && lam->bump)
+	{
+		if (lam->bump->destroy)
+			lam->bump->destroy(lam->bump);
+		free(lam->bump);
+	}
 	free(mat->data);
 	free(mat);
 }
