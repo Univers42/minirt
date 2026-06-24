@@ -2,6 +2,26 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Current capabilities (2026-06-24 build-out)
+
+Executable is **`rt`** (subject-compliant). Two engines, switchable at runtime:
+- **Default = fast deterministic ray tracer** (`srcs/engine/shading/`): ambient + Lambert
+  diffuse + Blinn-Phong specular + **soft area-light shadows** + **ambient occlusion** +
+  recursive reflection + Fresnel refraction + adaptive edge AA + graded sky. 1 ray/pixel.
+  Renders **4K (3840×2160) in ~0.5–1 s** via a wrapper-generic **flattened SAH BVH**
+  (`accelerators/bvh_flat*`) + per-mesh accel (`accelerators/mesh_accel*`) + OpenMP.
+- **`--cinematic`** = the Monte-Carlo **path tracer** (global illumination, colour bleed).
+
+**11 primitives**: sphere, plane (infinite), cylinder, cone, quad, triangle, disk, paraboloid,
+hyperboloid, **torus** (quartic solver `core/math/quartic.c`), mesh (OBJ via `vendor/wavefront`).
+**Materials** (trailing `.rt` keyword via `parse_material.c`): `glass`, `metal`/`mirror`,
+`glossy`, `tinted`/`tglass`, `light`/`lamp`, `checker`, `marble`, `wood`, `noise`, `iso`.
+Runtime resolution override: `RT_WIDTH`/`RT_HEIGHT`. Output: MLX window, PPM (`--ppm`, path via
+`RT_PPM_OUT`). Showcase scenes: `studio/assets/rt_files/showcase_*.rt`; gallery `renders/`.
+Verified: warning-free `-Werror` build, **0 memory leaks** (valgrind), all scenes render.
+Known gaps: live in-program editor, native PNG output (vendor encoder API), libft consolidation,
+~115 lines >80 cols (norminette pass). See `~/.claude/plans/calm-sprouting-tome.md`.
+
 ## What this is
 
 A 42 `miniRT` ray tracer in C, extended far past the base subject into a CPU path tracer:
