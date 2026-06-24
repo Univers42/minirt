@@ -25,7 +25,10 @@ static int	live_render(t_live *lv)
 
 	if (lv->buf)
 		free(lv->buf);
-	world = (lv->bvh || lv->fbvh) ? &lv->accel : &lv->scene->world;
+	if (lv->bvh || lv->fbvh)
+		world = &lv->accel;
+	else
+		world = &lv->scene->world;
 	lv->buf = render_to_buffer(&lv->cam, world);
 	if (!lv->buf)
 		return (-1);

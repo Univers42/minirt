@@ -3,7 +3,7 @@ build/
 /miniRT
 /rt
 /renders/
-
+render
 # ─── FDF build artifacts ────────────────────────────────────────────────── #
 fdf/object/
 fdf/fdf

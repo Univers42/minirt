@@ -24,7 +24,7 @@
 /* ------------------------------------------------------------------ */
 
 # define X_KEY_RELEASE		3
-# define KEY_MASK_RELEASE	(1L << 1)
+# define KEY_MASK_RELEASE	2L
 
 # define LK_W		119
 # define LK_A		97
