@@ -335,6 +335,17 @@
 #  define RT_SHADOW_SAMPLES		8
 # endif
 
+/* Number of DETERMINISTIC stratified shadow rays per light cast by   */
+/* the default direct engine to compute a soft-shadow visibility      */
+/* fraction across the light's spherical surface (g_lights[].radius). */
+/*   1  = hard shadows (single ray to light centre, reproduces old)   */
+/*   8  = visibly soft penumbra (default)                             */
+/* A small fixed offset pattern is used (no RNG) so renders stay      */
+/* bit-for-bit reproducible.  Range: 1 - 16.                          */
+# ifndef RT_SOFT_SHADOW_SAMPLES
+#  define RT_SOFT_SHADOW_SAMPLES	8
+# endif
+
 /* Light distance attenuation model.                                  */
 /*  0 = artistic / linear  (NdotL / distance) — smoother falloff      */
 /*  1 = physically correct (NdotL / distance²) — realistic inverse    */

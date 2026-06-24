@@ -67,4 +67,11 @@ t_color			direct_lighting(const t_hit_record *rec,
 					const t_hittable_list *world, const t_vec3 *view,
 					const t_color *albedo);
 
+/* shade_lights2.c — deterministic soft (area-light) shadow visibility.
+   Returns the fraction in [0,1] of N stratified shadow rays, aimed at a
+   fixed pattern of points across the light's spherical surface, that
+   reach the light unoccluded.  1 sample reproduces a hard shadow. */
+real_t			soft_shadow_visibility(const t_point3 *p, const t_vec3 *l,
+					int idx, const t_hittable_list *world);
+
 #endif
