@@ -51,6 +51,8 @@ static int	g_schema_tr[] = {'V', 'V', 'V', 'C', 'M', 0};
 static int	g_schema_di[] = {'V', 'V', 'F', 'C', 'M', 0};
 /* pb – Paraboloid: vertex:V  axis:V  diameter:F  height:F  color:C  [mat] */
 static int	g_schema_pb[] = {'V', 'V', 'F', 'F', 'C', 'M', 0};
+/* hy – Hyperboloid: center:V  axis:V  diameter:F  height:F  color:C  [mat] */
+static int	g_schema_hy[] = {'V', 'V', 'F', 'F', 'C', 'M', 0};
 
 static int	*get_schema(const char *id)
 {
@@ -74,6 +76,8 @@ static int	*get_schema(const char *id)
 		return (g_schema_di);
 	if (strcmp(id, "pb") == 0)
 		return (g_schema_pb);
+	if (strcmp(id, "hy") == 0)
+		return (g_schema_hy);
 	return (NULL);
 }
 

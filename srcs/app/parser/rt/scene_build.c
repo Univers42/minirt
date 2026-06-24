@@ -18,6 +18,7 @@
 #include "plane.h"
 #include "disk.h"
 #include "paraboloid.h"
+#include "hyperboloid.h"
 #include "triangle.h"
 #include "material.h"
 #include "camera.h"
@@ -157,6 +158,25 @@ static bool	build_paraboloid(t_hittable_list *world, const t_rt_object *obj)
 	return (hittable_list_add_paraboloid(world, &pb));
 }
 
+/* ------------------------------------------------------------------ */
+/*  Build a one-sheet hyperboloid (cooling-tower) from parsed data     */
+/*  hyperboloid_create(center, axis, diameter, height, mat)  (BONUS)   */
+/* ------------------------------------------------------------------ */
+
+static bool	build_hyperboloid(t_hittable_list *world, const t_rt_object *obj)
+{
+	t_material		*mat;
+	t_hyperboloid	hy;
+
+	mat = create_material(&obj->mat, obj->data.hyperboloid.color);
+	if (!mat)
+		return (false);
+	hy = hyperboloid_create(&obj->data.hyperboloid.center,
+			&obj->data.hyperboloid.axis, obj->data.hyperboloid.diameter,
+			obj->data.hyperboloid.height, mat);
+	return (hittable_list_add_hyperboloid(world, &hy));
+}
+
 static bool	build_object(t_hittable_list *world, const t_rt_object *obj);
 
 /* ------------------------------------------------------------------ */
@@ -201,6 +221,8 @@ static bool	build_object(t_hittable_list *world, const t_rt_object *obj)
 		return (build_disk(world, obj));
 	if (obj->type == OBJ_PARABOLOID)
 		return (build_paraboloid(world, obj));
+	if (obj->type == OBJ_HYPERBOLOID)
+		return (build_hyperboloid(world, obj));
 	return (true);
 }
 
