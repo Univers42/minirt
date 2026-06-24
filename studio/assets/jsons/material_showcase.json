@@ -8,9 +8,9 @@
   "render": { "aspect_ratio": 1.7778, "spp": 64, "max_depth": 16 },
 
   "camera": {
-    "position": [0.0, 2.1, -10.5],
-    "direction": [0.0, -0.10, 1.0],
-    "fov": 48
+    "position": [0.0, 5.9, -9.5],
+    "direction": [0.0, -0.52, 1.0],
+    "fov": 58
   },
 
   "lights": [
@@ -35,13 +35,13 @@
   ],
 
   "objects": [
-    {"_comment": "=== GLOSSY FLOOR — slightly reflective, neutral so materials pop ==="},
+    {"_comment": "=== CHECKER FLOOR — crisp near/mid tiles, fades cleanly at horizon; glass refracts it, metals reflect it ==="},
     {
       "type": "plane",
       "point": [0, 0, 0],
       "normal": [0, 1, 0],
-      "color": [62, 65, 73],
-      "material": { "type": "glossy", "roughness": 0.025 }
+      "color": [205, 210, 220],
+      "material": { "type": "checker", "scale": 0.7, "color2": [38, 42, 52] }
     },
 
     {"_comment": "=== SEAMLESS NEUTRAL BACKDROP — large soft-grey wall behind the row so the loud sky shows only in metal reflections, giving a clean studio sweep ==="},
@@ -105,7 +105,7 @@
     {
       "_comment": "1. PURE MIRROR METAL",
       "type": "sphere",
-      "center": [9.45, 1.0, 2.0],
+      "center": [8.4, 1.0, -2.5],
       "diameter": 2.0,
       "color": [245, 245, 248],
       "material": { "type": "metal", "fuzz": 0.0 }
@@ -113,7 +113,7 @@
     {
       "_comment": "2. BRUSHED METAL (fuzz)",
       "type": "sphere",
-      "center": [6.75, 1.0, 2.0],
+      "center": [6.0, 1.0, -2.5],
       "diameter": 2.0,
       "color": [222, 210, 196],
       "material": { "type": "metal", "fuzz": 0.18 }
@@ -121,7 +121,7 @@
     {
       "_comment": "3. CLEAR GLASS",
       "type": "sphere",
-      "center": [4.05, 1.0, 2.0],
+      "center": [3.6, 1.0, -2.5],
       "diameter": 2.0,
       "color": [255, 255, 255],
       "material": { "type": "dielectric", "ior": 1.52 }
@@ -129,7 +129,7 @@
     {
       "_comment": "4. TINTED GLASS (amber)",
       "type": "sphere",
-      "center": [1.35, 1.0, 2.0],
+      "center": [1.2, 1.0, -2.5],
       "diameter": 2.0,
       "color": [255, 180, 120],
       "material": { "type": "tinted_glass", "ior": 1.5 }
@@ -137,7 +137,7 @@
     {
       "_comment": "5. GLOSSY PLASTIC (saturated red)",
       "type": "sphere",
-      "center": [-1.35, 1.0, 2.0],
+      "center": [-1.2, 1.0, -2.5],
       "diameter": 2.0,
       "color": [210, 40, 45],
       "material": { "type": "glossy", "roughness": 0.12 }
@@ -145,7 +145,7 @@
     {
       "_comment": "6. MATTE DIFFUSE (teal)",
       "type": "sphere",
-      "center": [-4.05, 1.0, 2.0],
+      "center": [-3.6, 1.0, -2.5],
       "diameter": 2.0,
       "color": [55, 150, 140],
       "material": "lambertian"
@@ -153,7 +153,7 @@
     {
       "_comment": "7. EARTH TEXTURED",
       "type": "sphere",
-      "center": [-6.75, 1.0, 2.0],
+      "center": [-6.0, 1.0, -2.5],
       "diameter": 2.0,
       "color": [255, 255, 255],
       "material": { "type": "lambertian", "texture": "studio/assets/textures/earth.png" }
@@ -161,7 +161,7 @@
     {
       "_comment": "8. BRICK BUMP-MAPPED",
       "type": "sphere",
-      "center": [-9.45, 1.0, 2.0],
+      "center": [-8.4, 1.0, -2.5],
       "diameter": 2.0,
       "color": [255, 255, 255],
       "material": { "type": "lambertian", "texture": "studio/assets/textures/brick.png", "bump": "studio/assets/textures/brick.png", "bump_strength": 6 }

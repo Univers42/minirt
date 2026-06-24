@@ -16,17 +16,17 @@
   "camera": {
     "position": [
       0.0,
-      2.5,
-      10.0
+      2.7,
+      12.0
     ],
     "direction": [
       0.0,
-      -1.3,
-      -10.0
+      -1.4,
+      -12.0
     ],
-    "fov": 40,
-    "defocus_angle": 0.45,
-    "focus_dist": 10.1
+    "fov": 38,
+    "defocus_angle": 0.35,
+    "focus_dist": 12.1
   },
   "lights": [
     {
@@ -58,7 +58,7 @@
   ],
   "objects": [
     {
-      "_comment": "ground plane",
+      "_comment": "ground plane \u2014 subtle large checker, faint gloss",
       "type": "plane",
       "point": [
         0,
@@ -71,11 +71,19 @@
         0
       ],
       "color": [
-        148,
-        153,
-        163
+        178,
+        184,
+        194
       ],
-      "material": "lambertian"
+      "material": {
+        "type": "checker",
+        "scale": 2.0,
+        "color2": [
+          143,
+          148,
+          158
+        ]
+      }
     },
     {
       "_comment": "hero \u2014 diffuse brown (left)",
@@ -122,13 +130,13 @@
       ],
       "diameter": 2.4,
       "color": [
-        178,
-        153,
+        184,
+        158,
         128
       ],
       "material": {
         "type": "metal",
-        "fuzz": 0.0
+        "fuzz": 0.02
       }
     },
     {

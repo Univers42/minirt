@@ -1,9 +1,9 @@
 {
   "_description": "The Stanford Dragon as clear glass (dielectric ior 1.5) standing in a real sunset environment (equirectangular sky.png) on a dark glossy floor. The sky is refracted through the glass body and reflected on the floor. Dramatic warm key + cool rim light.",
 
-  "environment": "studio/assets/textures/starfield.png",
+  "environment": "studio/assets/textures/sky.png",
 
-  "ambient": { "ratio": 0.46, "color": [125, 140, 188] },
+  "ambient": { "ratio": 0.52, "color": [150, 178, 222] },
 
   "render": { "aspect_ratio": 1.7778, "spp": 96, "max_depth": 24 },
 
@@ -17,13 +17,13 @@
     {
       "_comment": "warm key, high front-right",
       "position": [8, 9, -5],
-      "brightness": 3.4,
+      "brightness": 6.0,
       "color": [255, 228, 188]
     },
     {
       "_comment": "cool rim, behind-left high — separates dragon from the stars",
       "position": [-8, 9, 7],
-      "brightness": 3.0,
+      "brightness": 5.0,
       "color": [150, 185, 255]
     },
     {
@@ -40,8 +40,8 @@
       "type": "plane",
       "point": [0, 0, 0],
       "normal": [0, 1, 0],
-      "color": [26, 24, 30],
-      "material": { "type": "glossy", "roughness": 0.05 }
+      "color": [48, 50, 62],
+      "material": { "type": "glossy", "roughness": 0.06 }
     },
 
     {"_comment": "=== EMISSIVE SOFTBOX PANELS — bright shapes the chrome reflects + real illumination ==="},
@@ -77,7 +77,7 @@
       "position": [0.0, 2.12, 0.0],
       "scale": 7.5,
       "color": [248, 249, 252],
-      "material": { "type": "metal", "fuzz": 0.045 }
+      "material": { "type": "metal", "fuzz": 0.025 }
     }
   ]
 }

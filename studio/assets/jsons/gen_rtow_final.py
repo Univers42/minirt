@@ -31,14 +31,19 @@ def rand_color(lo=0.0, hi=1.0):
 
 objects = []
 
-# --- ground: soft cool-grey diffuse plane (clean, no horizon shimmer) ---
+# --- ground: large-scale subtle checker + faint gloss so the heroes feel
+#     grounded and the plane reflects the sky a touch (kills the sterile flat). ---
 objects.append({
-    "_comment": "ground plane",
+    "_comment": "ground plane — subtle large checker, faint gloss",
     "type": "plane",
     "point": [0, 0, 0],
     "normal": [0, 1, 0],
-    "color": to255([0.58, 0.60, 0.64]),
-    "material": "lambertian",
+    "color": to255([0.70, 0.72, 0.76]),
+    "material": {
+        "type": "checker",
+        "scale": 2.0,
+        "color2": to255([0.56, 0.58, 0.62]),
+    },
 })
 
 # --- three hero spheres FIRST so they always survive the 256-object cap ---
@@ -57,7 +62,7 @@ objects.append({
 objects.append({
     "_comment": "hero — polished metal (right)",
     "type": "sphere", "center": [4, HERO_R, 0], "diameter": HD,
-    "color": to255([0.7, 0.6, 0.5]), "material": {"type": "metal", "fuzz": 0.0},
+    "color": to255([0.72, 0.62, 0.50]), "material": {"type": "metal", "fuzz": 0.02},
 })
 
 # --- candidate small spheres: a wide field that lives BEHIND the trio so the
@@ -118,11 +123,11 @@ scene = {
     "ambient": {"ratio": 0.45, "color": [205, 222, 255]},
     "render": {"aspect_ratio": 1.7778, "spp": 120, "max_depth": 24},
     "camera": {
-        "position": [0.0, 2.5, 10.0],
-        "direction": [0.0, -1.3, -10.0],
-        "fov": 40,
-        "defocus_angle": 0.45,
-        "focus_dist": 10.1,
+        "position": [0.0, 2.7, 12.0],
+        "direction": [0.0, -1.4, -12.0],
+        "fov": 38,
+        "defocus_angle": 0.35,
+        "focus_dist": 12.1,
     },
     "lights": [
         {"position": [20, 30, 10], "brightness": 1.0, "color": [255, 248, 235]},
