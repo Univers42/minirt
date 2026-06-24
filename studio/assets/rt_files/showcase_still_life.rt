@@ -1,0 +1,31 @@
+# ========================================================================== #
+#  showcase_still_life.rt — photoreal still life                              #
+#  A marble sphere, clear glass sphere, polished mirror sphere and a golden   #
+#  torus arranged with good spacing on a large checker floor.                 #
+#  Warm key light from upper-left, cooler fill from the right.                #
+#  Camera at a low 3/4 angle for depth.                                       #
+# ========================================================================== #
+
+A 0.22 205,212,235
+
+# Elevated 3/4 camera looking down for depth, aimed at the group
+C -7,7,-16 0.36,-0.29,1 50
+
+# Warm key from upper-left, cooler fill from the right
+L -12,16,-8 0.95 255,234,200
+L 11,9,0 0.4 190,212,255
+
+# Large checker floor
+pl 0,0,0 0,1,0 215,215,215 checker
+
+# Mirror sphere — right third, the polished focal accent
+sp 6,3,3 6 245,245,250 mirror
+
+# Marble sphere — back-left, large and tall (rule of thirds)
+sp -6,3.5,5 7 234,228,216 marble
+
+# Clear glass sphere — front-left
+sp -4,2,-4 4 255,255,255 glass
+
+# Golden torus — front-centre, glossy gold, tilted so the hole shows
+to 0.5,1.3,-5 0.1,0.8,-0.6 2.2 0.7 240,185,75 glossy

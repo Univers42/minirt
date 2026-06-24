@@ -1,0 +1,43 @@
+# ========================================================================== #
+#  showcase_quadrics.rt — exotic-primitive geometry showcase                  #
+#  Torus, paraboloid bowl, hyperboloid, cone, cylinder and disk arranged in   #
+#  a gentle arc on a marble floor, lit by two coloured spot lights so each    #
+#  silhouette reads clearly.                                                  #
+# ========================================================================== #
+
+A 0.22 200,210,255
+
+C 0,7,-19 0,-0.22,1 60
+
+# Two coloured spots: warm key from the front-left, cool fill from front-right,
+# plus a soft high fill to lift the bowl interior and the tower's top rim.
+L -12,17,-2 0.8 255,238,205
+L 12,13,-3 0.5 200,215,255
+L 0,20,6 0.3 235,240,255
+
+# Checker floor: calm, catches the shadows without competing with the objects
+pl 0,0,0 0,1,0 205,208,214 checker
+
+# --- The arc, left to right (gentle curve, nearer at the wings) -----------
+
+# Arc order on screen (engine maps +x to screen-left): from screen-left to
+# screen-right -> hyperboloid, cylinder, cone, paraboloid, disk.
+
+# Teal marble hyperboloid (cooling tower) — screen far-left. Kept compact
+# (height ~ waist) so the flared top rim reads as part of the form.
+hy 10,2.6,9 0,1,0 3.4 4 60,200,180 marble
+
+# Crimson matte cylinder — screen left
+cy 5.5,0,6 0,1,0 3 6.5 215,70,75
+
+# Gold metal cone — centre
+co -0.5,0,4 0,1,0 3.5 6 240,200,90 metal
+
+# Orange glossy paraboloid bowl — screen centre-right
+pb -6.5,0,6 0,1,0 5 4 235,130,55 glossy
+
+# Blue glossy disk, facing the camera — screen far-right
+di -11,5,8 0,0.15,-1 6 90,150,240 glossy
+
+# Tilted marble torus, foreground centre — hole faces camera, isolated hero
+to 2.2,1.7,15.5 0,0.62,-1 2.5 0.82 235,235,240 marble
