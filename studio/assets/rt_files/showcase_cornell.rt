@@ -1,0 +1,30 @@
+# ========================================================================== #
+#  showcase_cornell.rt — Cornell-box for path-traced colour bleeding         #
+#  Render with --cinematic. Red left wall, green right wall, white box,      #
+#  emissive ceiling light, tall metal stack + glass sphere inside.           #
+# ========================================================================== #
+
+A 0.15 180,180,185
+
+# Camera at the open front, looking +z into the box
+C 0,10,-23 0,0,1 53
+
+# Main ceiling light (just below the ceiling) + a soft fill
+L 0,18,11 0.6 255,244,224
+L 0,11,-18 0.12 220,230,255
+
+# --- box walls (camera looks +z: +x renders on screen-LEFT) ---
+pl 0,0,0  0,1,0   230,230,230           # floor (white)
+pl 0,20,0 0,-1,0  230,230,230           # ceiling (white)
+pl 0,0,20 0,0,-1  230,230,230           # back wall (white)
+pl 10,0,0 -1,0,0  210,45,45             # screen-LEFT wall (RED)
+pl -10,0,0 1,0,0  45,190,70             # screen-RIGHT wall (GREEN)
+
+# --- emissive light panel flush under the ceiling ---
+di 0,19.85,11 0,-1,0 7 255,246,222 light
+
+# --- tall metal pillar, screen-left (red side, +x) ---
+cy 4.2,0,12 0,1,0 5.5 15 220,224,232 metal
+
+# --- glass sphere, screen-right-front (green side, -x) ---
+sp -4.5,3.5,5 7 255,255,255 glass

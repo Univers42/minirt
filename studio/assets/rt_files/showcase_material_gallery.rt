@@ -1,0 +1,28 @@
+# ========================================================================== #
+#  showcase_material_gallery.rt                                              #
+#  A row of 7 equal spheres, each a different material, standing on a dark   #
+#  glossy (metal) floor that mirrors them. Soft key + fill studio lighting,  #
+#  camera straight-on and slightly above.                                    #
+# ========================================================================== #
+
+A 0.22 180,195,225
+
+# Camera: straight-on, slightly above, looking at the row centre
+C 0,3.6,-19 0,-0.10,1 54
+
+# Soft key (warm, upper-left) + cooler fill (upper-right) + gentle top light
+L -10,14,-8 0.85 255,248,232
+L 11,11,-6 0.45 215,228,255
+L 0,20,10 0.35 250,245,235
+
+# Dark glossy floor -> reflects the spheres
+pl 0,0,0 0,1,0 35,38,45 metal
+
+# Row of 7 spheres, diameter 3 (centre y = 1.5), spaced 4.5 apart on z=3
+sp 13.5,1.5,3 3 215,55,55             # matte red       (image left)
+sp 9,1.5,3 3 235,237,245 metal        # polished metal
+sp 4.5,1.5,3 3 255,255,255 glass      # clear glass
+sp 0,1.5,3 3 255,190,40 glossy        # glossy gold
+sp -4.5,1.5,3 3 230,228,232 marble    # marble
+sp -9,1.5,3 3 150,95,55 wood          # wood
+sp -13.5,1.5,3 3 90,180,210 tinted glass  # tinted glass (image right)

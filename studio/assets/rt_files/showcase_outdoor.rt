@@ -1,0 +1,31 @@
+# ========================================================================== #
+#  showcase_outdoor.rt — open-air scenery                                     #
+#  A vast checker ground stretching to the horizon under a graded sky.        #
+#  Hero objects: a large marble sphere, a glass sphere, a torus, a cone,      #
+#  lit by a low warm key light casting long soft shadows.                     #
+# ========================================================================== #
+
+A 0.22 175,198,235
+
+# Low camera, gentle downward tilt -> high horizon, open foreground
+C 2,4,-27 -0.03,-0.07,1 60
+
+# Low warm key (late-afternoon sun) high and left, out of frame -> long shadows
+L -18,20,-14 0.9 255,224,178
+# Soft cool fill from the right, out of frame, to lift the shadows
+L 16,18,0 0.4 198,214,255
+
+# Vast textured ground stretching to the horizon
+pl 0,0,0 0,1,0 200,196,188 checker
+
+# Hero 1: large warm marble sphere, RIGHT foreground (closest, biggest)
+sp 10,3.5,2 7 215,195,175 marble
+
+# Hero 2: glass centrepiece sphere, centre mid, refracting scene behind it
+sp 0,3,7 6 255,255,255 glass
+
+# Hero 3: warm cone resting base-down, pointing skyward (apex top, axis down)
+co -10,9,9 0,-1,0 5 9 235,135,65
+
+# Hero 4: blue torus lying open toward camera, left foreground (nearest)
+to -5,1.4,-2 0.1,0.55,-1 2.2 0.7 80,140,225
