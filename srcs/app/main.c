@@ -391,9 +391,10 @@ static int	run_obj(const char *filepath)
 static void	usage(const char *prog)
 {
 	fprintf(stderr,
-		"Usage: %s [--ppm] [--edit] [--cinematic] "
+		"Usage: %s [--ppm] [--png] [--edit] [--cinematic] "
 		"<scene.rt | scene.json | scene.obj>\n"
-		"  --ppm        Save render to render.ppm instead of MLX window\n"
+		"  --ppm        Save render to $RT_PPM_OUT (default render.ppm)\n"
+		"  --png        Save render to $RT_PNG_OUT (default render.png)\n"
 		"  --edit       Live editor: fly the camera (WASD/QE + arrows)\n"
 		"  --cinematic  Use the Monte-Carlo path tracer (slow, photoreal)\n"
 		"               instead of the default fast deterministic engine\n",
