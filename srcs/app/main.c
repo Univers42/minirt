@@ -23,6 +23,7 @@
 #include "mesh_accel.h"
 #include "shading.h"
 #include "lode_image.h"
+#include "live.h"
 #include "mlx.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,6 +40,7 @@ unsigned char	*render_to_buffer(const t_camera *cam,
 /* Global flags: dump PPM / PNG instead of opening the MLX window. */
 static int	g_ppm_mode;
 static int	g_png_mode;
+static int	g_edit_mode;
 
 /* Output path for --png: $RT_PNG_OUT if set, else render.png. */
 static const char	*png_out_path(void)
@@ -250,6 +252,43 @@ static int	run_json(const char *filepath)
 }
 
 /* ------------------------------------------------------------------ */
+/*  Live editor pipeline (--edit): parse .rt/.json, fly the camera     */
+/* ------------------------------------------------------------------ */
+
+static bool	edit_parse(const char *filepath, t_scene *scene)
+{
+	const char	*ext;
+
+	ext = get_ext(filepath);
+	if (strcasecmp(ext, ".json") == 0)
+		return (json_parse_scene(filepath, scene));
+	return (parse_scene(filepath, scene));
+}
+
+static int	run_edit(const char *filepath)
+{
+	t_scene	scene;
+	int		ret;
+
+	if (!edit_parse(filepath, &scene))
+		return (1);
+	if (!build_scene_objects(&scene))
+	{
+		fprintf(stderr, "Error\nFailed to build scene objects\n");
+		scene_cleanup(&scene);
+		return (1);
+	}
+	if (!add_scene_lights(&scene.world, &scene))
+	{
+		scene_cleanup(&scene);
+		return (1);
+	}
+	ret = rt_live_run(&scene);
+	scene_cleanup(&scene);
+	return (ret);
+}
+
+/* ------------------------------------------------------------------ */
 /*  OBJ pipeline: loads a mesh, wraps it in a default scene           */
 /* ------------------------------------------------------------------ */
 
@@ -352,9 +391,10 @@ static int	run_obj(const char *filepath)
 static void	usage(const char *prog)
 {
 	fprintf(stderr,
-		"Usage: %s [--ppm] [--cinematic] "
+		"Usage: %s [--ppm] [--edit] [--cinematic] "
 		"<scene.rt | scene.json | scene.obj>\n"
 		"  --ppm        Save render to render.ppm instead of MLX window\n"
+		"  --edit       Live editor: fly the camera (WASD/QE + arrows)\n"
 		"  --cinematic  Use the Monte-Carlo path tracer (slow, photoreal)\n"
 		"               instead of the default fast deterministic engine\n",
 		prog);
@@ -375,6 +415,8 @@ static const char	*parse_args(int argc, char **argv)
 			g_ppm_mode = 1;
 		else if (strcmp(argv[i], "--png") == 0)
 			g_png_mode = 1;
+		else if (strcmp(argv[i], "--edit") == 0)
+			g_edit_mode = 1;
 		else if (strcmp(argv[i], "--cinematic") == 0)
 			render_set_engine_mode(ENGINE_CINEMATIC);
 		else if (argv[i][0] == '-' || path)
@@ -391,6 +433,9 @@ static int	dispatch(const char *path)
 	const char	*ext;
 
 	ext = get_ext(path);
+	if (g_edit_mode && (strcasecmp(ext, ".rt") == 0
+			|| strcasecmp(ext, ".json") == 0))
+		return (run_edit(path));
 	if (strcasecmp(ext, ".rt") == 0)
 	{
 		if (g_ppm_mode || g_png_mode)
@@ -410,6 +455,7 @@ int	main(int argc, char **argv)
 	const char	*scene_path;
 
 	g_ppm_mode = 0;
+	g_edit_mode = 0;
 	render_set_engine_mode(ENGINE_DIRECT);
 	scene_path = parse_args(argc, argv);
 	if (!scene_path)

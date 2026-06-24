@@ -96,12 +96,13 @@ INC_RT_PARSER := -I $(SRC_APP)/parser/rt
 INC_JSON      := -I $(SRC_APP)/parser/json
 INC_CSV       := -I $(SRC_APP)/parser/csv
 INC_OBJ       := -I $(SRC_APP)/parser/obj
+INC_LIVE      := -I $(SRC_APP)/live
 INC_BUILDERS  := -I $(STUDIO)/builders
 
 # Combined include sets
 INC_LIB     := $(INC_CORE) $(INC_ENGINE) $(INC_APP) $(INC_PNG) $(INC_BUILDERS)
 INC_MINIRT  := $(INC_LIB) $(INC_RT_PARSER) $(INC_JSON) $(INC_CSV) $(INC_OBJ) \
-               $(INC_MLX) $(INC_LIBFT) $(INC_WF) -I $(STUDIO)
+               $(INC_LIVE) $(INC_MLX) $(INC_LIBFT) $(INC_WF) -I $(STUDIO)
 INC_STUDIO  := $(INC_LIB) $(INC_PNG) $(INC_WF) -I $(STUDIO)
 
 # ──────────────────────────────────────────────────────────────────────────── #
