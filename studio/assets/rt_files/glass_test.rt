@@ -1,0 +1,17 @@
+# Glass refraction test: a clear glass sphere in front of three coloured
+# spheres. Through the glass the background should appear refracted
+# (bent / flipped), with a bright Fresnel rim.
+A 0.2 150,170,210
+
+C 0,3,-14 0,-0.12,1 50
+
+L -6,12,-4 0.8 255,255,255
+L 6,10,2 0.5 255,255,255
+
+pl 0,0,0 0,1,0 210,210,210
+
+sp 0,3,0 5 255,255,255 glass
+
+sp -4,2,8 3 230,60,60
+sp 4,2,8 3 60,160,230
+sp 0,5,9 3 60,210,90

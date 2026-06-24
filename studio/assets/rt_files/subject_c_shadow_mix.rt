@@ -1,0 +1,24 @@
+# ========================================================================== #
+#  Subject reference scene C — Figure VI.3                                    #
+#  "Shadow mixing"                                                            #
+#  Three coloured spots from three directions cast overlapping, differently   #
+#  coloured shadows from a row of pillars onto the floor.                     #
+# ========================================================================== #
+
+A 0.12 30,30,40
+
+C 0,8,-22 0,-0.25,1 55
+
+# Three coloured spots, well separated -> three coloured shadows that mix
+L -14,12,-4 0.7 255,90,90
+L 14,12,-4 0.7 90,255,90
+L 0,13,8 0.7 90,120,255
+
+# White matte floor so the coloured shadows read clearly
+pl 0,0,0 0,1,0 235,235,235
+
+# A row of pale pillars + a sphere to cast the mixing shadows
+cy -6,0,3 0,1,0 2 8 230,230,230
+cy 0,0,3 0,1,0 2 8 230,230,230
+cy 6,0,3 0,1,0 2 8 230,230,230
+sp 0,3,-3 6 230,230,230

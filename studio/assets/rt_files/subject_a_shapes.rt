@@ -1,0 +1,28 @@
+# ========================================================================== #
+#  Subject reference scene A — Figure VI.1                                    #
+#  "The 4 basic objects, 2 spots, shadow and shine effects"                  #
+#  plane + sphere + cylinder + cone, two coloured spot lights.               #
+# ========================================================================== #
+
+A 0.2 180,200,255
+
+C 0,7,-20 0,-0.22,1 55
+
+# Two spots from opposite sides -> overlapping shadows + specular highlights
+L -11,16,-7 0.8 255,245,220
+L 10,12,-3 0.6 210,225,255
+
+# Matte ground plane (catches the shadows)
+pl 0,0,0 0,1,0 200,200,205
+
+# Sphere (radius 3, resting on the plane)
+sp -6,3,5 6 230,70,70
+
+# Cylinder
+cy 4,0,4 0,1,0 3 7 70,200,130
+
+# Cone
+co 0,0,11 0,1,0 5 7 245,205,70
+
+# Second sphere, smaller, to mix shadows with the others
+sp 7,2,0 4 90,140,240

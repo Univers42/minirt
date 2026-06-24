@@ -1,0 +1,20 @@
+# ========================================================================== #
+#  Subject reference scene B — Figure VI.2                                    #
+#  "Same scene from another viewpoint"                                        #
+#  Identical objects/lights as scene A, camera moved to a side-high angle.    #
+# ========================================================================== #
+
+A 0.2 180,200,255
+
+# Camera moved to the right and lower, looking across the scene
+C 16,4,-10 -0.7,-0.12,0.7 60
+
+L -11,16,-7 0.8 255,245,220
+L 10,12,-3 0.6 210,225,255
+
+pl 0,0,0 0,1,0 200,200,205
+
+sp -6,3,5 6 230,70,70
+cy 4,0,4 0,1,0 3 7 70,200,130
+co 0,0,11 0,1,0 5 7 245,205,70
+sp 7,2,0 4 90,140,240
