@@ -122,8 +122,12 @@ unsigned char	*render_to_buffer(const t_camera *cam,
 		free(pixels);
 		return (NULL);
 	}
-	fprintf(stderr, "Rendering %dx%d (%d spp, depth %d)...\n",
-		w, h, (int)cam->samples_per_pixel, cam->max_depth);
+	if (render_get_engine_mode() == ENGINE_DIRECT)
+		fprintf(stderr, "Rendering %dx%d (direct engine + AA, depth %d)...\n",
+			w, h, cam->max_depth);
+	else
+		fprintf(stderr, "Rendering %dx%d (cinematic %d spp, depth %d)...\n",
+			w, h, (int)cam->samples_per_pixel, cam->max_depth);
 #ifdef _OPENMP
 # if RT_NUM_THREADS > 0
 	omp_set_num_threads(RT_NUM_THREADS);
