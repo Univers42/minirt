@@ -97,8 +97,8 @@ t_vec3	ray_color_depth(const t_ray *r, const t_hittable_list *world, int depth)
 		return (vec3_zero());
 	if (hittable_list_hit(world, r, interval((real_t)1e-4, INFINITY), &rec))
 	{
-		if (rec.mat && rec.mat->scatter(rec.mat, r, &rec, &attenuation,
-				&scattered))
+		if (rec.mat && rec.mat->scatter(&(t_scatter){rec.mat, r,
+				&rec, &attenuation, &scattered}))
 		{
 			a = ray_color_depth(&scattered, world, depth - 1);
 			return (vec3_mul_elem(&attenuation, &a));

@@ -13,91 +13,65 @@
 #include "material.h"
 #include "random.h"
 
-bool	glossy_scatter(const t_material *mat, const t_ray *r_in,
-			const t_hit_record *rec, t_color *attenuation, t_ray *scattered)
+static t_vec3	glossy_spec_dir(const t_glossy *glossy, t_scatter *s)
+{
+	t_vec3	reflected;
+	t_vec3	direction;
+
+	reflected = vec3_reflect(&s->r_in->dir, &s->rec->normal);
+	direction = unit_vector(&reflected);
+	reflected = random_unit_vector();
+	reflected = vec3_mul_scalar(&reflected, glossy->roughness * 0.5);
+	direction = vec3_add(&direction, &reflected);
+	if (dot(&direction, &s->rec->normal) <= 0)
+		direction = s->rec->normal;
+	return (direction);
+}
+
+static t_vec3	glossy_diff_dir(t_scatter *s)
+{
+	t_vec3	direction;
+
+	direction = random_cosine_direction(&s->rec->normal);
+	if (vec3_near_zero(&direction))
+		direction = s->rec->normal;
+	return (direction);
+}
+
+bool	glossy_scatter(t_scatter *s)
 {
 	const t_glossy	*glossy;
-	t_vec3			reflected;
 	t_vec3			direction;
 
-	glossy = (const t_glossy *)mat->data;
+	glossy = (const t_glossy *)s->mat->data;
 	if (!glossy)
 		return (false);
-	*attenuation = glossy->albedo;
+	*s->attenuation = glossy->albedo;
 	if (random_double() > glossy->roughness)
-	{
-		reflected = vec3_reflect(&r_in->dir, &rec->normal);
-		direction = unit_vector(&reflected);
-		reflected = random_unit_vector();
-		reflected = vec3_mul_scalar(&reflected, glossy->roughness * 0.5);
-		direction = vec3_add(&direction, &reflected);
-		if (dot(&direction, &rec->normal) <= 0)
-			direction = rec->normal;
-		*scattered = ray_create(rec->p, direction, r_in->tm);
-	}
+		direction = glossy_spec_dir(glossy, s);
 	else
-	{
-		direction = random_cosine_direction(&rec->normal);
-		if (vec3_near_zero(&direction))
-			direction = rec->normal;
-		*scattered = ray_create(rec->p, direction, r_in->tm);
-	}
+		direction = glossy_diff_dir(s);
+	*s->scattered = ray_create(s->rec->p, direction, s->r_in->tm);
 	return (true);
 }
 
-bool	diffuse_light_scatter(const t_material *mat, const t_ray *r_in,
-			const t_hit_record *rec, t_color *attenuation, t_ray *scattered)
+bool	diffuse_light_scatter(t_scatter *s)
 {
-	(void)mat;
-	(void)r_in;
-	(void)rec;
-	(void)attenuation;
-	(void)scattered;
+	(void)s;
 	return (false);
 }
 
-bool	isotropic_scatter(const t_material *mat, const t_ray *r_in,
-			const t_hit_record *rec, t_color *attenuation, t_ray *scattered)
+bool	isotropic_scatter(t_scatter *s)
 {
 	const t_isotropic	*iso;
 	t_vec3				scattered_dir;
 
-	iso = (const t_isotropic *)mat->data;
+	iso = (const t_isotropic *)s->mat->data;
 	if (!iso || !iso->tex)
 		return (false);
 	scattered_dir = random_unit_vector();
-	*scattered = ray_create(rec->p, scattered_dir, r_in->tm);
-	*attenuation = iso->tex->value(iso->tex, rec->u, rec->v, &rec->p);
+	*s->scattered = ray_create(s->rec->p, scattered_dir, s->r_in->tm);
+	*s->attenuation = iso->tex->value(iso->tex, s->rec->u,
+			s->rec->v, &s->rec->p);
 	return (true);
-}
-
-void	lambertian_destroy(t_material *mat)
-{
-	t_lambertian	*lam;
-
-	if (!mat)
-		return ;
-	lam = (t_lambertian *)mat->data;
-	if (lam && lam->tex)
-	{
-		if (lam->tex->destroy)
-			lam->tex->destroy(lam->tex);
-		free(lam->tex);
-	}
-	if (lam && lam->bump)
-	{
-		if (lam->bump->destroy)
-			lam->bump->destroy(lam->bump);
-		free(lam->bump);
-	}
-	free(mat->data);
-	free(mat);
-}
-
-void	metal_destroy(t_material *mat)
-{
-	if (!mat)
-		return ;
-	free(mat->data);
-	free(mat);
 }

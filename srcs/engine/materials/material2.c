@@ -13,27 +13,31 @@
 #include "material.h"
 #include "random.h"
 
-bool	metal_scatter(const t_material *mat, const t_ray *r_in,
-			const t_hit_record *rec, t_color *attenuation, t_ray *scattered)
+static t_vec3	metal_fuzzed_dir(const t_metal *metal, const t_ray *r_in,
+					const t_hit_record *rec)
+{
+	t_vec3	reflected;
+	t_vec3	random_vec;
+
+	reflected = vec3_reflect(&r_in->dir, &rec->normal);
+	reflected = unit_vector(&reflected);
+	random_vec = random_unit_vector();
+	random_vec = vec3_mul_scalar(&random_vec, metal->fuzz);
+	return (vec3_add(&reflected, &random_vec));
+}
+
+bool	metal_scatter(t_scatter *s)
 {
 	const t_metal	*metal;
-	t_vec3			reflected;
-	t_vec3			unit_reflected;
-	t_vec3			random_vec;
-	t_vec3			fuzz_offset;
 	t_vec3			fuzzed;
 
-	metal = (const t_metal *)mat->data;
+	metal = (const t_metal *)s->mat->data;
 	if (!metal)
 		return (false);
-	reflected = vec3_reflect(&r_in->dir, &rec->normal);
-	unit_reflected = unit_vector(&reflected);
-	random_vec = random_unit_vector();
-	fuzz_offset = vec3_mul_scalar(&random_vec, metal->fuzz);
-	fuzzed = vec3_add(&unit_reflected, &fuzz_offset);
-	*scattered = ray_create(rec->p, fuzzed, r_in->tm);
-	*attenuation = metal->albedo;
-	return (dot(&fuzzed, &rec->normal) > 0.0);
+	fuzzed = metal_fuzzed_dir(metal, s->r_in, s->rec);
+	*s->scattered = ray_create(s->rec->p, fuzzed, s->r_in->tm);
+	*s->attenuation = metal->albedo;
+	return (dot(&fuzzed, &s->rec->normal) > 0.0);
 }
 
 static bool	dielectric_get_dir(const t_hit_record *rec,
@@ -58,63 +62,44 @@ static bool	dielectric_get_dir(const t_hit_record *rec,
 	return (true);
 }
 
-bool	dielectric_scatter(const t_material *mat, const t_ray *r_in,
-			const t_hit_record *rec, t_color *attenuation, t_ray *scattered)
+bool	dielectric_scatter(t_scatter *s)
 {
 	const t_dielectric	*dielec;
 	real_t				ri;
 	t_vec3				unit_direction;
 	t_vec3				direction;
 
-	dielec = (const t_dielectric *)mat->data;
+	dielec = (const t_dielectric *)s->mat->data;
 	if (!dielec)
 		return (false);
-	*attenuation = vec3_create(1.0, 1.0, 1.0);
-	if (rec->front_face)
+	*s->attenuation = vec3_create(1.0, 1.0, 1.0);
+	if (s->rec->front_face)
 		ri = 1.0 / dielec->refraction_index;
 	else
 		ri = dielec->refraction_index;
-	unit_direction = unit_vector(&r_in->dir);
-	dielectric_get_dir(rec, &unit_direction, ri, &direction);
-	*scattered = ray_create(rec->p, direction, r_in->tm);
+	unit_direction = unit_vector(&s->r_in->dir);
+	dielectric_get_dir(s->rec, &unit_direction, ri, &direction);
+	*s->scattered = ray_create(s->rec->p, direction, s->r_in->tm);
 	return (true);
 }
 
-bool	tinted_glass_scatter(const t_material *mat, const t_ray *r_in,
-			const t_hit_record *rec, t_color *attenuation, t_ray *scattered)
+bool	tinted_glass_scatter(t_scatter *s)
 {
 	const t_tinted_glass	*glass;
 	real_t					ri;
 	t_vec3					unit_direction;
 	t_vec3					direction;
 
-	glass = (const t_tinted_glass *)mat->data;
+	glass = (const t_tinted_glass *)s->mat->data;
 	if (!glass)
 		return (false);
-	*attenuation = glass->tint;
-	if (rec->front_face)
+	*s->attenuation = glass->tint;
+	if (s->rec->front_face)
 		ri = 1.0 / glass->refraction_index;
 	else
 		ri = glass->refraction_index;
-	unit_direction = unit_vector(&r_in->dir);
-	dielectric_get_dir(rec, &unit_direction, ri, &direction);
-	*scattered = ray_create(rec->p, direction, r_in->tm);
+	unit_direction = unit_vector(&s->r_in->dir);
+	dielectric_get_dir(s->rec, &unit_direction, ri, &direction);
+	*s->scattered = ray_create(s->rec->p, direction, s->r_in->tm);
 	return (true);
-}
-
-t_color	diffuse_light_emitted(const t_material *mat, real_t u, real_t v,
-			const t_point3 *p, bool front_face)
-{
-	const t_diffuse_light	*light;
-	t_color					c;
-
-	light = (const t_diffuse_light *)mat->data;
-	if (!light || !light->tex)
-		return (vec3_create(0.0, 0.0, 0.0));
-	if (!front_face)
-		return (vec3_create(0.0, 0.0, 0.0));
-	c = light->tex->value(light->tex, u, v, p);
-	if (light->scale > (real_t)0.0)
-		return (vec3_mul_scalar(&c, light->scale));
-	return (vec3_mul_scalar(&c, (real_t)1.0));
 }

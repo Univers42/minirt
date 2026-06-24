@@ -73,3 +73,34 @@ t_material	*isotropic_create_texture(t_texture *tex)
 	mat->destroy = isotropic_destroy;
 	return (mat);
 }
+
+void	lambertian_destroy(t_material *mat)
+{
+	t_lambertian	*lam;
+
+	if (!mat)
+		return ;
+	lam = (t_lambertian *)mat->data;
+	if (lam && lam->tex)
+	{
+		if (lam->tex->destroy)
+			lam->tex->destroy(lam->tex);
+		free(lam->tex);
+	}
+	if (lam && lam->bump)
+	{
+		if (lam->bump->destroy)
+			lam->bump->destroy(lam->bump);
+		free(lam->bump);
+	}
+	free(mat->data);
+	free(mat);
+}
+
+void	metal_destroy(t_material *mat)
+{
+	if (!mat)
+		return ;
+	free(mat->data);
+	free(mat);
+}

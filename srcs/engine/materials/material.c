@@ -23,14 +23,9 @@ real_t	reflectance(real_t cosine, real_t refraction_index)
 	return (r0 + (1.0 - r0) * omc * omc * omc * omc * omc);
 }
 
-t_color	default_emitted(const t_material *mat, real_t u, real_t v,
-			const t_point3 *p, bool front_face)
+t_color	default_emitted(t_emit *e)
 {
-	(void)mat;
-	(void)u;
-	(void)v;
-	(void)p;
-	(void)front_face;
+	(void)e;
 	return (vec3_create(0.0, 0.0, 0.0));
 }
 
@@ -57,19 +52,19 @@ real_t	lambertian_scattering_pdf(const t_material *mat, const t_ray *r_in,
 	return (cos_theta / (real_t)PI);
 }
 
-bool	lambertian_scatter(const t_material *mat, const t_ray *r_in,
-			const t_hit_record *rec, t_color *attenuation, t_ray *scattered)
+bool	lambertian_scatter(t_scatter *s)
 {
 	const t_lambertian	*lamb;
 	t_vec3				scatter_direction;
 
-	lamb = (const t_lambertian *)mat->data;
+	lamb = (const t_lambertian *)s->mat->data;
 	if (!lamb || !lamb->tex)
 		return (false);
-	scatter_direction = random_cosine_direction(&rec->normal);
+	scatter_direction = random_cosine_direction(&s->rec->normal);
 	if (vec3_near_zero(&scatter_direction))
-		scatter_direction = rec->normal;
-	*scattered = ray_create(rec->p, scatter_direction, r_in->tm);
-	*attenuation = lamb->tex->value(lamb->tex, rec->u, rec->v, &rec->p);
+		scatter_direction = s->rec->normal;
+	*s->scattered = ray_create(s->rec->p, scatter_direction, s->r_in->tm);
+	*s->attenuation = lamb->tex->value(lamb->tex, s->rec->u,
+			s->rec->v, &s->rec->p);
 	return (true);
 }

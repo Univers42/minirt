@@ -26,7 +26,8 @@ t_vec3	shade_matte(const t_shade_ctx *c)
 
 	albedo = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
 	checker_set_hit(&c->rec->normal);
-	c->rec->mat->scatter(c->rec->mat, c->r, c->rec, &albedo, &scattered);
+	c->rec->mat->scatter(&(t_scatter){c->rec->mat, c->r, c->rec,
+		&albedo, &scattered});
 	view = vec3_neg(&c->r->dir);
 	view = unit_vector(&view);
 	amb = vec3_mul_elem(c->amb, &albedo);
@@ -46,7 +47,8 @@ t_vec3	shade_reflective(const t_shade_ctx *c)
 	t_color	out;
 
 	att = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
-	if (!c->rec->mat->scatter(c->rec->mat, c->r, c->rec, &att, &scattered))
+	if (!c->rec->mat->scatter(&(t_scatter){c->rec->mat, c->r, c->rec,
+			&att, &scattered}))
 		return (c->emission);
 	rcol = ray_color_direct(&scattered, c->world, c->depth - 1, c->amb);
 	out = vec3_mul_elem(&att, &rcol);

@@ -88,7 +88,7 @@ t_vec3	ray_color_direct(const t_ray *r, const t_hittable_list *world,
 	c.amb = ambient;
 	c.emission = vec3_zero();
 	if (rec.mat && rec.mat->emitted)
-		c.emission = rec.mat->emitted(rec.mat, rec.u, rec.v, &rec.p,
-				rec.front_face);
+		c.emission = rec.mat->emitted(&(t_emit){rec.mat, rec.u, rec.v,
+				&rec.p, rec.front_face});
 	return (shade(&c));
 }

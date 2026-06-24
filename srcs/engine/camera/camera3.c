@@ -152,10 +152,10 @@ t_vec3	ray_color_with_background(const t_ray *r,
 	}
 	emission = vec3_zero();
 	if (rec.mat && rec.mat->emitted)
-		emission = rec.mat->emitted(rec.mat, rec.u, rec.v, &rec.p,
-				rec.front_face);
-	if (rec.mat && rec.mat->scatter(rec.mat, r, &rec, &attenuation,
-			&scattered))
+		emission = rec.mat->emitted(&(t_emit){rec.mat, rec.u, rec.v,
+				&rec.p, rec.front_face});
+	if (rec.mat && rec.mat->scatter(&(t_scatter){rec.mat, r,
+			&rec, &attenuation, &scattered}))
 	{
 		if (!russian_roulette(depth, RT_MAX_DEPTH, &attenuation))
 			return (emission);
