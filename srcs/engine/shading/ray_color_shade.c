@@ -12,6 +12,7 @@
 
 #include "shading.h"
 #include "material.h"
+#include "texture.h"
 
 /* Matte surface (lambertian / isotropic): ambient + direct diffuse +
    specular shine.  No indirect bounce — the classic ray-tracing model. */
@@ -24,6 +25,7 @@ t_vec3	shade_matte(const t_shade_ctx *c)
 	t_color	lit;
 
 	albedo = vec3_create((real_t)1.0, (real_t)1.0, (real_t)1.0);
+	checker_set_hit(&c->rec->normal);
 	c->rec->mat->scatter(c->rec->mat, c->r, c->rec, &albedo, &scattered);
 	view = vec3_neg(&c->r->dir);
 	view = unit_vector(&view);

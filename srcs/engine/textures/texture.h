@@ -58,6 +58,7 @@ void		checker_texture_destroy(t_texture *tex);
 t_texture	*checker_texture_create(real_t scale, t_texture *even,
 				t_texture *odd);
 void		checker_set_view(const t_point3 *cam);
+void		checker_set_hit(const t_vec3 *normal);
 int			checker_parity(const t_checker_texture *ck, const t_point3 *p);
 real_t		checker_blend(const t_checker_texture *ck, const t_point3 *p);
 t_color		image_texture_value(const t_texture *tex, real_t u, real_t v,

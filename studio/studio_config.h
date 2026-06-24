@@ -377,11 +377,14 @@
 #  define RT_AO_MIN				0.4
 # endif
 
-/* Checker texture distance-fade strength (footprint anti-aliasing).        */
-/* Distant checker blends to its average grey to kill grazing-angle moire.  */
-/* Larger = fades nearer the camera.  0 disables.  DEFAULT 0.03.            */
+/* Checker texture footprint-fade strength (grazing-angle anti-aliasing).   */
+/* Footprint = dist * inv_scale * FILTER / cos^2(view,normal); the cos^2 is */
+/* the planar-floor minification rate, so it explodes toward the horizon.   */
+/* Once it spans ~half a tile the checker blends to its average grey,       */
+/* killing the horizon dark bands / moire.  Larger = fades nearer the       */
+/* camera.  0 disables.  DEFAULT 0.18.                                      */
 # ifndef RT_CHECKER_FILTER
-#  define RT_CHECKER_FILTER		0.06
+#  define RT_CHECKER_FILTER		0.18
 # endif
 
 /* Light distance attenuation model.                                  */
