@@ -17,10 +17,19 @@ hyperboloid, **torus** (quartic solver `core/math/quartic.c`), mesh (OBJ via `ve
 **Materials** (trailing `.rt` keyword via `parse_material.c`): `glass`, `metal`/`mirror`,
 `glossy`, `tinted`/`tglass`, `light`/`lamp`, `checker`, `marble`, `wood`, `noise`, `iso`.
 Runtime resolution override: `RT_WIDTH`/`RT_HEIGHT`. Output: MLX window, PPM (`--ppm`, path via
-`RT_PPM_OUT`). Showcase scenes: `studio/assets/rt_files/showcase_*.rt`; gallery `renders/`.
-Verified: warning-free `-Werror` build, **0 memory leaks** (valgrind), all scenes render.
-Known gaps: live in-program editor, native PNG output (vendor encoder API), libft consolidation,
-~115 lines >80 cols (norminette pass). See `~/.claude/plans/calm-sprouting-tome.md`.
+`RT_PPM_OUT`), **native PNG** (`--png`, path via `RT_PNG_OUT`; zlib writer in `core/io/lode_image2.c`).
+**Live editor** (`--edit`, `srcs/app/live/`): camera fly (WASD/QE + arrows/IJKL), object select
+(1–9) + translate/rotate, progressive re-render, F2 PNG save, clean ESC/red-cross teardown.
+Showcase: `studio/assets/rt_files/showcase_*.rt`; **Wavefront hero scenes**
+`studio/assets/jsons/{gold_dragon_studio,glass_chrome_stilllife,marble_buddha_shrine,erato_museum_alcove}.json`
+(metals reflect colored-backdrop + emissive-softbox environments); gallery `renders/`.
+The `.rt`/`.json` parsers route string/memory ops through the vendored **libft** (hot render path
+keeps libc/SIMD intrinsics for 4K speed). Verified: warning-free `-Werror` build (mandatory +
+`make bonus` + `make studio`), **0 memory leaks** (valgrind) on `--ppm`/`--png`/`--cinematic`,
+4K in ~0.5 s. Known gaps: static scene-file object rotation (only the live editor rotates;
+`rotate_y_create` exists but is unwired in the parsers); ~115 lines >80 cols + the pre-existing
+codebase's space-indentation (norminette pass would churn the original engine). See
+`~/.claude/plans/calm-sprouting-tome.md`.
 
 ## What this is
 
