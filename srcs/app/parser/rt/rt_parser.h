@@ -95,7 +95,9 @@ typedef enum e_mat_type
 	MAT_CHECKER,
 	MAT_GLOSSY,
 	MAT_TINTED_GLASS,
-	MAT_ISOTROPIC
+	MAT_ISOTROPIC,
+	MAT_MARBLE,
+	MAT_WOOD
 }	t_mat_type;
 
 typedef struct s_rt_sphere

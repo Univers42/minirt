@@ -73,6 +73,8 @@ static t_material	*create_mat_checker(const t_mat_spec *ms, t_color clr)
 	return (lambertian_create_texture(checker));
 }
 
+t_material	*create_mat_noise(const t_mat_spec *ms, t_color clr);
+
 t_material	*create_material(const t_mat_spec *ms, t_color clr)
 {
 	t_texture	*img;
@@ -89,6 +91,8 @@ t_material	*create_material(const t_mat_spec *ms, t_color clr)
 		m = create_mat_emissive(ms, clr);
 	else if (!m && ms->type == MAT_CHECKER)
 		m = create_mat_checker(ms, clr);
+	else if (!m && (ms->type == MAT_MARBLE || ms->type == MAT_WOOD))
+		m = create_mat_noise(ms, clr);
 	else if (!m && ms->type != MAT_LAMBERTIAN)
 		m = create_mat_special(ms, clr);
 	else if (!m)
