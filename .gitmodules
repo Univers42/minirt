@@ -1,3 +1,18 @@
 [submodule "example_rt"]
 	path = example_rt
 	url = https://github.com/ttcpavle/Raytracer-in-c.git
+[submodule "vendor/libft"]
+	path = vendor/libft
+	url = https://github.com/Univers42/libft.git
+[submodule "vendor/minilibx-linux"]
+	path = vendor/minilibx-linux
+	url = https://github.com/Univers42/minilibx-linux.git
+[submodule "vendor/png_writer"]
+	path = vendor/png_writer
+	url = https://github.com/Univers42/en-decoder_png.git
+[submodule "vendor/scripts"]
+	path = vendor/scripts
+	url = https://github.com/Univers42/scripts.git
+[submodule "vendor/evals42"]
+	path = vendor/evals42
+	url = https://github.com/Univers42/evals42.git
