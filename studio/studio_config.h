@@ -346,6 +346,31 @@
 #  define RT_SOFT_SHADOW_SAMPLES	8
 # endif
 
+/* ---- Ambient occlusion (direct engine only) ---------------------- */
+
+/* Number of FIXED (deterministic) hemisphere rays cast at a matte hit */
+/* to estimate how exposed the point is.  The unoccluded fraction      */
+/* multiplies ONLY the ambient/fill term, darkening creases and        */
+/* contact points.  Does NOT touch the direct-light (shadow) term, and */
+/* has no effect on the cinematic path tracer.                         */
+/*   0  = off (no AO)                                                  */
+/*   6  = subtle contact darkening (default)                          */
+/*  16  = stronger, smoother occlusion                                */
+/* A precomputed cosine-ish pattern is used (no RNG) so renders stay   */
+/* bit-for-bit reproducible.  Range: 0 - 16.                           */
+# ifndef RT_AO_SAMPLES
+#  define RT_AO_SAMPLES			6
+# endif
+
+/* World-space length of the AO probe rays.  Only occluders within     */
+/* this distance darken a point, keeping AO a local contact effect      */
+/* (and bounded for speed).  Larger = broader, softer darkening.       */
+/* Range: 0.01 - 100.  Tune to typical scene scale (units between      */
+/* touching objects).  DEFAULT: 1.5.                                   */
+# ifndef RT_AO_RADIUS
+#  define RT_AO_RADIUS			1.5
+# endif
+
 /* Light distance attenuation model.                                  */
 /*  0 = artistic / linear  (NdotL / distance) — smoother falloff      */
 /*  1 = physically correct (NdotL / distance²) — realistic inverse    */

@@ -28,6 +28,7 @@ t_vec3	shade_matte(const t_shade_ctx *c)
 	view = vec3_neg(&c->r->dir);
 	view = unit_vector(&view);
 	amb = vec3_mul_elem(c->amb, &albedo);
+	amb = vec3_mul_scalar(&amb, ambient_occlusion(c->rec, c->world));
 	lit = direct_lighting(c->rec, c->world, &view, &albedo);
 	amb = vec3_add(&amb, &lit);
 	return (vec3_add(&c->emission, &amb));
