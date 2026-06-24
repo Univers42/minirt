@@ -1,0 +1,4083 @@
+{
+  "_description": "Ray Tracing in One Weekend \u2014 the final cover scene. Three hero spheres (glass, diffuse brown, polished metal) on a clean apron, backed by 252 small random-material spheres. Soft daytime sky, shallow depth of field.",
+  "ambient": {
+    "ratio": 0.45,
+    "color": [
+      205,
+      222,
+      255
+    ]
+  },
+  "render": {
+    "aspect_ratio": 1.7778,
+    "spp": 120,
+    "max_depth": 24
+  },
+  "camera": {
+    "position": [
+      0.0,
+      2.5,
+      10.0
+    ],
+    "direction": [
+      0.0,
+      -1.3,
+      -10.0
+    ],
+    "fov": 40,
+    "defocus_angle": 0.45,
+    "focus_dist": 10.1
+  },
+  "lights": [
+    {
+      "position": [
+        20,
+        30,
+        10
+      ],
+      "brightness": 1.0,
+      "color": [
+        255,
+        248,
+        235
+      ]
+    },
+    {
+      "position": [
+        -18,
+        16,
+        -8
+      ],
+      "brightness": 0.45,
+      "color": [
+        200,
+        218,
+        255
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "_comment": "ground plane",
+      "type": "plane",
+      "point": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "color": [
+        148,
+        153,
+        163
+      ],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "hero \u2014 diffuse brown (left)",
+      "type": "sphere",
+      "center": [
+        -4,
+        1.2,
+        0
+      ],
+      "diameter": 2.4,
+      "color": [
+        102,
+        51,
+        26
+      ],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "hero \u2014 glass (centre)",
+      "type": "sphere",
+      "center": [
+        0,
+        1.2,
+        0
+      ],
+      "diameter": 2.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "_comment": "hero \u2014 polished metal (right)",
+      "type": "sphere",
+      "center": [
+        4,
+        1.2,
+        0
+      ],
+      "diameter": 2.4,
+      "color": [
+        178,
+        153,
+        128
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.824,
+        0.2,
+        -20.851
+      ],
+      "diameter": 0.4,
+      "color": [
+        167,
+        182,
+        241
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.301
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.906,
+        0.2,
+        -18.248
+      ],
+      "diameter": 0.4,
+      "color": [
+        141,
+        96,
+        188
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        11.461,
+        0.2,
+        -11.194
+      ],
+      "diameter": 0.4,
+      "color": [
+        244,
+        172,
+        138
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.342
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.202,
+        0.2,
+        -6.367
+      ],
+      "diameter": 0.4,
+      "color": [
+        189,
+        89,
+        119
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.128,
+        0.2,
+        -15.953
+      ],
+      "diameter": 0.4,
+      "color": [
+        194,
+        188,
+        203
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.443
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.502,
+        0.2,
+        -16.645
+      ],
+      "diameter": 0.4,
+      "color": [
+        18,
+        14,
+        21
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.011,
+        0.2,
+        -11.504
+      ],
+      "diameter": 0.4,
+      "color": [
+        4,
+        89,
+        3
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.718,
+        0.2,
+        -1.762
+      ],
+      "diameter": 0.4,
+      "color": [
+        202,
+        17,
+        97
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        2.795,
+        0.2,
+        -15.572
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.742,
+        0.2,
+        -11.856
+      ],
+      "diameter": 0.4,
+      "color": [
+        9,
+        198,
+        142
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.858,
+        0.2,
+        -4.599
+      ],
+      "diameter": 0.4,
+      "color": [
+        3,
+        26,
+        50
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.366,
+        0.2,
+        -5.205
+      ],
+      "diameter": 0.4,
+      "color": [
+        96,
+        30,
+        38
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.704,
+        0.2,
+        -17.929
+      ],
+      "diameter": 0.4,
+      "color": [
+        13,
+        13,
+        25
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.391,
+        0.2,
+        -6.951
+      ],
+      "diameter": 0.4,
+      "color": [
+        25,
+        3,
+        0
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.053,
+        0.2,
+        -12.299
+      ],
+      "diameter": 0.4,
+      "color": [
+        32,
+        31,
+        91
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        14.763,
+        0.2,
+        -6.269
+      ],
+      "diameter": 0.4,
+      "color": [
+        12,
+        3,
+        25
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.302,
+        0.2,
+        -19.325
+      ],
+      "diameter": 0.4,
+      "color": [
+        49,
+        58,
+        8
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.624,
+        0.2,
+        -16.319
+      ],
+      "diameter": 0.4,
+      "color": [
+        131,
+        6,
+        107
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.851,
+        0.2,
+        -7.905
+      ],
+      "diameter": 0.4,
+      "color": [
+        27,
+        18,
+        178
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.856,
+        0.2,
+        -4.877
+      ],
+      "diameter": 0.4,
+      "color": [
+        42,
+        60,
+        207
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.906,
+        0.2,
+        -3.761
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.369,
+        0.2,
+        -14.745
+      ],
+      "diameter": 0.4,
+      "color": [
+        57,
+        4,
+        145
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.529,
+        0.2,
+        -21.983
+      ],
+      "diameter": 0.4,
+      "color": [
+        160,
+        34,
+        114
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.381,
+        0.2,
+        -6.262
+      ],
+      "diameter": 0.4,
+      "color": [
+        11,
+        14,
+        111
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.436,
+        0.2,
+        -16.387
+      ],
+      "diameter": 0.4,
+      "color": [
+        41,
+        50,
+        5
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.984,
+        0.2,
+        -14.587
+      ],
+      "diameter": 0.4,
+      "color": [
+        135,
+        177,
+        184
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.22
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.612,
+        0.2,
+        -9.194
+      ],
+      "diameter": 0.4,
+      "color": [
+        21,
+        141,
+        137
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.12,
+        0.2,
+        -15.157
+      ],
+      "diameter": 0.4,
+      "color": [
+        239,
+        128,
+        225
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.064
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        11.002,
+        0.2,
+        -8.681
+      ],
+      "diameter": 0.4,
+      "color": [
+        53,
+        70,
+        83
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.423,
+        0.2,
+        -4.244
+      ],
+      "diameter": 0.4,
+      "color": [
+        16,
+        197,
+        131
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        2.304,
+        0.2,
+        -7.621
+      ],
+      "diameter": 0.4,
+      "color": [
+        234,
+        35,
+        14
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -10.909,
+        0.2,
+        -18.673
+      ],
+      "diameter": 0.4,
+      "color": [
+        99,
+        43,
+        23
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.592,
+        0.2,
+        -1.73
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.944,
+        0.2,
+        -1.939
+      ],
+      "diameter": 0.4,
+      "color": [
+        147,
+        164,
+        193
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.21
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.808,
+        0.2,
+        -13.205
+      ],
+      "diameter": 0.4,
+      "color": [
+        29,
+        3,
+        42
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.098,
+        0.2,
+        -10.861
+      ],
+      "diameter": 0.4,
+      "color": [
+        75,
+        3,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.201,
+        0.2,
+        -19.625
+      ],
+      "diameter": 0.4,
+      "color": [
+        70,
+        104,
+        92
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.792,
+        0.2,
+        -8.704
+      ],
+      "diameter": 0.4,
+      "color": [
+        4,
+        146,
+        27
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.636,
+        0.2,
+        -12.687
+      ],
+      "diameter": 0.4,
+      "color": [
+        150,
+        173,
+        151
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.122
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.213,
+        0.2,
+        -4.282
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.223,
+        0.2,
+        -15.942
+      ],
+      "diameter": 0.4,
+      "color": [
+        55,
+        40,
+        120
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.268,
+        0.2,
+        -19.335
+      ],
+      "diameter": 0.4,
+      "color": [
+        30,
+        86,
+        41
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.728,
+        0.2,
+        -17.412
+      ],
+      "diameter": 0.4,
+      "color": [
+        56,
+        8,
+        12
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.441,
+        0.2,
+        -15.788
+      ],
+      "diameter": 0.4,
+      "color": [
+        24,
+        17,
+        91
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -5.925,
+        0.2,
+        -13.229
+      ],
+      "diameter": 0.4,
+      "color": [
+        163,
+        131,
+        214
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.066
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        11.324,
+        0.2,
+        -20.312
+      ],
+      "diameter": 0.4,
+      "color": [
+        63,
+        146,
+        3
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.265,
+        0.2,
+        -21.143
+      ],
+      "diameter": 0.4,
+      "color": [
+        2,
+        23,
+        44
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.867,
+        0.2,
+        -3.771
+      ],
+      "diameter": 0.4,
+      "color": [
+        13,
+        147,
+        80
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        14.568,
+        0.2,
+        -4.741
+      ],
+      "diameter": 0.4,
+      "color": [
+        185,
+        134,
+        217
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.314
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -10.447,
+        0.2,
+        -16.866
+      ],
+      "diameter": 0.4,
+      "color": [
+        99,
+        42,
+        28
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.793,
+        0.2,
+        -20.972
+      ],
+      "diameter": 0.4,
+      "color": [
+        44,
+        13,
+        93
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -10.773,
+        0.2,
+        -15.687
+      ],
+      "diameter": 0.4,
+      "color": [
+        13,
+        11,
+        9
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -8.784,
+        0.2,
+        -7.472
+      ],
+      "diameter": 0.4,
+      "color": [
+        181,
+        68,
+        40
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.388,
+        0.2,
+        -3.615
+      ],
+      "diameter": 0.4,
+      "color": [
+        30,
+        169,
+        17
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.364,
+        0.2,
+        -9.238
+      ],
+      "diameter": 0.4,
+      "color": [
+        4,
+        89,
+        24
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.806,
+        0.2,
+        -15.574
+      ],
+      "diameter": 0.4,
+      "color": [
+        109,
+        91,
+        72
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.792,
+        0.2,
+        -5.192
+      ],
+      "diameter": 0.4,
+      "color": [
+        148,
+        165,
+        184
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.452
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.66,
+        0.2,
+        -7.3
+      ],
+      "diameter": 0.4,
+      "color": [
+        29,
+        137,
+        148
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.323,
+        0.2,
+        -2.42
+      ],
+      "diameter": 0.4,
+      "color": [
+        146,
+        42,
+        26
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.143,
+        0.2,
+        -8.881
+      ],
+      "diameter": 0.4,
+      "color": [
+        142,
+        237,
+        160
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.274
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.263,
+        0.2,
+        -17.222
+      ],
+      "diameter": 0.4,
+      "color": [
+        75,
+        53,
+        16
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.677,
+        0.2,
+        -15.204
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.372,
+        0.2,
+        -5.528
+      ],
+      "diameter": 0.4,
+      "color": [
+        4,
+        8,
+        23
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.757,
+        0.2,
+        -14.177
+      ],
+      "diameter": 0.4,
+      "color": [
+        239,
+        199,
+        244
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.311
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.294,
+        0.2,
+        -19.193
+      ],
+      "diameter": 0.4,
+      "color": [
+        223,
+        171,
+        225
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.084
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.88,
+        0.2,
+        -19.675
+      ],
+      "diameter": 0.4,
+      "color": [
+        155,
+        124,
+        54
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.131,
+        0.2,
+        -20.745
+      ],
+      "diameter": 0.4,
+      "color": [
+        23,
+        153,
+        37
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.03,
+        0.2,
+        -14.503
+      ],
+      "diameter": 0.4,
+      "color": [
+        41,
+        48,
+        49
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.56,
+        0.2,
+        -15.997
+      ],
+      "diameter": 0.4,
+      "color": [
+        25,
+        68,
+        86
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.583,
+        0.2,
+        -7.312
+      ],
+      "diameter": 0.4,
+      "color": [
+        144,
+        141,
+        68
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -9.27,
+        0.2,
+        -20.114
+      ],
+      "diameter": 0.4,
+      "color": [
+        192,
+        208,
+        172
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.37
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.507,
+        0.2,
+        -5.943
+      ],
+      "diameter": 0.4,
+      "color": [
+        33,
+        8,
+        19
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.777,
+        0.2,
+        -21.806
+      ],
+      "diameter": 0.4,
+      "color": [
+        42,
+        86,
+        53
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -9.157,
+        0.2,
+        -12.111
+      ],
+      "diameter": 0.4,
+      "color": [
+        160,
+        130,
+        148
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.138
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.406,
+        0.2,
+        -17.871
+      ],
+      "diameter": 0.4,
+      "color": [
+        36,
+        30,
+        47
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.059,
+        0.2,
+        -18.684
+      ],
+      "diameter": 0.4,
+      "color": [
+        245,
+        155,
+        169
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.32
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.807,
+        0.2,
+        -16.753
+      ],
+      "diameter": 0.4,
+      "color": [
+        56,
+        95,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.709,
+        0.2,
+        -21.864
+      ],
+      "diameter": 0.4,
+      "color": [
+        29,
+        122,
+        60
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.422,
+        0.2,
+        -4.93
+      ],
+      "diameter": 0.4,
+      "color": [
+        167,
+        226,
+        252
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.388
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -3.473,
+        0.2,
+        -13.524
+      ],
+      "diameter": 0.4,
+      "color": [
+        9,
+        45,
+        19
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.598,
+        0.2,
+        -5.891
+      ],
+      "diameter": 0.4,
+      "color": [
+        43,
+        7,
+        184
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        2.211,
+        0.2,
+        -14.778
+      ],
+      "diameter": 0.4,
+      "color": [
+        75,
+        66,
+        84
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.802,
+        0.2,
+        -15.143
+      ],
+      "diameter": 0.4,
+      "color": [
+        43,
+        19,
+        19
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.763,
+        0.2,
+        -3.134
+      ],
+      "diameter": 0.4,
+      "color": [
+        81,
+        5,
+        23
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.356,
+        0.2,
+        -17.505
+      ],
+      "diameter": 0.4,
+      "color": [
+        160,
+        6,
+        109
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.57,
+        0.2,
+        -6.153
+      ],
+      "diameter": 0.4,
+      "color": [
+        30,
+        4,
+        79
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.238,
+        0.2,
+        -11.924
+      ],
+      "diameter": 0.4,
+      "color": [
+        5,
+        98,
+        126
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -10.236,
+        0.2,
+        -13.106
+      ],
+      "diameter": 0.4,
+      "color": [
+        31,
+        236,
+        52
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.705,
+        0.2,
+        -4.356
+      ],
+      "diameter": 0.4,
+      "color": [
+        134,
+        216,
+        169
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.454
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.239,
+        0.2,
+        -14.422
+      ],
+      "diameter": 0.4,
+      "color": [
+        0,
+        95,
+        68
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.107,
+        0.2,
+        -12.829
+      ],
+      "diameter": 0.4,
+      "color": [
+        98,
+        41,
+        32
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.558,
+        0.2,
+        -7.393
+      ],
+      "diameter": 0.4,
+      "color": [
+        173,
+        12,
+        41
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.497,
+        0.2,
+        -17.435
+      ],
+      "diameter": 0.4,
+      "color": [
+        45,
+        20,
+        55
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.203,
+        0.2,
+        -21.905
+      ],
+      "diameter": 0.4,
+      "color": [
+        15,
+        69,
+        8
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.196,
+        0.2,
+        -5.668
+      ],
+      "diameter": 0.4,
+      "color": [
+        37,
+        18,
+        96
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -5.775,
+        0.2,
+        -1.986
+      ],
+      "diameter": 0.4,
+      "color": [
+        131,
+        203,
+        186
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.379
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.205,
+        0.2,
+        -16.129
+      ],
+      "diameter": 0.4,
+      "color": [
+        191,
+        84,
+        43
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.736,
+        0.2,
+        -5.586
+      ],
+      "diameter": 0.4,
+      "color": [
+        157,
+        125,
+        70
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.19,
+        0.2,
+        -5.298
+      ],
+      "diameter": 0.4,
+      "color": [
+        0,
+        7,
+        11
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        4.031,
+        0.2,
+        -15.944
+      ],
+      "diameter": 0.4,
+      "color": [
+        56,
+        74,
+        24
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -9.767,
+        0.2,
+        -14.377
+      ],
+      "diameter": 0.4,
+      "color": [
+        191,
+        95,
+        117
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.743,
+        0.2,
+        -11.158
+      ],
+      "diameter": 0.4,
+      "color": [
+        144,
+        24,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -8.882,
+        0.2,
+        -5.181
+      ],
+      "diameter": 0.4,
+      "color": [
+        2,
+        33,
+        64
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -9.181,
+        0.2,
+        -4.296
+      ],
+      "diameter": 0.4,
+      "color": [
+        101,
+        210,
+        83
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.405,
+        0.2,
+        -11.874
+      ],
+      "diameter": 0.4,
+      "color": [
+        67,
+        211,
+        4
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.196,
+        0.2,
+        -7.64
+      ],
+      "diameter": 0.4,
+      "color": [
+        21,
+        112,
+        17
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.872,
+        0.2,
+        -9.528
+      ],
+      "diameter": 0.4,
+      "color": [
+        15,
+        32,
+        59
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.192,
+        0.2,
+        -16.123
+      ],
+      "diameter": 0.4,
+      "color": [
+        27,
+        54,
+        46
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.626,
+        0.2,
+        -18.239
+      ],
+      "diameter": 0.4,
+      "color": [
+        15,
+        13,
+        3
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.489,
+        0.2,
+        -1.989
+      ],
+      "diameter": 0.4,
+      "color": [
+        143,
+        21,
+        8
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        2.873,
+        0.2,
+        -3.719
+      ],
+      "diameter": 0.4,
+      "color": [
+        67,
+        46,
+        4
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.876,
+        0.2,
+        -11.475
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.337,
+        0.2,
+        -11.773
+      ],
+      "diameter": 0.4,
+      "color": [
+        178,
+        169,
+        28
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.829,
+        0.2,
+        -20.573
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.116,
+        0.2,
+        -11.612
+      ],
+      "diameter": 0.4,
+      "color": [
+        234,
+        157,
+        153
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.126
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.784,
+        0.2,
+        -21.296
+      ],
+      "diameter": 0.4,
+      "color": [
+        41,
+        167,
+        178
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.61,
+        0.2,
+        -21.833
+      ],
+      "diameter": 0.4,
+      "color": [
+        190,
+        130,
+        142
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.002
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.669,
+        0.2,
+        -10.15
+      ],
+      "diameter": 0.4,
+      "color": [
+        205,
+        186,
+        170
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.209
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.159,
+        0.2,
+        -19.904
+      ],
+      "diameter": 0.4,
+      "color": [
+        26,
+        14,
+        17
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.527,
+        0.2,
+        -19.212
+      ],
+      "diameter": 0.4,
+      "color": [
+        89,
+        41,
+        60
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        2.454,
+        0.2,
+        -4.815
+      ],
+      "diameter": 0.4,
+      "color": [
+        13,
+        75,
+        109
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -8.882,
+        0.2,
+        -13.987
+      ],
+      "diameter": 0.4,
+      "color": [
+        174,
+        252,
+        135
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.249
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.244,
+        0.2,
+        -9.15
+      ],
+      "diameter": 0.4,
+      "color": [
+        199,
+        185,
+        223
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.342
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.101,
+        0.2,
+        -15.47
+      ],
+      "diameter": 0.4,
+      "color": [
+        223,
+        132,
+        169
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.364
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.811,
+        0.2,
+        -11.149
+      ],
+      "diameter": 0.4,
+      "color": [
+        143,
+        145,
+        169
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.98,
+        0.2,
+        -3.584
+      ],
+      "diameter": 0.4,
+      "color": [
+        68,
+        104,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.682,
+        0.2,
+        -2.966
+      ],
+      "diameter": 0.4,
+      "color": [
+        76,
+        44,
+        44
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.115,
+        0.2,
+        -2.773
+      ],
+      "diameter": 0.4,
+      "color": [
+        150,
+        176,
+        55
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.167,
+        0.2,
+        -10.158
+      ],
+      "diameter": 0.4,
+      "color": [
+        22,
+        19,
+        64
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.948,
+        0.2,
+        -18.543
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.51,
+        0.2,
+        -3.664
+      ],
+      "diameter": 0.4,
+      "color": [
+        30,
+        18,
+        74
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.178,
+        0.2,
+        -16.886
+      ],
+      "diameter": 0.4,
+      "color": [
+        115,
+        173,
+        158
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.481,
+        0.2,
+        -12.643
+      ],
+      "diameter": 0.4,
+      "color": [
+        58,
+        19,
+        135
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.187,
+        0.2,
+        -13.763
+      ],
+      "diameter": 0.4,
+      "color": [
+        39,
+        10,
+        164
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.843,
+        0.2,
+        -16.34
+      ],
+      "diameter": 0.4,
+      "color": [
+        4,
+        95,
+        84
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.506,
+        0.2,
+        -18.205
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.01,
+        0.2,
+        -19.42
+      ],
+      "diameter": 0.4,
+      "color": [
+        83,
+        9,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.438,
+        0.2,
+        -6.539
+      ],
+      "diameter": 0.4,
+      "color": [
+        170,
+        14,
+        90
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        2.271,
+        0.2,
+        -17.585
+      ],
+      "diameter": 0.4,
+      "color": [
+        10,
+        13,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        14.287,
+        0.2,
+        -1.619
+      ],
+      "diameter": 0.4,
+      "color": [
+        3,
+        96,
+        1
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.26,
+        0.2,
+        -5.744
+      ],
+      "diameter": 0.4,
+      "color": [
+        9,
+        40,
+        137
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.46,
+        0.2,
+        -6.951
+      ],
+      "diameter": 0.4,
+      "color": [
+        32,
+        74,
+        23
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.215,
+        0.2,
+        -8.767
+      ],
+      "diameter": 0.4,
+      "color": [
+        135,
+        158,
+        253
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.3
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.54,
+        0.2,
+        -21.505
+      ],
+      "diameter": 0.4,
+      "color": [
+        63,
+        12,
+        157
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.425,
+        0.2,
+        -6.665
+      ],
+      "diameter": 0.4,
+      "color": [
+        4,
+        22,
+        0
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.646,
+        0.2,
+        -16.544
+      ],
+      "diameter": 0.4,
+      "color": [
+        12,
+        2,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.138,
+        0.2,
+        -14.864
+      ],
+      "diameter": 0.4,
+      "color": [
+        23,
+        20,
+        22
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -3.726,
+        0.2,
+        -14.79
+      ],
+      "diameter": 0.4,
+      "color": [
+        62,
+        156,
+        39
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.577,
+        0.2,
+        -2.181
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.863,
+        0.2,
+        -15.56
+      ],
+      "diameter": 0.4,
+      "color": [
+        63,
+        191,
+        1
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -3.114,
+        0.2,
+        -9.865
+      ],
+      "diameter": 0.4,
+      "color": [
+        174,
+        43,
+        160
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.984,
+        0.2,
+        -7.702
+      ],
+      "diameter": 0.4,
+      "color": [
+        165,
+        19,
+        83
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.87,
+        0.2,
+        -9.894
+      ],
+      "diameter": 0.4,
+      "color": [
+        44,
+        98,
+        2
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.861,
+        0.2,
+        -18.355
+      ],
+      "diameter": 0.4,
+      "color": [
+        34,
+        34,
+        72
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.152,
+        0.2,
+        -4.766
+      ],
+      "diameter": 0.4,
+      "color": [
+        61,
+        27,
+        143
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.252,
+        0.2,
+        -5.684
+      ],
+      "diameter": 0.4,
+      "color": [
+        2,
+        13,
+        155
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.029,
+        0.2,
+        -16.361
+      ],
+      "diameter": 0.4,
+      "color": [
+        18,
+        3,
+        14
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.005,
+        0.2,
+        -7.189
+      ],
+      "diameter": 0.4,
+      "color": [
+        5,
+        53,
+        232
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.586,
+        0.2,
+        -2.817
+      ],
+      "diameter": 0.4,
+      "color": [
+        13,
+        53,
+        44
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.78,
+        0.2,
+        -20.483
+      ],
+      "diameter": 0.4,
+      "color": [
+        0,
+        39,
+        170
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.664,
+        0.2,
+        -8.139
+      ],
+      "diameter": 0.4,
+      "color": [
+        5,
+        21,
+        2
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        11.527,
+        0.2,
+        -15.403
+      ],
+      "diameter": 0.4,
+      "color": [
+        150,
+        245,
+        28
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -10.525,
+        0.2,
+        -7.868
+      ],
+      "diameter": 0.4,
+      "color": [
+        205,
+        160,
+        185
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.0
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -10.85,
+        0.2,
+        -2.305
+      ],
+      "diameter": 0.4,
+      "color": [
+        22,
+        8,
+        76
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        14.13,
+        0.2,
+        -19.976
+      ],
+      "diameter": 0.4,
+      "color": [
+        162,
+        248,
+        179
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.478
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.795,
+        0.2,
+        -12.111
+      ],
+      "diameter": 0.4,
+      "color": [
+        68,
+        86,
+        50
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.212,
+        0.2,
+        -12.718
+      ],
+      "diameter": 0.4,
+      "color": [
+        152,
+        137,
+        242
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.481
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.341,
+        0.2,
+        -3.594
+      ],
+      "diameter": 0.4,
+      "color": [
+        11,
+        9,
+        78
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        11.562,
+        0.2,
+        -4.573
+      ],
+      "diameter": 0.4,
+      "color": [
+        105,
+        180,
+        9
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.426,
+        0.2,
+        -12.904
+      ],
+      "diameter": 0.4,
+      "color": [
+        3,
+        16,
+        31
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.04,
+        0.2,
+        -14.522
+      ],
+      "diameter": 0.4,
+      "color": [
+        208,
+        217,
+        251
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.321
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.244,
+        0.2,
+        -20.776
+      ],
+      "diameter": 0.4,
+      "color": [
+        161,
+        80,
+        0
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -10.672,
+        0.2,
+        -14.889
+      ],
+      "diameter": 0.4,
+      "color": [
+        1,
+        12,
+        1
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        4.21,
+        0.2,
+        -5.572
+      ],
+      "diameter": 0.4,
+      "color": [
+        129,
+        36,
+        6
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.245,
+        0.2,
+        -19.892
+      ],
+      "diameter": 0.4,
+      "color": [
+        39,
+        84,
+        48
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -8.639,
+        0.2,
+        -20.148
+      ],
+      "diameter": 0.4,
+      "color": [
+        118,
+        14,
+        168
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.594,
+        0.2,
+        -2.728
+      ],
+      "diameter": 0.4,
+      "color": [
+        49,
+        18,
+        70
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -9.139,
+        0.2,
+        -13.597
+      ],
+      "diameter": 0.4,
+      "color": [
+        136,
+        177,
+        189
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.053
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.056,
+        0.2,
+        -3.75
+      ],
+      "diameter": 0.4,
+      "color": [
+        81,
+        71,
+        65
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.847,
+        0.2,
+        -8.35
+      ],
+      "diameter": 0.4,
+      "color": [
+        8,
+        21,
+        6
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.722,
+        0.2,
+        -8.265
+      ],
+      "diameter": 0.4,
+      "color": [
+        163,
+        16,
+        35
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.152,
+        0.2,
+        -6.997
+      ],
+      "diameter": 0.4,
+      "color": [
+        35,
+        41,
+        28
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        1.528,
+        0.2,
+        -15.0
+      ],
+      "diameter": 0.4,
+      "color": [
+        61,
+        195,
+        11
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.78,
+        0.2,
+        -9.596
+      ],
+      "diameter": 0.4,
+      "color": [
+        206,
+        155,
+        52
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.381,
+        0.2,
+        -15.116
+      ],
+      "diameter": 0.4,
+      "color": [
+        177,
+        9,
+        75
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.581,
+        0.2,
+        -17.601
+      ],
+      "diameter": 0.4,
+      "color": [
+        28,
+        4,
+        218
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.415,
+        0.2,
+        -4.854
+      ],
+      "diameter": 0.4,
+      "color": [
+        200,
+        88,
+        64
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.668,
+        0.2,
+        -9.49
+      ],
+      "diameter": 0.4,
+      "color": [
+        101,
+        48,
+        24
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.244,
+        0.2,
+        -2.877
+      ],
+      "diameter": 0.4,
+      "color": [
+        55,
+        20,
+        112
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.449,
+        0.2,
+        -9.545
+      ],
+      "diameter": 0.4,
+      "color": [
+        46,
+        214,
+        53
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.595,
+        0.2,
+        -12.758
+      ],
+      "diameter": 0.4,
+      "color": [
+        10,
+        99,
+        39
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -9.68,
+        0.2,
+        -16.974
+      ],
+      "diameter": 0.4,
+      "color": [
+        168,
+        15,
+        62
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.178,
+        0.2,
+        -16.322
+      ],
+      "diameter": 0.4,
+      "color": [
+        12,
+        9,
+        25
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -5.919,
+        0.2,
+        -17.948
+      ],
+      "diameter": 0.4,
+      "color": [
+        26,
+        42,
+        1
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -3.819,
+        0.2,
+        -18.546
+      ],
+      "diameter": 0.4,
+      "color": [
+        70,
+        206,
+        35
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -9.796,
+        0.2,
+        -17.534
+      ],
+      "diameter": 0.4,
+      "color": [
+        1,
+        49,
+        67
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.478,
+        0.2,
+        -10.589
+      ],
+      "diameter": 0.4,
+      "color": [
+        86,
+        5,
+        10
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.036,
+        0.2,
+        -13.736
+      ],
+      "diameter": 0.4,
+      "color": [
+        101,
+        95,
+        7
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.189,
+        0.2,
+        -17.739
+      ],
+      "diameter": 0.4,
+      "color": [
+        20,
+        56,
+        64
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.675,
+        0.2,
+        -6.628
+      ],
+      "diameter": 0.4,
+      "color": [
+        16,
+        137,
+        145
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        4.387,
+        0.2,
+        -2.556
+      ],
+      "diameter": 0.4,
+      "color": [
+        199,
+        146,
+        150
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.457
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        4.003,
+        0.2,
+        -8.32
+      ],
+      "diameter": 0.4,
+      "color": [
+        138,
+        77,
+        89
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.211,
+        0.2,
+        -8.625
+      ],
+      "diameter": 0.4,
+      "color": [
+        189,
+        31,
+        178
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -4.364,
+        0.2,
+        -13.428
+      ],
+      "diameter": 0.4,
+      "color": [
+        114,
+        23,
+        6
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.356,
+        0.2,
+        -19.107
+      ],
+      "diameter": 0.4,
+      "color": [
+        51,
+        206,
+        12
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        5.722,
+        0.2,
+        -21.335
+      ],
+      "diameter": 0.4,
+      "color": [
+        37,
+        132,
+        101
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.776,
+        0.2,
+        -13.751
+      ],
+      "diameter": 0.4,
+      "color": [
+        171,
+        10,
+        44
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -12.343,
+        0.2,
+        -18.741
+      ],
+      "diameter": 0.4,
+      "color": [
+        251,
+        226,
+        208
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.306
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.655,
+        0.2,
+        -8.817
+      ],
+      "diameter": 0.4,
+      "color": [
+        199,
+        57,
+        19
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.849,
+        0.2,
+        -15.122
+      ],
+      "diameter": 0.4,
+      "color": [
+        70,
+        222,
+        3
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.555,
+        0.2,
+        -7.656
+      ],
+      "diameter": 0.4,
+      "color": [
+        18,
+        209,
+        74
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.628,
+        0.2,
+        -3.228
+      ],
+      "diameter": 0.4,
+      "color": [
+        1,
+        118,
+        62
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.013,
+        0.2,
+        -3.504
+      ],
+      "diameter": 0.4,
+      "color": [
+        87,
+        57,
+        17
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.501,
+        0.2,
+        -8.604
+      ],
+      "diameter": 0.4,
+      "color": [
+        142,
+        223,
+        162
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.491
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.153,
+        0.2,
+        -5.506
+      ],
+      "diameter": 0.4,
+      "color": [
+        92,
+        15,
+        32
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.352,
+        0.2,
+        -4.955
+      ],
+      "diameter": 0.4,
+      "color": [
+        53,
+        26,
+        93
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -5.263,
+        0.2,
+        -20.767
+      ],
+      "diameter": 0.4,
+      "color": [
+        86,
+        2,
+        20
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        14.07,
+        0.2,
+        -20.18
+      ],
+      "diameter": 0.4,
+      "color": [
+        35,
+        135,
+        13
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.234,
+        0.2,
+        -8.3
+      ],
+      "diameter": 0.4,
+      "color": [
+        16,
+        70,
+        118
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.757,
+        0.2,
+        -1.883
+      ],
+      "diameter": 0.4,
+      "color": [
+        39,
+        62,
+        100
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.86,
+        0.2,
+        -4.889
+      ],
+      "diameter": 0.4,
+      "color": [
+        171,
+        17,
+        91
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.455,
+        0.2,
+        -12.713
+      ],
+      "diameter": 0.4,
+      "color": [
+        1,
+        123,
+        203
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        14.096,
+        0.2,
+        -8.815
+      ],
+      "diameter": 0.4,
+      "color": [
+        202,
+        251,
+        210
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.433
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.432,
+        0.2,
+        -6.178
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.724,
+        0.2,
+        -17.13
+      ],
+      "diameter": 0.4,
+      "color": [
+        17,
+        29,
+        95
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.752,
+        0.2,
+        -13.957
+      ],
+      "diameter": 0.4,
+      "color": [
+        159,
+        246,
+        193
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.259
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        10.145,
+        0.2,
+        -10.157
+      ],
+      "diameter": 0.4,
+      "color": [
+        61,
+        41,
+        40
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -2.933,
+        0.2,
+        -10.761
+      ],
+      "diameter": 0.4,
+      "color": [
+        64,
+        39,
+        51
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.021,
+        0.2,
+        -16.443
+      ],
+      "diameter": 0.4,
+      "color": [
+        158,
+        70,
+        42
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -5.935,
+        0.2,
+        -15.155
+      ],
+      "diameter": 0.4,
+      "color": [
+        143,
+        243,
+        184
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.187
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        4.807,
+        0.2,
+        -18.973
+      ],
+      "diameter": 0.4,
+      "color": [
+        59,
+        121,
+        133
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.934,
+        0.2,
+        -20.397
+      ],
+      "diameter": 0.4,
+      "color": [
+        202,
+        201,
+        169
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.117
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        9.378,
+        0.2,
+        -19.476
+      ],
+      "diameter": 0.4,
+      "color": [
+        42,
+        12,
+        2
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -1.58,
+        0.2,
+        -17.893
+      ],
+      "diameter": 0.4,
+      "color": [
+        162,
+        226,
+        189
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.405
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.746,
+        0.2,
+        -8.835
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.281,
+        0.2,
+        -20.817
+      ],
+      "diameter": 0.4,
+      "color": [
+        75,
+        153,
+        11
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.884,
+        0.2,
+        -21.777
+      ],
+      "diameter": 0.4,
+      "color": [
+        27,
+        16,
+        51
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        0.339,
+        0.2,
+        -4.696
+      ],
+      "diameter": 0.4,
+      "color": [
+        2,
+        35,
+        18
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        13.71,
+        0.2,
+        -15.529
+      ],
+      "diameter": 0.4,
+      "color": [
+        49,
+        38,
+        11
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        7.281,
+        0.2,
+        -12.49
+      ],
+      "diameter": 0.4,
+      "color": [
+        18,
+        38,
+        88
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -6.536,
+        0.2,
+        -11.695
+      ],
+      "diameter": 0.4,
+      "color": [
+        224,
+        174,
+        185
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.283
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.371,
+        0.2,
+        -5.211
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -11.648,
+        0.2,
+        -20.216
+      ],
+      "diameter": 0.4,
+      "color": [
+        141,
+        206,
+        132
+      ],
+      "material": {
+        "type": "metal",
+        "fuzz": 0.326
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.707,
+        0.2,
+        -16.533
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        6.837,
+        0.2,
+        -10.665
+      ],
+      "diameter": 0.4,
+      "color": [
+        255,
+        255,
+        255
+      ],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    },
+    {
+      "type": "sphere",
+      "center": [
+        12.224,
+        0.2,
+        -15.187
+      ],
+      "diameter": 0.4,
+      "color": [
+        56,
+        60,
+        6
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -5.955,
+        0.2,
+        -6.818
+      ],
+      "diameter": 0.4,
+      "color": [
+        47,
+        177,
+        173
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        3.054,
+        0.2,
+        -14.646
+      ],
+      "diameter": 0.4,
+      "color": [
+        109,
+        37,
+        96
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -0.675,
+        0.2,
+        -14.615
+      ],
+      "diameter": 0.4,
+      "color": [
+        98,
+        35,
+        184
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        8.469,
+        0.2,
+        -19.167
+      ],
+      "diameter": 0.4,
+      "color": [
+        17,
+        42,
+        133
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -7.604,
+        0.2,
+        -20.835
+      ],
+      "diameter": 0.4,
+      "color": [
+        156,
+        17,
+        8
+      ],
+      "material": "lambertian"
+    },
+    {
+      "type": "sphere",
+      "center": [
+        -13.837,
+        0.2,
+        -7.477
+      ],
+      "diameter": 0.4,
+      "color": [
+        79,
+        0,
+        40
+      ],
+      "material": "lambertian"
+    }
+  ]
+}

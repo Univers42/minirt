@@ -1,0 +1,83 @@
+{
+  "_description": "The Stanford Dragon as clear glass (dielectric ior 1.5) standing in a real sunset environment (equirectangular sky.png) on a dark glossy floor. The sky is refracted through the glass body and reflected on the floor. Dramatic warm key + cool rim light.",
+
+  "environment": "studio/assets/textures/starfield.png",
+
+  "ambient": { "ratio": 0.46, "color": [125, 140, 188] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 96, "max_depth": 24 },
+
+  "camera": {
+    "position": [-0.6, 2.5, -8.8],
+    "direction": [0.07, -0.09, 1.0],
+    "fov": 44
+  },
+
+  "lights": [
+    {
+      "_comment": "warm key, high front-right",
+      "position": [8, 9, -5],
+      "brightness": 3.4,
+      "color": [255, 228, 188]
+    },
+    {
+      "_comment": "cool rim, behind-left high — separates dragon from the stars",
+      "position": [-8, 9, 7],
+      "brightness": 3.0,
+      "color": [150, 185, 255]
+    },
+    {
+      "_comment": "magenta accent fill, low camera-left",
+      "position": [-6, 2.5, -7],
+      "brightness": 1.1,
+      "color": [255, 170, 210]
+    }
+  ],
+
+  "objects": [
+    {"_comment": "=== DARK GLOSSY FLOOR — reflects the dragon and the sunset ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [26, 24, 30],
+      "material": { "type": "glossy", "roughness": 0.05 }
+    },
+
+    {"_comment": "=== EMISSIVE SOFTBOX PANELS — bright shapes the chrome reflects + real illumination ==="},
+    {
+      "_comment": "warm KEY orb — bright emissive sphere front-right, just outside frame. Lights the dragon's right side and appears as a warm round highlight in the chrome.",
+      "type": "sphere",
+      "center": [6.2, 3.6, -3.8],
+      "diameter": 4.2,
+      "color": [255, 224, 184],
+      "material": { "type": "emissive", "scale": 12.0 }
+    },
+    {
+      "_comment": "cool FILL orb — bright emissive sphere front-left, just outside frame.",
+      "type": "sphere",
+      "center": [-6.6, 3.0, -3.8],
+      "diameter": 3.6,
+      "color": [182, 206, 255],
+      "material": { "type": "emissive", "scale": 10.0 }
+    },
+    {
+      "_comment": "glowing moon, high behind — bright disc in the starfield, reflected by chrome",
+      "type": "sphere",
+      "center": [-3.8, 8.4, 11.0],
+      "diameter": 4.8,
+      "color": [255, 250, 240],
+      "material": { "type": "emissive", "scale": 7.0 }
+    },
+
+    {"_comment": "=== GLASS DRAGON — raw y in [-0.283,0.422] (h=0.705). scale 7 -> h=4.94. Lift bottom to floor: y = 0.283*7 = 1.98 ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/dragon.obj",
+      "position": [0.0, 2.12, 0.0],
+      "scale": 7.5,
+      "color": [248, 249, 252],
+      "material": { "type": "metal", "fuzz": 0.045 }
+    }
+  ]
+}

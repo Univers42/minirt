@@ -1,0 +1,61 @@
+{
+  "_description": "Whitted 1980 recursive ray tracing, modernized. A perfect mirror sphere and a clear glass sphere rest on an infinite checkerboard floor under a clean graded sky. Sharp reflections of the checker and of each other in the spheres, crisp refraction through the glass, alias-free checker receding to the horizon.",
+
+  "ambient": { "ratio": 0.34, "color": [210, 222, 240] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 64, "max_depth": 18 },
+
+  "camera": {
+    "position": [0.0, 5.0, -7.0],
+    "direction": [0.0, -0.50, 1.0],
+    "fov": 50
+  },
+
+  "lights": [
+    {
+      "_comment": "warm key, high front-right",
+      "position": [6, 9, -5],
+      "brightness": 0.9,
+      "color": [255, 244, 224]
+    },
+    {
+      "_comment": "cool fill, left",
+      "position": [-7, 5, -3],
+      "brightness": 0.45,
+      "color": [200, 218, 255]
+    }
+  ],
+
+  "objects": [
+    {"_comment": "=== INFINITE CHECKERBOARD FLOOR ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [235, 235, 235],
+      "material": {
+        "type": "checker",
+        "scale": 4.5,
+        "color2": [28, 30, 38]
+      }
+    },
+
+    {"_comment": "=== MIRROR SPHERE — perfect chrome, left ==="},
+    {
+      "type": "sphere",
+      "center": [-2.3, 1.4, 0.0],
+      "diameter": 2.8,
+      "color": [250, 250, 250],
+      "material": { "type": "metal", "fuzz": 0.0 }
+    },
+
+    {"_comment": "=== CLEAR GLASS SPHERE — right, slightly forward ==="},
+    {
+      "type": "sphere",
+      "center": [2.0, 1.4, -1.4],
+      "diameter": 2.8,
+      "color": [255, 255, 255],
+      "material": { "type": "dielectric", "ior": 1.52 }
+    }
+  ]
+}

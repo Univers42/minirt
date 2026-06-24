@@ -1,0 +1,39 @@
+# ========================================================================== #
+#  saturn_rings.rt — a Saturn-like ringed gas giant against the Milky Way.    #
+#  - jupiter.png textured sphere as the gas-giant body                        #
+#  - flat RING built from concentric tilted disks (the planet is the hole)    #
+#  - starfield equirectangular environment map                               #
+#  - hard side sun so the rings cast a shadow band across the planet          #
+# ========================================================================== #
+
+# Equirectangular Milky Way background (also seen at the planet's limb)
+ENV studio/assets/textures/starfield.png
+
+# Faint ambient so the unlit side isn't pure black (space bounce / starlight)
+A 0.08 64,74,116
+
+# Camera: above the ring plane so the ring opens into a wide ellipse, framed
+# heroically with the planet large and centred
+C 0,7.5,-17 0,-0.34,1 44
+
+# Hard, near-grazing SUN from the right and slightly behind -> a crisp
+# terminator, the planet's shadow rakes across the FAR rings, and the rings
+# drop a thin shadow band onto the planet's lit face
+L 24,10,-3 1.0 255,247,230
+
+# Cool fill from the front-left so the dark hemisphere keeps its banding
+L -18,5,-16 0.30 130,158,215
+
+# ---- THE PLANET: jupiter map as a gas-giant body (radius 5) ----
+sp 0,0,0 10 255,250,242 tex:studio/assets/textures/jupiter.png
+
+# ---- THE RINGS: concentric flat tori (donuts with a small minor radius read
+#      as thin flat bands).  Increasing major radii with gaps between them give
+#      genuine Saturn ring divisions; the planet's shadow falls across them.
+#      Shared axis 0.30,0.90,-0.32 tilts the ring plane toward sun + camera.  --
+to 0,0,0 0.30,0.90,-0.32 6.9  0.55 236,220,192
+to 0,0,0 0.30,0.90,-0.32 8.1  0.62 214,196,168
+to 0,0,0 0.30,0.90,-0.32 9.4  0.55 200,180,154
+to 0,0,0 0.30,0.90,-0.32 11.3 0.78 226,208,180
+to 0,0,0 0.30,0.90,-0.32 12.9 0.48 184,166,142
+to 0,0,0 0.30,0.90,-0.32 14.0 0.30 162,146,126

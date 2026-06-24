@@ -1,0 +1,68 @@
+{
+  "_description": "Solar System tableau against the real Milky Way. Equirectangular starfield environment. Earth + Moon pair mid-ground, Mars closer/left, Jupiter large in the back. A single strong warm 'sun' key light from screen-right casts hard day/night terminators on every textured sphere.",
+
+  "environment": "studio/assets/textures/starfield.png",
+
+  "ambient": { "ratio": 0.06, "color": [46, 56, 84] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 64, "max_depth": 8 },
+
+  "camera": {
+    "position": [0.0, 1.0, -15.0],
+    "direction": [0.05, -0.01, 1.0],
+    "fov": 46
+  },
+
+  "lights": [
+    {
+      "_comment": "the SUN — strong warm key from far screen-LEFT and slightly toward camera, so the lit limbs are bold crescents/half-faces with hard terminators",
+      "position": [-44, 8, -6],
+      "brightness": 1.9,
+      "color": [255, 246, 226]
+    },
+    {
+      "_comment": "faint cool starlight fill so night sides keep subtle relief, not pure black",
+      "position": [26, 6, 18],
+      "brightness": 0.16,
+      "color": [120, 150, 220]
+    }
+  ],
+
+  "objects": [
+    {
+      "_comment": "=== JUPITER — huge, deep back-right, anchors the frame ===",
+      "type": "sphere",
+      "center": [9.5, 3.6, 29.0],
+      "diameter": 14.0,
+      "color": [255, 255, 255],
+      "material": { "type": "lambertian", "texture": "studio/assets/textures/jupiter.png" }
+    },
+
+    {
+      "_comment": "=== EARTH — HERO, large, left-of-centre mid-ground ===",
+      "type": "sphere",
+      "center": [-2.6, 0.4, 6.4],
+      "diameter": 7.0,
+      "color": [255, 255, 255],
+      "material": { "type": "lambertian", "texture": "studio/assets/textures/earth.png" }
+    },
+
+    {
+      "_comment": "=== MOON — small companion to the lower-right of Earth, nearer camera ===",
+      "type": "sphere",
+      "center": [2.6, -1.8, 3.4],
+      "diameter": 1.6,
+      "color": [255, 255, 255],
+      "material": { "type": "lambertian", "texture": "studio/assets/textures/moon.png" }
+    },
+
+    {
+      "_comment": "=== MARS — closer, lower-left, medium, fills the bottom-left third ===",
+      "type": "sphere",
+      "center": [-8.5, -3.0, 10.5],
+      "diameter": 4.2,
+      "color": [255, 255, 255],
+      "material": { "type": "lambertian", "texture": "studio/assets/textures/mars.png" }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "_description": "earth_moon_hero — poster 'blue marble' shot. Textured Earth fills the frame, the textured Moon smaller and set back to camera-left, against the starfield Milky Way environment. A single hard sun key from camera-right carves a crisp day/night terminator on both bodies.",
+
+  "environment": "studio/assets/textures/starfield.png",
+
+  "ambient": { "ratio": 0.08, "color": [70, 85, 130] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 80, "max_depth": 8 },
+
+  "camera": {
+    "position": [0.0, 0.4, -9.0],
+    "direction": [0.0, 0.0, 1.0],
+    "fov": 44
+  },
+
+  "lights": [
+    {
+      "_comment": "hard sun key, high camera-LEFT-front so the lit day side faces the camera, crisp terminator on the right limb",
+      "position": [-9, 7, -11],
+      "brightness": 2.1,
+      "color": [255, 250, 240]
+    }
+  ],
+
+  "objects": [
+    {
+      "_comment": "=== EARTH — hero, fills lower-right of frame ===",
+      "type": "sphere",
+      "center": [0.9, -0.3, 1.2],
+      "diameter": 5.6,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "lambertian",
+        "texture": "studio/assets/textures/earth.png"
+      }
+    },
+    {
+      "_comment": "=== MOON — smaller, set back camera-left/up ===",
+      "type": "sphere",
+      "center": [-3.6, 2.0, 5.0],
+      "diameter": 1.9,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "lambertian",
+        "texture": "studio/assets/textures/moon.png"
+      }
+    }
+  ]
+}
