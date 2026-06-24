@@ -112,11 +112,13 @@ bool	parse_json_objects(const t_json_node *arr, t_scene *sc)
 			continue ;
 		}
 		if (!fill_obj(&sc->objects[sc->object_count], o))
+		{
 			if (!fill_extra(&sc->objects[sc->object_count], o, type))
 			{
 				i++;
 				continue ;
 			}
+		}
 		parse_mat_spec(o, &sc->objects[sc->object_count]);
 		sc->object_count++;
 		i++;
