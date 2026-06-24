@@ -62,9 +62,23 @@ t_vec3			shade_reflective(const t_shade_ctx *c);
 /* ray_color_glass.c */
 t_vec3			shade_glass(const t_shade_ctx *c);
 
+/* shade_ao.c — deterministic ambient occlusion.
+   Returns the unoccluded fraction in [0,1] of N fixed hemisphere probe
+   rays of length RT_AO_RADIUS around the surface normal.  Used to
+   modulate the ambient/fill term only (never the direct-light term). */
+real_t			ambient_occlusion(const t_hit_record *rec,
+					const t_hittable_list *world);
+
 /* shade_lights.c */
 t_color			direct_lighting(const t_hit_record *rec,
 					const t_hittable_list *world, const t_vec3 *view,
 					const t_color *albedo);
+
+/* shade_lights2.c — deterministic soft (area-light) shadow visibility.
+   Returns the fraction in [0,1] of N stratified shadow rays, aimed at a
+   fixed pattern of points across the light's spherical surface, that
+   reach the light unoccluded.  1 sample reproduces a hard shadow. */
+real_t			soft_shadow_visibility(const t_point3 *p, const t_vec3 *l,
+					int idx, const t_hittable_list *world);
 
 #endif

@@ -67,6 +67,7 @@ void			get_output_filename(char *filename, size_t size,
 t_vec3			ray_color_with_background(const t_ray *r,
 					const t_hittable_list *world, int depth,
 					const t_color *background);
+t_vec3			bg_sky_color(const t_ray *r, const t_color *background);
 unsigned char	*write_color_to_buf_bin(unsigned char *dst,
 					const t_vec3 *pixel);
 void			format_time(double seconds, char *buf, size_t bufsize);

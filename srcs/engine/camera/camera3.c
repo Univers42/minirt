@@ -17,35 +17,54 @@
 #include "random.h"
 
 /*
-** bg_sky_color — gradient sky dome for miss rays.
-**
-** Produces a smooth gradient between a neutral "horizon glow" and
-** the scene's background (sky) colour.  The horizon brightness is
-** derived from the background itself (2× peak component) so that
-** the entire sky energy is controlled by the ambient ratio set in
-** the .rt file.  This prevents the old pure-white horizon from
-** flooding scenes with (1,1,1) environment radiance.
-**
-**   a ≈ 0  (looking down) → horizon glow (lighter, neutral)
-**   a ≈ 1  (looking up)   → background colour (sky tint)
+** sky_peak — overall sky energy = brightest background component.
+** Scaling the whole gradient by this keeps the sky tied to the scene
+** ambient, so a dark scene gets a dark sky (no wash-out).
 */
-static t_vec3	bg_sky_color(const t_ray *r, const t_color *background)
+static real_t	sky_peak(const t_color *background)
 {
-	t_vec3	unit_dir;
-	real_t	a;
 	real_t	peak;
-	t_vec3	horizon;
 
-	unit_dir = unit_vector(&r->dir);
-	a = (real_t)0.5 * (unit_dir.y + (real_t)1.0);
 	peak = background->x;
 	if (background->y > peak)
 		peak = background->y;
 	if (background->z > peak)
 		peak = background->z;
-	horizon = vec3_create(peak * (real_t)2.0,
-			peak * (real_t)2.0, peak * (real_t)2.0);
-	return (vec3_lerp(&horizon, background, a));
+	return (peak);
+}
+
+/*
+** bg_sky_color — physically-plausible sky dome for miss rays.
+**
+** Two tinted bands (studio_config.h): a brighter, slightly warm
+** HORIZON easing up to a deeper, cooler ZENITH.  Both bands are
+** scaled by the background peak, so the gradient never blows out
+** dark scenes.  Shared by BOTH engines (direct + path tracer), so
+** reflective/refractive rays see the same graded environment.
+**
+**   t ≈ 0  (looking level/down) → warm horizon haze
+**   t ≈ 1  (looking up)         → deep blue zenith
+*/
+t_vec3	bg_sky_color(const t_ray *r, const t_color *background)
+{
+	t_vec3	unit_dir;
+	real_t	t;
+	real_t	peak;
+	t_vec3	horizon;
+	t_vec3	zenith;
+
+	unit_dir = unit_vector(&r->dir);
+	t = unit_dir.y;
+	if (t < (real_t)0.0)
+		t = (real_t)0.0;
+	t = sqrt(t);
+	peak = sky_peak(background) * (real_t)RT_SKY_HORIZON_GAIN;
+	horizon = vec3_create((real_t)RT_SKY_HORIZON_R * peak,
+			(real_t)RT_SKY_HORIZON_G * peak, (real_t)RT_SKY_HORIZON_B * peak);
+	peak = peak * (real_t)RT_SKY_ZENITH_GAIN;
+	zenith = vec3_create((real_t)RT_SKY_ZENITH_R * peak,
+			(real_t)RT_SKY_ZENITH_G * peak, (real_t)RT_SKY_ZENITH_B * peak);
+	return (vec3_lerp(&horizon, &zenith, t));
 }
 
 static t_color	compute_lighting(const t_hit_record *rec,

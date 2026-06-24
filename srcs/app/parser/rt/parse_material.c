@@ -43,4 +43,8 @@ void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat)
 		mat->type = MAT_CHECKER;
 	else if (!strncmp(kw, "iso", 8) || !strncmp(kw, "fog", 8))
 		mat->type = MAT_ISOTROPIC;
+	else if (!strncmp(kw, "marble", 8) || !strncmp(kw, "noise", 8))
+		mat->type = MAT_MARBLE;
+	else if (!strncmp(kw, "wood", 8))
+		mat->type = MAT_WOOD;
 }

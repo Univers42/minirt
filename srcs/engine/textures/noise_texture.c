@@ -22,13 +22,24 @@ real_t	rt_clamp(real_t x, real_t lo, real_t hi)
 	return (x);
 }
 
+real_t	noise_marble_base(const t_noise_texture *nt, const t_point3 *p)
+{
+	int		depth;
+	real_t	t;
+	double	angle;
+
+	depth = nt->turb_depth;
+	if (depth <= 0)
+		depth = 7;
+	t = perlin_turb(&nt->perlin, (const t_vec3 *)p, depth);
+	angle = (double)(nt->scale * p->z) + 10.0 * (double)t;
+	return ((real_t)0.5 * ((real_t)1.0 + (real_t)sin(angle)));
+}
+
 t_color	noise_texture_value(const t_texture *tex, real_t u, real_t v,
 			const t_point3 *p)
 {
 	const t_noise_texture	*nt;
-	int						depth;
-	real_t					t;
-	double					angle;
 	real_t					base;
 
 	(void)u;
@@ -36,13 +47,13 @@ t_color	noise_texture_value(const t_texture *tex, real_t u, real_t v,
 	nt = (const t_noise_texture *)tex->data;
 	if (!nt || !p)
 		return (vec3_create(0.0, 0.0, 0.0));
-	depth = nt->turb_depth;
-	if (depth <= 0)
-		depth = 7;
-	t = perlin_turb(&nt->perlin, (const t_vec3 *)p, depth);
-	angle = (double)(nt->scale * p->z) + 10.0 * (double)t;
-	base = (real_t)0.5 * ((real_t)1.0 + (real_t)sin(angle));
-	return (vec3_create(base, base, base));
+	if (nt->mode == 2)
+		base = noise_wood_base(nt, p);
+	else
+		base = noise_marble_base(nt, p);
+	if (nt->mode == 0)
+		return (vec3_create(base, base, base));
+	return (vec3_mul_scalar(&nt->tint, base));
 }
 
 void	noise_texture_destroy(t_texture *tex)
@@ -72,6 +83,8 @@ t_texture	*noise_texture_create(real_t scale)
 		nt->scale = (real_t)1.0;
 	nt->use_turb = false;
 	nt->turb_depth = 0;
+	nt->mode = 0;
+	nt->tint = vec3_create(1.0, 1.0, 1.0);
 	tex->data = nt;
 	tex->value = noise_texture_value;
 	tex->destroy = noise_texture_destroy;
@@ -99,6 +112,8 @@ t_texture	*noise_texture_create_turb(real_t scale, int turb_depth)
 		nt->turb_depth = turb_depth;
 	else
 		nt->turb_depth = 7;
+	nt->mode = 0;
+	nt->tint = vec3_create(1.0, 1.0, 1.0);
 	tex->data = nt;
 	tex->value = noise_texture_value;
 	tex->destroy = noise_texture_destroy;

@@ -24,17 +24,6 @@ typedef struct s_lctx
 	const t_hittable_list	*world;
 }	t_lctx;
 
-static int	shadow_blocked(const t_point3 *o, const t_vec3 *dir,
-				real_t maxd, const t_hittable_list *world)
-{
-	t_ray	s;
-
-	if (maxd < (real_t)0.002)
-		maxd = (real_t)0.002;
-	s = ray_create(*o, *dir, (real_t)0.0);
-	return (hittable_list_hit(world, &s, interval((real_t)0.001, maxd), NULL));
-}
-
 /* Blinn-Phong specular weight for one light (white-tinted highlight). */
 static real_t	blinn_phong(const t_vec3 *n, const t_vec3 *l, const t_vec3 *v)
 {
@@ -55,6 +44,7 @@ static void	add_light(const t_lctx *lc, int i, t_color acc[2])
 	real_t	d;
 	real_t	nl;
 	real_t	s;
+	real_t	vis;
 	t_color	tmp;
 
 	l = vec3_sub(&g_lights[i].pos, &lc->rec->p);
@@ -65,12 +55,12 @@ static void	add_light(const t_lctx *lc, int i, t_color acc[2])
 	nl = dot(&lc->rec->normal, &l);
 	if (nl <= (real_t)0.0)
 		return ;
-	if (shadow_blocked(&lc->rec->p, &l,
-			d - g_lights[i].radius - (real_t)0.01, lc->world))
+	vis = soft_shadow_visibility(&lc->rec->p, &l, i, lc->world);
+	if (vis <= (real_t)0.0)
 		return ;
-	tmp = vec3_mul_scalar(&g_lights[i].emission, nl / d);
+	tmp = vec3_mul_scalar(&g_lights[i].emission, vis * nl / d);
 	acc[0] = vec3_add(&acc[0], &tmp);
-	s = blinn_phong(&lc->rec->normal, &l, lc->view) * RT_SPECULAR_KS / d;
+	s = blinn_phong(&lc->rec->normal, &l, lc->view) * RT_SPECULAR_KS * vis / d;
 	tmp = vec3_mul_scalar(&g_lights[i].emission, s);
 	acc[1] = vec3_add(&acc[1], &tmp);
 }
