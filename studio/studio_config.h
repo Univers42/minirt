@@ -116,6 +116,15 @@
 #  define RT_FAST_MAX_DEPTH		8
 # endif
 
+/* Use the flattened SAH/median BVH (iterative, float slab test) for the      */
+/* deterministic engine's hot path instead of the recursive wrapper BVH.      */
+/*   1 = flat BVH (default, fastest)                                          */
+/*   0 = legacy wrapper BVH (for A/B correctness comparison)                  */
+/* Has no effect on the cinematic path tracer, which always uses the wrapper. */
+# ifndef RT_FAST_BVH
+#  define RT_FAST_BVH			1
+# endif
+
 /* Blinn-Phong specular strength ("shine effect").  0 = matte.           */
 /* Range: 0.0 - 1.0.                                                     */
 # ifndef RT_SPECULAR_KS
@@ -126,6 +135,29 @@
 /* Range: 1 - 1024.                                                      */
 # ifndef RT_SHININESS
 #  define RT_SHININESS			64.0
+# endif
+
+/* ---- Adaptive edge anti-aliasing (direct engine only) ------------ */
+
+/* Anti-aliasing mode for the deterministic (direct) engine.          */
+/*   0 = off  (byte-reproduces the legacy 1-centred-ray output)       */
+/*   1 = adaptive: supersample only silhouette/edge pixels.           */
+/* Has no effect on the cinematic path tracer.                        */
+# ifndef RT_AA_MODE
+#  define RT_AA_MODE			1
+# endif
+
+/* Sub-samples averaged on a flagged edge pixel (fixed rotated grid). */
+/* Implemented as a 2x2 deterministic grid.  Range: 1 - 16.           */
+# ifndef RT_AA_SAMPLES
+#  define RT_AA_SAMPLES			4
+# endif
+
+/* Luma delta (0..1, BT.709) versus the right/down neighbour above    */
+/* which a pixel is treated as an edge and supersampled.              */
+/* Lower = more pixels refined (slower); higher = fewer.              */
+# ifndef RT_AA_EDGE_THRESH
+#  define RT_AA_EDGE_THRESH		0.08
 # endif
 
 /* ================================================================== */

@@ -28,6 +28,8 @@ bool	hittable_list_hit(const t_hittable_list *list, const t_ray *r,
 	size_t					i;
 	const t_hittable_wrapper	*w;
 
+	if (list->fast_hit)
+		return (list->fast_hit(list->fast, r, rayt, rec));
 	hit_anything = false;
 	closest_so_far = (real_t)rayt.max;
 	i = 0;

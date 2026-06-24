@@ -15,6 +15,7 @@
 #include "rt_mlx.h"
 #include "camera.h"
 #include "bvh.h"
+#include "bvh_flat.h"
 #include "mlx.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,6 +25,7 @@
 /* ------------------------------------------------------------------ */
 
 void			setup_camera(t_camera *cam, const t_scene *sc, int width);
+int				rt_render_width(void);
 bool			add_scene_lights(t_hittable_list *world, const t_scene *sc);
 
 /* ------------------------------------------------------------------ */
@@ -46,6 +48,7 @@ int	rt_run(const char *filepath)
 	t_scene				scene;
 	t_camera			cam;
 	t_bvh_node			*bvh;
+	t_flat_bvh			*fbvh;
 	t_hittable_list		accel;
 	t_hittable_wrapper	bvh_wrap;
 	unsigned char		*buf;
@@ -65,7 +68,7 @@ int	rt_run(const char *filepath)
 		scene_cleanup(&scene);
 		return (1);
 	}
-	setup_camera(&cam, &scene, RT_IMAGE_WIDTH);
+	setup_camera(&cam, &scene, rt_render_width());
 	bvh = bvh_node_create(&scene.world);
 	hittable_list_init(&accel);
 	if (bvh)
@@ -77,11 +80,13 @@ int	rt_run(const char *filepath)
 		bvh_wrap.bbox = bvh->bbox;
 		hittable_list_add_wrapper(&accel, &bvh_wrap);
 	}
-	buf = render_to_buffer(&cam, bvh ? &accel : &scene.world);
+	fbvh = accel_attach_fast(&accel, &scene.world);
+	buf = render_to_buffer(&cam, (bvh || fbvh) ? &accel : &scene.world);
 	if (!buf)
 	{
 		fprintf(stderr, "Error\nRender failed (out of memory)\n");
 		hittable_list_clear(&accel);
+		flat_bvh_free(fbvh);
 		bvh_node_destroy(bvh);
 		scene_cleanup(&scene);
 		return (1);
@@ -92,6 +97,7 @@ int	rt_run(const char *filepath)
 		fprintf(stderr, "Error\nFailed to initialize display\n");
 		free(buf);
 		hittable_list_clear(&accel);
+		flat_bvh_free(fbvh);
 		bvh_node_destroy(bvh);
 		scene_cleanup(&scene);
 		return (1);
@@ -106,6 +112,7 @@ int	rt_run(const char *filepath)
 	mlx_loop(ctx.mlx);
 	mlx_ctx_destroy(&ctx);
 	hittable_list_clear(&accel);
+	flat_bvh_free(fbvh);
 	bvh_node_destroy(bvh);
 	scene_cleanup(&scene);
 	return (0);

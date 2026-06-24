@@ -18,6 +18,8 @@ void	hittable_list_init(t_hittable_list *list)
 	list->count = 0;
 	list->capacity = 0;
 	list->bbox = aabb_empty();
+	list->fast = NULL;
+	list->fast_hit = NULL;
 }
 
 void	hittable_list_clear(t_hittable_list *list)
@@ -38,6 +40,8 @@ void	hittable_list_clear(t_hittable_list *list)
 	list->count = 0;
 	list->capacity = 0;
 	list->bbox = aabb_empty();
+	list->fast = NULL;
+	list->fast_hit = NULL;
 }
 
 bool	hittable_list_add_wrapper(t_hittable_list *list,

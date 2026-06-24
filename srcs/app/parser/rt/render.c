@@ -181,6 +181,7 @@ unsigned char	*render_to_buffer(const t_camera *cam,
 		fprintf(stderr, "\rDone. Elapsed: %.1fs (wall-clock)\n",
 			rt_buf_wtime() - start);
 	}
+	render_aa_pass(cam, world, pixels);
 	{
 		int	j = 0;
 		while (j < h)
