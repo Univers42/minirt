@@ -479,6 +479,14 @@
 #  define RT_TONE_MAP			1
 # endif
 
+/* The Narkowicz 2015 ACES fit is display-referred: it already bakes an  */
+/* approximate sRGB transfer into its output.  When 1, the separate      */
+/* gamma stage is skipped while ACES is active, so the curve is not       */
+/* double-encoded (which lifts midtones/blacks and washes the image out).*/
+# ifndef RT_ACES_GAMMA_BAKED
+#  define RT_ACES_GAMMA_BAKED	1
+# endif
+
 /* ---- Gamma -------------------------------------------------------- */
 /*                                                                    */
 /*  RT_COLOR_CIE     (0) – CIE gamma 2.2 power law.  Default.        */
