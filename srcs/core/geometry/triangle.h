@@ -24,7 +24,7 @@
 # include <stdbool.h>
 # include <string.h>
 
-typedef struct s_material	t_material;
+typedef struct s_material		t_material;
 typedef struct s_hittable_list	t_hittable_list;
 
 typedef struct s_triangle

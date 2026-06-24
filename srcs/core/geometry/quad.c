@@ -100,6 +100,8 @@ bool	quad_hit(const t_quad *quad, const t_ray *r,
 	t_vec3	p;
 	t_vec3	phv;
 	real_t	ab[2];
+	t_vec3	cross1;
+	t_vec3	cross2;
 
 	if (!quad || !r || !rec)
 		return (false);
@@ -113,17 +115,12 @@ bool	quad_hit(const t_quad *quad, const t_ray *r,
 	phv = vec3_sub(&p, &quad->q);
 	if (vec3_length_squared(&quad->w) <= (real_t)0.0)
 		return (false);
-	{
-		t_vec3	cross1;
-		t_vec3	cross2;
-
-		cross1 = cross(&phv, &quad->v);
-		ab[0] = (real_t)dot(&quad->w, &cross1)
-			/ vec3_length_squared(&quad->w);
-		cross2 = cross(&quad->u, &phv);
-		ab[1] = (real_t)dot(&quad->w, &cross2)
-			/ vec3_length_squared(&quad->w);
-	}
+	cross1 = cross(&phv, &quad->v);
+	ab[0] = (real_t)dot(&quad->w, &cross1)
+		/ vec3_length_squared(&quad->w);
+	cross2 = cross(&quad->u, &phv);
+	ab[1] = (real_t)dot(&quad->w, &cross2)
+		/ vec3_length_squared(&quad->w);
 	if (!quad_is_interior(ab[0], ab[1], rec))
 		return (false);
 	rec->t = t;

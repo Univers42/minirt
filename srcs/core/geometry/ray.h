@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 
 #ifndef RAY_H
-#define RAY_H
+# define RAY_H
 
-#include "types.h"
-#include "vector.h"
+# include "types.h"
+# include "vector.h"
 
 /**
  * the on thing that all ray tracers have in common
@@ -35,10 +35,10 @@
  */
 typedef struct s_ray
 {
-	t_vec3 orig;
-	t_vec3 dir;
-	real_t tm;
-} t_ray;
+	t_vec3	orig;
+	t_vec3	dir;
+	real_t	tm;
+}	t_ray;
 
 /* ray.c */
 t_ray			ray_create(t_vec3 origin, t_vec3 direction, real_t time);

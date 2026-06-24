@@ -76,6 +76,7 @@ static bool	torus_nearest(const t_torus *to, const t_vec3 *o,
 	found = false;
 	i = -1;
 	while (++i < rs->n)
+	{
 		if (contains(rs->rayt.min, rs->rayt.max, rs->roots[i])
 			&& (!found || rs->roots[i] < rs->best)
 			&& torus_root_valid(to, o, d, rs->roots[i]))
@@ -83,6 +84,7 @@ static bool	torus_nearest(const t_torus *to, const t_vec3 *o,
 			rs->best = rs->roots[i];
 			found = true;
 		}
+	}
 	return (found);
 }
 
