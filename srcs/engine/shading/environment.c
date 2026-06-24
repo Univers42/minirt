@@ -56,16 +56,16 @@ void	free_scene_environment(void)
    pass v measured from the bottom (v = 0 at -Y, v = 1 at +Y). */
 t_color	bg_environment_color(const t_ray *r)
 {
-	t_vec3	dir;
-	real_t	u;
-	real_t	v;
-	real_t	y;
+	t_vec3		dir;
+	real_t		u;
+	real_t		v;
+	real_t		y;
 	t_point3	p;
 
 	dir = unit_vector(&r->dir);
 	y = dir.y;
 	if (y < (real_t)-1.0)
-		y = (real_t)-1.0;
+		y = (real_t)(-1.0);
 	if (y > (real_t)1.0)
 		y = (real_t)1.0;
 	u = (real_t)0.5 + atan2(dir.z, dir.x) / (real_t)(2.0 * PI);

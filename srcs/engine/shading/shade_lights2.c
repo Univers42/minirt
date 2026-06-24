@@ -21,10 +21,10 @@
    Index 0 is the centre; the rest are two stratified rings.  Using a
    precomputed set (not random_*) keeps renders bit-for-bit reproducible. */
 static const real_t	g_disk[16][2] = {
-	{0.0, 0.0}, {0.52, 0.0}, {0.16, 0.49}, {-0.42, 0.31},
-	{-0.42, -0.31}, {0.16, -0.49}, {0.92, 0.38}, {-0.35, 0.92},
-	{-0.97, 0.0}, {-0.35, -0.92}, {0.92, -0.38}, {0.0, 0.70},
-	{-0.68, -0.18}, {0.50, -0.50}, {0.0, -0.85}, {0.68, 0.18}
+{0.0, 0.0}, {0.52, 0.0}, {0.16, 0.49}, {-0.42, 0.31},
+{-0.42, -0.31}, {0.16, -0.49}, {0.92, 0.38}, {-0.35, 0.92},
+{-0.97, 0.0}, {-0.35, -0.92}, {0.92, -0.38}, {0.0, 0.70},
+{-0.68, -0.18}, {0.50, -0.50}, {0.0, -0.85}, {0.68, 0.18}
 };
 
 /* Orthonormal tangent basis perpendicular to the light direction l. */
@@ -89,8 +89,11 @@ real_t	soft_shadow_visibility(const t_point3 *p, const t_vec3 *l,
 	maxd = vec3_length(&target) - g_lights[idx].radius - (real_t)0.01;
 	n[0] = rt_clampi(RT_SOFT_SHADOW_SAMPLES, 1, 16);
 	if (n[0] == 1 || g_lights[idx].radius < (real_t)1e-4)
-		return (occluded(p, &g_lights[idx].pos, maxd, world) ? (real_t)0.0
-			: (real_t)1.0);
+	{
+		if (occluded(p, &g_lights[idx].pos, maxd, world))
+			return ((real_t)0.0);
+		return ((real_t)1.0);
+	}
 	light_basis(l, &t, &b);
 	n[1] = 0;
 	s = -1;

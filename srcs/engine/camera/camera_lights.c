@@ -76,6 +76,7 @@ static t_color	sample_one_light(const t_hit_record *rec, int idx,
 	real_t		falloff;
 	t_vec3		to_center;
 	real_t		dist_center;
+	t_vec3		jitter;
 
 	accum = vec3_zero();
 	valid = 0;
@@ -88,7 +89,7 @@ static t_color	sample_one_light(const t_hit_record *rec, int idx,
 	{
 		if (RT_SHADOW_SAMPLES > 1)
 		{
-			t_vec3 jitter = random_unit_vector();
+			jitter = random_unit_vector();
 			jitter = vec3_mul_scalar(&jitter, g_lights[idx].radius);
 			target = vec3_add(&g_lights[idx].pos, &jitter);
 		}

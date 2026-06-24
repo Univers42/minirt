@@ -169,9 +169,9 @@ t_vec3	ray_color_with_background(const t_ray *r,
 unsigned char	*write_color_to_buf_bin(unsigned char *dst,
 				const t_vec3 *pixel)
 {
-	real_t				r;
-	real_t				g;
-	real_t				b;
+	real_t					r;
+	real_t					g;
+	real_t					b;
 	static const t_interval	intensity = {0.000, 0.999, true};
 
 	r = pixel->x;
