@@ -1,0 +1,80 @@
+{
+  "_description": "PHOTO WORLD — ray-traced chrome and glass spheres composited into a REAL photographic sky (sky.png, equirectangular environment). The chrome mirrors the photographed blue sky and clouds; the glass refracts it; a glossy reflective floor doubles the sky. Demonstrates RT realism layered onto an existing photo.",
+
+  "environment": "studio/assets/textures/sky.png",
+
+  "ambient": { "ratio": 0.30, "color": [200, 216, 245] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 80, "max_depth": 18 },
+
+  "camera": {
+    "position": [-6.0, 2.2, -9.5],
+    "direction": [0.42, 0.07, 1.0],
+    "fov": 52
+  },
+
+  "lights": [
+    {
+      "_comment": "warm sun key, high front-right (matches a bright daytime sky)",
+      "position": [8, 11, -7],
+      "brightness": 2.2,
+      "color": [255, 246, 224]
+    },
+    {
+      "_comment": "cool sky fill from the left",
+      "position": [-8, 7, -5],
+      "brightness": 1.3,
+      "color": [200, 218, 255]
+    },
+    {
+      "_comment": "rim from behind to separate spheres from sky",
+      "position": [0, 8, 9],
+      "brightness": 1.4,
+      "color": [255, 250, 240]
+    },
+    {
+      "_comment": "warm fill from high behind-camera-left so the foreground floor catches golden bounce without showing a hotspot in frame",
+      "position": [-12, 9, -14],
+      "brightness": 1.2,
+      "color": [255, 200, 144]
+    }
+  ],
+
+  "objects": [
+    {"_comment": "=== GLOSSY REFLECTIVE FLOOR — low and dark so it mirrors the sky like wet tarmac; most of the frame stays sky ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [44, 46, 56],
+      "material": { "type": "glossy", "roughness": 0.05 }
+    },
+
+    {"_comment": "=== CHROME SPHERE — perfect mirror, left-center, reflects the photographed sky ==="},
+    {
+      "type": "sphere",
+      "center": [-2.8, 2.0, 2.4],
+      "diameter": 4.0,
+      "color": [248, 248, 248],
+      "material": { "type": "metal", "fuzz": 0.0 }
+    },
+
+    {"_comment": "=== GLASS SPHERE — clear dielectric, right, refracts the sky behind it ==="},
+    {
+      "type": "sphere",
+      "center": [2.8, 2.1, 1.2],
+      "diameter": 4.2,
+      "color": [240, 248, 255],
+      "material": { "type": "dielectric", "ior": 1.5 }
+    },
+
+    {"_comment": "=== SMALL CHROME ACCENT in front, ties the group ==="},
+    {
+      "type": "sphere",
+      "center": [0.2, 1.1, -1.2],
+      "diameter": 2.2,
+      "color": [245, 245, 245],
+      "material": { "type": "metal", "fuzz": 0.0 }
+    }
+  ]
+}

@@ -384,7 +384,7 @@
 /* killing the horizon dark bands / moire.  Larger = fades nearer the       */
 /* camera.  0 disables.  DEFAULT 0.18.                                      */
 # ifndef RT_CHECKER_FILTER
-#  define RT_CHECKER_FILTER		0.18
+#  define RT_CHECKER_FILTER		0.03
 # endif
 
 /* Light distance attenuation model.                                  */

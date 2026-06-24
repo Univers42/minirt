@@ -1,0 +1,73 @@
+{
+  "_description": "Neon Car City — a glossy sports car on a wet mirror road at night, a neon street corridor of coloured emissive signs receding to a vanishing point, starfield sky. Reflections everywhere; moody but readable.",
+
+  "environment": "studio/assets/textures/starfield.png",
+
+  "ambient": { "ratio": 0.16, "color": [38, 44, 78] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 64, "max_depth": 16 },
+
+  "camera": {
+    "position": [5.5, 2.2, -11.0],
+    "direction": [-0.33, -0.07, 1.0],
+    "fov": 54
+  },
+
+  "lights": [
+    { "_comment": "cool moonlight fill", "position": [-4, 20, -8], "brightness": 0.5, "color": [150, 175, 230] },
+    { "_comment": "magenta key from left, on car", "position": [-6, 5, 4], "brightness": 1.6, "color": [255, 90, 200] },
+    { "_comment": "cyan rim from right, on car", "position": [7, 5, 6], "brightness": 1.6, "color": [110, 225, 255] },
+    { "_comment": "cyan rim behind/right of car rear to separate from wall", "position": [5, 3, 9], "brightness": 1.7, "color": [120, 235, 255] },
+    { "_comment": "strong warm key on car nose, close front-left", "position": [-2, 4, -2], "brightness": 2.4, "color": [255, 215, 175] },
+    { "_comment": "white spot above car for body highlights", "position": [0, 9, 3], "brightness": 1.6, "color": [225, 230, 255] }
+  ],
+
+  "objects": [
+    {"_comment": "=== WET MIRROR ROAD ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [16, 18, 26],
+      "material": { "type": "glossy", "roughness": 0.04 }
+    },
+
+    {"_comment": "=== LEFT BUILDING WALL (x=-9), dark ==="},
+    { "type": "quad", "position": [-9, 0, -6], "u": [0, 0, 60], "v": [0, 40, 0], "color": [14, 16, 30], "material": "lambertian" },
+    {"_comment": "=== RIGHT BUILDING WALL (x=9) ==="},
+    { "type": "quad", "position": [9, 0, 54], "u": [0, 0, -60], "v": [0, 40, 0], "color": [14, 16, 30], "material": "lambertian" },
+
+    {"_comment": "=== LEFT NEON SIGNS (x=-8.9): u=height, v=depth -> normal +x faces road ==="},
+    { "type": "quad", "position": [-8.9, 1.5, 4],  "u": [0, 7, 0], "v": [0, 0, 4], "color": [255, 45, 175], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [-8.9, 2, 12],   "u": [0, 1.4, 0], "v": [0, 0, 7], "color": [70, 225, 255], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [-8.9, 8, 14],   "u": [0, 6, 0], "v": [0, 0, 3], "color": [255, 130, 35], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [-8.9, 3, 24],   "u": [0, 9, 0], "v": [0, 0, 5], "color": [80, 230, 255], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [-8.9, 12, 30],  "u": [0, 1.2, 0], "v": [0, 0, 6], "color": [255, 60, 170], "material": { "type": "emissive", "scale": 6.5 } },
+
+    {"_comment": "=== RIGHT NEON SIGNS (x=8.9): u=height, v=-depth -> normal -x faces road ==="},
+    { "type": "quad", "position": [8.9, 2, 10], "u": [0, 8, 0],   "v": [0, 0, -5], "color": [45, 205, 255], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [8.9, 9, 6],  "u": [0, 1.5, 0], "v": [0, 0, -4], "color": [255, 135, 35], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [8.9, 2, 20], "u": [0, 1.4, 0], "v": [0, 0, -6], "color": [255, 45, 175], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [8.9, 4, 28], "u": [0, 7, 0],   "v": [0, 0, -4], "color": [120, 255, 200], "material": { "type": "emissive", "scale": 6.5 } },
+    { "type": "quad", "position": [8.9, 13, 16],"u": [0, 1.2, 0], "v": [0, 0, -7], "color": [80, 220, 255], "material": { "type": "emissive", "scale": 6.5 } },
+    { "_comment": "near-right magenta window strip", "type": "quad", "position": [8.9, 6, 1], "u": [0, 1.2, 0], "v": [0, 0, -3], "color": [255, 60, 180], "material": { "type": "emissive", "scale": 6.5 } },
+    { "_comment": "near-right cyan vertical bar", "type": "quad", "position": [8.9, 1, 3], "u": [0, 6, 0], "v": [0, 0, -0.8], "color": [70, 225, 255], "material": { "type": "emissive", "scale": 6.5 } },
+    { "_comment": "near-left orange window strip", "type": "quad", "position": [-8.9, 6, 0], "u": [0, 1.2, 0], "v": [0, 0, 3], "color": [255, 150, 50], "material": { "type": "emissive", "scale": 6.5 } },
+
+    {"_comment": "=== HANGING STREET LAMPS — warm emissive spheres over the road ==="},
+    { "type": "sphere", "center": [-3.5, 5.0, 9],  "diameter": 0.7, "color": [255, 205, 130], "material": { "type": "emissive", "scale": 15 } },
+    { "type": "sphere", "center": [3.5, 5.0, 15],  "diameter": 0.7, "color": [255, 205, 130], "material": { "type": "emissive", "scale": 15 } },
+    { "type": "sphere", "center": [-3.5, 5.0, 23], "diameter": 0.7, "color": [255, 205, 130], "material": { "type": "emissive", "scale": 15 } },
+    { "type": "sphere", "center": [3.5, 5.0, 33],  "diameter": 0.7, "color": [200, 150, 255], "material": { "type": "emissive", "scale": 15 } },
+
+    {"_comment": "=== THE SPORTS CAR — glossy red paint, rests on the road, 3/4 view ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/sportsCar.obj",
+      "position": [-0.5, 1.13, 1.5],
+      "scale": 9.5,
+      "color": [225, 40, 50],
+      "material": { "type": "glossy", "roughness": 0.16 }
+    }
+  ]
+}

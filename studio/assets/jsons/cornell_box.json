@@ -1,0 +1,129 @@
+{
+  "_description": "Classic Cornell box — closed white box with one red (left) wall and one green (right) wall, a bright emissive ceiling panel, containing a tall white box and a glossy sphere. Path-traced for true global illumination: red/green colour bleeding onto the white surfaces and soft contact shadows.",
+  "ambient": {
+    "ratio": 0.0,
+    "color": [0, 0, 0]
+  },
+  "render": {
+    "aspect_ratio": 1.0,
+    "spp": 150,
+    "max_depth": 50
+  },
+  "camera": {
+    "position": [278, 278, -800],
+    "direction": [0, 0, 1],
+    "fov": 40
+  },
+  "lights": [],
+  "objects": [
+    {
+      "_comment": "GREEN wall (right, x=555). normal faces -x toward interior",
+      "type": "quad",
+      "position": [555, 0, 0],
+      "u": [0, 0, 555],
+      "v": [0, 555, 0],
+      "color": [30, 160, 45],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "RED wall (left, x=0). normal faces +x toward interior",
+      "type": "quad",
+      "position": [0, 0, 555],
+      "u": [0, 0, -555],
+      "v": [0, 555, 0],
+      "color": [170, 35, 35],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "CEILING (white, y=555)",
+      "type": "quad",
+      "position": [0, 555, 0],
+      "u": [555, 0, 0],
+      "v": [0, 0, 555],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "FLOOR (white, y=0)",
+      "type": "quad",
+      "position": [0, 0, 0],
+      "u": [555, 0, 0],
+      "v": [0, 0, 555],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "BACK wall (white, z=555)",
+      "type": "quad",
+      "position": [0, 0, 555],
+      "u": [555, 0, 0],
+      "v": [0, 555, 0],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "EMISSIVE ceiling light panel, slightly below ceiling, normal faces down",
+      "type": "quad",
+      "position": [203, 554, 207],
+      "u": [150, 0, 0],
+      "v": [0, 0, 145],
+      "color": [255, 244, 224],
+      "material": {
+        "type": "emissive",
+        "scale": 34.0
+      }
+    },
+    {
+      "_comment": "TALL BOX — built from 6 quads, rotated-ish footprint, left-back",
+      "type": "quad",
+      "position": [130, 0, 230],
+      "u": [135, 0, 0],
+      "v": [0, 330, 0],
+      "color": [210, 210, 210],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [130, 0, 230],
+      "u": [0, 0, 135],
+      "v": [0, 330, 0],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [265, 0, 230],
+      "u": [0, 0, 135],
+      "v": [0, 330, 0],
+      "color": [200, 200, 200],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [130, 0, 365],
+      "u": [135, 0, 0],
+      "v": [0, 330, 0],
+      "color": [195, 195, 195],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [130, 330, 230],
+      "u": [135, 0, 0],
+      "v": [0, 0, 135],
+      "color": [215, 215, 215],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "GLASS sphere, right-front, resting on floor — refracts and catches coloured light",
+      "type": "sphere",
+      "center": [370, 100, 130],
+      "diameter": 200,
+      "color": [255, 255, 255],
+      "material": {
+        "type": "dielectric",
+        "ior": 1.5
+      }
+    }
+  ]
+}

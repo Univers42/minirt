@@ -1,0 +1,170 @@
+{
+  "_description": "Material showcase — a clean product-shot row of 8 spheres on a glossy floor, each a different material: mirror metal, brushed metal (fuzz), clear glass, tinted glass, glossy plastic, matte diffuse, earth-textured, brick bump-mapped. Studio key+fill+rim lighting plus a sky environment for the metals to reflect.",
+
+  "environment": "studio/assets/textures/sky.png",
+
+  "ambient": { "ratio": 0.34, "color": [210, 216, 230] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 64, "max_depth": 16 },
+
+  "camera": {
+    "position": [0.0, 5.9, -9.5],
+    "direction": [0.0, -0.52, 1.0],
+    "fov": 58
+  },
+
+  "lights": [
+    {
+      "_comment": "warm key, high front-right",
+      "position": [8, 12, -8],
+      "brightness": 1.05,
+      "color": [255, 240, 215]
+    },
+    {
+      "_comment": "cool fill, front-left, softer",
+      "position": [-10, 7, -7],
+      "brightness": 0.45,
+      "color": [200, 215, 255]
+    },
+    {
+      "_comment": "bright rim, high behind for edge separation",
+      "position": [-2, 13, 9],
+      "brightness": 1.1,
+      "color": [255, 252, 245]
+    }
+  ],
+
+  "objects": [
+    {"_comment": "=== CHECKER FLOOR — crisp near/mid tiles, fades cleanly at horizon; glass refracts it, metals reflect it ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [205, 210, 220],
+      "material": { "type": "checker", "scale": 0.7, "color2": [38, 42, 52] }
+    },
+
+    {"_comment": "=== SEAMLESS NEUTRAL BACKDROP — large soft-grey wall behind the row so the loud sky shows only in metal reflections, giving a clean studio sweep ==="},
+    {
+      "type": "quad",
+      "position": [-26, -2, 6.5],
+      "u": [52, 0, 0],
+      "v": [0, 34, 0],
+      "color": [126, 130, 142],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "warm-tinted left side wall to give chrome reflections shape and warmth",
+      "type": "quad",
+      "position": [-20, -2, 6.5],
+      "u": [0, 0, -16],
+      "v": [0, 34, 0],
+      "color": [150, 120, 92],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "cool-tinted right side wall",
+      "type": "quad",
+      "position": [20, -2, -9.5],
+      "u": [0, 0, 16],
+      "v": [0, 34, 0],
+      "color": [96, 116, 150],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "soft ceiling cap so metals reflect a calm light grey overhead instead of the loud sky, and a thin band of sky still peeks at the edges",
+      "type": "quad",
+      "position": [-30, 15, -11],
+      "u": [60, 0, 0],
+      "v": [0, 0, 20],
+      "color": [156, 162, 174],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== EMISSIVE SOFTBOXES — give every sphere a crisp specular highlight shape; placed high & forward so they sit just above the frame but reflect into the row ==="},
+    {
+      "type": "quad",
+      "position": [-9, 9.5, -6],
+      "u": [18, 0, 0],
+      "v": [0, 0, 5],
+      "color": [255, 248, 235],
+      "material": { "type": "emissive", "scale": 4.5 }
+    },
+    {
+      "_comment": "small cool kicker softbox high-right for a second highlight",
+      "type": "quad",
+      "position": [5, 8.5, -7],
+      "u": [6, 0, 0],
+      "v": [0, 4, 0],
+      "color": [225, 235, 255],
+      "material": { "type": "emissive", "scale": 5.0 }
+    },
+
+    {"_comment": "=== ROW OF 8 SPHERES, radius 1.0 (diameter 2.0), centers at y=1.0 resting on floor, spaced 2.7 along x, z=2.0 ==="},
+
+    {
+      "_comment": "1. PURE MIRROR METAL",
+      "type": "sphere",
+      "center": [8.4, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [245, 245, 248],
+      "material": { "type": "metal", "fuzz": 0.0 }
+    },
+    {
+      "_comment": "2. BRUSHED METAL (fuzz)",
+      "type": "sphere",
+      "center": [6.0, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [222, 210, 196],
+      "material": { "type": "metal", "fuzz": 0.18 }
+    },
+    {
+      "_comment": "3. CLEAR GLASS",
+      "type": "sphere",
+      "center": [3.6, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [255, 255, 255],
+      "material": { "type": "dielectric", "ior": 1.52 }
+    },
+    {
+      "_comment": "4. TINTED GLASS (amber)",
+      "type": "sphere",
+      "center": [1.2, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [255, 180, 120],
+      "material": { "type": "tinted_glass", "ior": 1.5 }
+    },
+    {
+      "_comment": "5. GLOSSY PLASTIC (saturated red)",
+      "type": "sphere",
+      "center": [-1.2, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [210, 40, 45],
+      "material": { "type": "glossy", "roughness": 0.12 }
+    },
+    {
+      "_comment": "6. MATTE DIFFUSE (teal)",
+      "type": "sphere",
+      "center": [-3.6, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [55, 150, 140],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "7. EARTH TEXTURED",
+      "type": "sphere",
+      "center": [-6.0, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [255, 255, 255],
+      "material": { "type": "lambertian", "texture": "studio/assets/textures/earth.png" }
+    },
+    {
+      "_comment": "8. BRICK BUMP-MAPPED",
+      "type": "sphere",
+      "center": [-8.4, 1.0, -2.5],
+      "diameter": 2.0,
+      "color": [255, 255, 255],
+      "material": { "type": "lambertian", "texture": "studio/assets/textures/brick.png", "bump": "studio/assets/textures/brick.png", "bump_strength": 6 }
+    }
+  ]
+}
