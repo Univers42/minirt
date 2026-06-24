@@ -1,0 +1,147 @@
+{
+  "_description": "Glass & Chrome Still Life — a gallery-lit tabletop. Crystal bunny (clear dielectric) beside a chrome sphere (metal fuzz 0) and a polished-metal teapot, grouped on a dark glossy reflective floor. Deep-blue and warm-amber backdrop panels plus two emissive softbox quads give the chrome bright crisp shapes to reflect and the glass colored refraction.",
+
+  "ambient": { "ratio": 0.14, "color": [180, 195, 220] },
+
+  "render": { "aspect_ratio": 1.7778, "spp": 96, "max_depth": 24 },
+
+  "camera": {
+    "position": [0.0, 3.9, -13.5],
+    "direction": [0.0, -0.17, 1.0],
+    "fov": 46
+  },
+
+  "lights": [
+    {
+      "_comment": "warm key, high front-right",
+      "position": [7, 11, -6],
+      "brightness": 0.9,
+      "color": [255, 236, 205]
+    },
+    {
+      "_comment": "cool fill, left",
+      "position": [-9, 6, -4],
+      "brightness": 0.5,
+      "color": [180, 205, 255]
+    },
+    {
+      "_comment": "bright rim, behind high",
+      "position": [2, 12, 10],
+      "brightness": 0.8,
+      "color": [255, 250, 240]
+    }
+  ],
+
+  "objects": [
+    {"_comment": "=== DARK GLOSSY REFLECTIVE FLOOR ==="},
+    {
+      "type": "plane",
+      "point": [0, 0, 0],
+      "normal": [0, 1, 0],
+      "color": [18, 20, 26],
+      "material": { "type": "glossy", "roughness": 0.04 }
+    },
+
+    {"_comment": "=== ENCLOSING CYCLORAMA — oversized walls + ceiling so no void ever enters the wide 16:9 frame. Back wall split warm | cool. ==="},
+    {
+      "type": "quad",
+      "position": [-30, -2, 13],
+      "u": [25, 0, 0],
+      "v": [0, 40, 0],
+      "color": [150, 86, 32],
+      "material": "lambertian"
+    },
+    {
+      "type": "quad",
+      "position": [-5, -2, 13],
+      "u": [35, 0, 0],
+      "v": [0, 40, 0],
+      "color": [26, 46, 104],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "warm left side wall (long, tall)",
+      "type": "quad",
+      "position": [-22, -2, -16],
+      "u": [0, 0, 29],
+      "v": [0, 40, 0],
+      "color": [158, 96, 36],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "cool right side wall (long, tall)",
+      "type": "quad",
+      "position": [22, -2, 13],
+      "u": [0, 0, -29],
+      "v": [0, 40, 0],
+      "color": [34, 64, 108],
+      "material": "lambertian"
+    },
+    {
+      "_comment": "dim ceiling cap so the top corners never see void",
+      "type": "quad",
+      "position": [-30, 26, -16],
+      "u": [60, 0, 0],
+      "v": [0, 0, 29],
+      "color": [40, 48, 70],
+      "material": "lambertian"
+    },
+
+    {"_comment": "=== EMISSIVE SOFTBOX PANELS — kept low (y<=6) and far out so their dark backs stay below the 16:9 top frame edge; bright shapes for the chrome to reflect ==="},
+    {
+      "type": "quad",
+      "position": [-19, 0.3, 1],
+      "u": [0, 0, -7],
+      "v": [0, 6, 0],
+      "color": [255, 246, 228],
+      "material": { "type": "emissive", "scale": 11.0 }
+    },
+    {
+      "_comment": "cool softbox on the right, low and far out; normal faces -x toward the objects",
+      "type": "quad",
+      "position": [19, 0.3, 8],
+      "u": [0, 0, 6],
+      "v": [0, 6, 0],
+      "color": [206, 224, 255],
+      "material": { "type": "emissive", "scale": 11.0 }
+    },
+    {
+      "_comment": "backlight panel behind the bunny; normal faces -z (toward camera) so it reads bright, glass transmits its glow",
+      "type": "quad",
+      "position": [1.6, 0.4, 10.5],
+      "u": [-3.6, 0, 0],
+      "v": [0, 5, 0],
+      "color": [255, 248, 236],
+      "material": { "type": "emissive", "scale": 6.0 }
+    },
+
+    {"_comment": "=== CHROME SPHERE — perfect mirror, far left, pushed back ==="},
+    {
+      "type": "sphere",
+      "center": [-4.4, 1.7, 2.6],
+      "diameter": 3.4,
+      "color": [245, 245, 245],
+      "material": { "type": "metal", "fuzz": 0.0 }
+    },
+
+    {"_comment": "=== CRYSTAL BUNNY — clear glass, center-front; scale 4.6 (max dim y) rests on floor at y=scale/2=2.3 ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/bunny.obj",
+      "position": [0.0, 2.6, -0.8],
+      "scale": 5.2,
+      "color": [240, 248, 255],
+      "material": { "type": "dielectric", "ior": 1.52 }
+    },
+
+    {"_comment": "=== POLISHED METAL TEAPOT — right; max dim x=6.43 so height=0.49*scale, base y=scale*0.245 ==="},
+    {
+      "type": "mesh",
+      "path": "studio/assets/obj_files/teapot.obj",
+      "position": [4.8, 1.47, 2.2],
+      "scale": 6.0,
+      "color": [240, 230, 214],
+      "material": { "type": "metal", "fuzz": 0.02 }
+    }
+  ]
+}
