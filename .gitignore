@@ -107,3 +107,8 @@ studio/assets/obj_files/*.Any
 
 # cinematic hero variants (path-traced, large/noisy — regenerate on demand)
 studio/assets/jsons/*_cine.json
+
+# downloaded texture images (PD/CC; reproduce with studio/assets/textures/fetch_textures.sh)
+studio/assets/textures/*.png
+studio/assets/textures/*.jpg
+!studio/assets/textures/.gitkeep
