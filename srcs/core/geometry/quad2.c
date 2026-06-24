@@ -26,18 +26,20 @@ bool	quad_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
 	return (quad_hit(g_current_quad, r, rayt, rec));
 }
 
-static void	box_add_face(t_hittable_list *world, const t_point3 *pos,
-		const t_vec3 *u, const t_vec3 *v, t_material *mat)
+static void	box_add_face(t_hittable_list *world, const t_quad_face *face,
+		t_material *mat)
 {
-	t_quad	q;
-	t_quad	*cpy;
+	t_quad		q;
+	t_quad		*cpy;
+	t_nonowned	no;
 
-	q = quad_create(pos, u, v, mat);
+	q = quad_create(&face->pos, &face->u, &face->v, mat);
 	cpy = (t_quad *)malloc(sizeof(t_quad));
 	if (cpy)
 	{
 		*cpy = q;
-		hittable_list_add_nonowned(world, &(t_nonowned){cpy, set_current_quad, quad_hit_noobj, &q.bbox});
+		no = (t_nonowned){cpy, set_current_quad, quad_hit_noobj, &q.bbox};
+		hittable_list_add_nonowned(world, &no);
 	}
 }
 
@@ -47,7 +49,6 @@ void	box(t_hittable_list *world, const t_point3 *a,
 	t_point3	mn;
 	t_point3	mx;
 	t_vec3		d[3];
-	t_vec3		neg;
 
 	if (!world || !a || !b || !mat)
 		return ;
@@ -56,15 +57,15 @@ void	box(t_hittable_list *world, const t_point3 *a,
 	d[0] = vec3_create(mx.x - mn.x, 0.0, 0.0);
 	d[1] = vec3_create(0.0, mx.y - mn.y, 0.0);
 	d[2] = vec3_create(0.0, 0.0, mx.z - mn.z);
-	box_add_face(world, &(t_point3){mn.x, mn.y, mx.z}, &d[0], &d[1], mat);
-	neg = vec3_neg(&d[2]);
-	box_add_face(world, &(t_point3){mx.x, mn.y, mx.z}, &neg, &d[1], mat);
-	neg = vec3_neg(&d[0]);
-	box_add_face(world, &(t_point3){mx.x, mn.y, mn.z}, &neg, &d[1], mat);
-	box_add_face(world, &(t_point3){mn.x, mn.y, mn.z}, &d[2], &d[1], mat);
-	neg = vec3_neg(&d[2]);
-	box_add_face(world, &(t_point3){mn.x, mx.y, mx.z}, &d[0], &neg, mat);
-	box_add_face(world, &(t_point3){mn.x, mn.y, mn.z}, &d[0], &d[2], mat);
+	box_add_face(world, &(t_quad_face){{mn.x, mn.y, mx.z}, d[0], d[1]}, mat);
+	box_add_face(world, &(t_quad_face){{mx.x, mn.y, mx.z},
+		vec3_neg(&d[2]), d[1]}, mat);
+	box_add_face(world, &(t_quad_face){{mx.x, mn.y, mn.z},
+		vec3_neg(&d[0]), d[1]}, mat);
+	box_add_face(world, &(t_quad_face){{mn.x, mn.y, mn.z}, d[2], d[1]}, mat);
+	box_add_face(world, &(t_quad_face){{mn.x, mx.y, mx.z}, d[0],
+		vec3_neg(&d[2])}, mat);
+	box_add_face(world, &(t_quad_face){{mn.x, mn.y, mn.z}, d[0], d[2]}, mat);
 }
 
 void	box_create_list(const t_point3 *a, const t_point3 *b,

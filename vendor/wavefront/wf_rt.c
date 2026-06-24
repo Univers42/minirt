@@ -27,8 +27,8 @@ static t_triangle	wf_make_tri(const t_wf_triangle *wt, t_material *mat)
 		n[i] = (t_vec3){wt->n[i].x, wt->n[i].y, wt->n[i].z};
 	}
 	if (RT_OBJ_SMOOTH_NORMALS && wt->has_normals)
-		return (triangle_create_smooth(&v[0], &v[1], &v[2],
-				&n[0], &n[1], &n[2], mat));
+		return (triangle_create_smooth(&(t_tri_smooth){v[0], v[1], v[2],
+				n[0], n[1], n[2]}, mat));
 	return (triangle_create(&v[0], &v[1], &v[2], mat));
 }
 

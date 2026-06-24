@@ -208,13 +208,13 @@ void build_triangle_decorations(t_hittable_list *world,
 	mesh_add_icosahedron(&mesh, &c1, 18.0, mat_a);
 
 	t_point3 b0 = point3_create(-210.0, 0.5, 130.0);
-	mesh_add_pyramid(&mesh, &b0, 26.0, 32.0, mat_b);
+	mesh_add_pyramid(&mesh, &b0, &(t_shape_dims){26.0, 32.0}, mat_b);
 
 	t_point3 b1 = point3_create(-210.0, 26.0, 130.0);
-	mesh_add_pyramid(&mesh, &b1, 20.0, 26.0, mat_c);
+	mesh_add_pyramid(&mesh, &b1, &(t_shape_dims){20.0, 26.0}, mat_c);
 
 	t_point3 b2 = point3_create(-210.0, 47.0, 130.0);
-	mesh_add_pyramid(&mesh, &b2, 14.0, 20.0, mat_b);
+	mesh_add_pyramid(&mesh, &b2, &(t_shape_dims){14.0, 20.0}, mat_b);
 
 	t_point3 c2 = point3_create(-20.0, 52.0, -35.0);
 	mesh_add_icosahedron(&mesh, &c2, 8.0, mat_c);

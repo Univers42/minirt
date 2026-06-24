@@ -38,7 +38,7 @@ static t_vec3	torus_pick_ortho(const t_vec3 *axis)
 }
 
 t_torus	torus_create(const t_point3 *center, const t_vec3 *axis,
-		real_t major, real_t minor, t_material *mat)
+		const t_torus_radii *rad, t_material *mat)
 {
 	t_torus		to;
 	real_t		reach;
@@ -49,10 +49,10 @@ t_torus	torus_create(const t_point3 *center, const t_vec3 *axis,
 	to.axis = unit_vector(axis);
 	to.u = torus_pick_ortho(&to.axis);
 	to.v = cross(&to.axis, &to.u);
-	to.major = major;
-	to.minor = minor;
+	to.major = rad->major;
+	to.minor = rad->minor;
 	to.mat = mat;
-	reach = major + minor;
+	reach = rad->major + rad->minor;
 	low = point3_create(center->x - reach, center->y - reach,
 			center->z - reach);
 	high = point3_create(center->x + reach, center->y + reach,

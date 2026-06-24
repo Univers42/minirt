@@ -70,9 +70,9 @@ void final_scene(int image_width, int samples_per_pixel, int max_depth)
 	}
 
 	t_material *move_mat = lambertian_create(vec3_create(0.7, 0.3, 0.1));
-	t_point3 c1 = point3_create(400.0, 400.0, 200.0);
-	t_point3 c2 = point3_create(430.0, 400.0, 200.0);
-	t_sphere moving = create_sphere_moving(&c1, &c2, 50.0, vec3_create(0.7, 0.3, 0.1), move_mat);
+	t_sphere_motion path = {point3_create(400.0, 400.0, 200.0),
+		point3_create(430.0, 400.0, 200.0)};
+	t_sphere moving = create_sphere_moving(&path, 50.0, vec3_create(0.7, 0.3, 0.1), move_mat);
 	hittable_list_add_sphere(&world, &moving);
 
 	t_material *glass = dielectric_create(1.5);

@@ -150,13 +150,15 @@ static bool	build_paraboloid(t_hittable_list *world, const t_rt_object *obj)
 {
 	t_material		*mat;
 	t_paraboloid	pb;
+	t_shape_dims	dims;
 
 	mat = create_material(&obj->mat, obj->data.paraboloid.color);
 	if (!mat)
 		return (false);
+	dims.size = obj->data.paraboloid.diameter;
+	dims.height = obj->data.paraboloid.height;
 	pb = paraboloid_create(&obj->data.paraboloid.vertex,
-			&obj->data.paraboloid.axis, obj->data.paraboloid.diameter,
-			obj->data.paraboloid.height, mat);
+			&obj->data.paraboloid.axis, &dims, mat);
 	return (hittable_list_add_paraboloid(world, &pb));
 }
 
@@ -188,14 +190,17 @@ static bool	build_hyperboloid(t_hittable_list *world, const t_rt_object *obj)
 
 static bool	build_torus(t_hittable_list *world, const t_rt_object *obj)
 {
-	t_material	*mat;
-	t_torus		to;
+	t_material		*mat;
+	t_torus			to;
+	t_torus_radii	rad;
 
 	mat = create_material(&obj->mat, obj->data.torus.color);
 	if (!mat)
 		return (false);
+	rad.major = obj->data.torus.major;
+	rad.minor = obj->data.torus.minor;
 	to = torus_create(&obj->data.torus.center, &obj->data.torus.axis,
-			obj->data.torus.major, obj->data.torus.minor, mat);
+			&rad, mat);
 	return (hittable_list_add_torus(world, &to));
 }
 

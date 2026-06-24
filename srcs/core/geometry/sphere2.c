@@ -53,56 +53,36 @@ real_t	hit_sphere(const t_vec3 *center, real_t radius, const t_ray *r)
 	return ((h - sqrt(discriminant)) / a);
 }
 
-static __thread const t_sphere	*g_current_sphere = NULL;
-
-void	set_current_sphere(const void *obj)
+static t_aabb	sphere_box_at(const t_point3 *c, real_t radius)
 {
-	g_current_sphere = (const t_sphere *)obj;
+	t_point3	low;
+	t_point3	high;
+
+	low = point3_create(c->x - radius, c->y - radius, c->z - radius);
+	high = point3_create(c->x + radius, c->y + radius, c->z + radius);
+	return (aabb_from_points(&low, &high));
 }
 
-static bool	sphere_try_root(real_t root, t_interval rayt,
-		const t_sphere *s, t_hit_record *rec)
+t_sphere	create_sphere_moving(const t_sphere_motion *path, real_t radius,
+		t_vec3 albedo, t_material *mat)
 {
-	if (!contains(rayt.min, rayt.max, root))
-		return (false);
-	rec->t = root;
-	return (true);
-	(void)s;
-}
+	t_sphere	s;
+	t_vec3		c2;
+	t_aabb		box0;
+	t_aabb		box1;
 
-bool	sphere_hit_noobj(const t_ray *r, t_interval rayt, t_hit_record *rec)
-{
-	const t_sphere	*s;
-	t_vec3			current_center;
-	t_vec3			oc;
-	real_t			vars[4];
-	real_t			root;
-
-	s = g_current_sphere;
-	if (!s)
-		return (false);
-	current_center = sphere_center_at(s, r->tm);
-	oc = vec3_sub(&r->orig, &current_center);
-	vars[0] = vec3_length_squared(&r->dir);
-	vars[1] = dot(&r->dir, &oc);
-	vars[2] = vec3_length_squared(&oc) - s->radius * s->radius;
-	vars[3] = vars[1] * vars[1] - vars[0] * vars[2];
-	if (vars[3] < 0.0)
-		return (false);
-	root = (-vars[1] - sqrt(vars[3])) / vars[0];
-	if (!contains(rayt.min, rayt.max, root))
-	{
-		root = (-vars[1] + sqrt(vars[3])) / vars[0];
-		if (!contains(rayt.min, rayt.max, root))
-			return (false);
-	}
-	rec->t = root;
-	rec->p = ray_at((t_ray *)r, rec->t);
-	oc = vec3_sub(&rec->p, &current_center);
-	oc = unit_vector(&oc);
-	set_face_normal(rec, r, &oc);
-	sphere_get_uv(&oc, &rec->u, &rec->v);
-	rec->albedo = s->albedo;
-	rec->mat = s->mat;
-	return (true);
+	s.center.center1 = vec3_create(path->start.x, path->start.y,
+			path->start.z);
+	c2 = vec3_create(path->end.x, path->end.y, path->end.z);
+	s.center.center_velocity = vec3_sub(&c2, &s.center.center1);
+	if (radius > 0.0)
+		s.radius = radius;
+	else
+		s.radius = 0.0;
+	s.albedo = albedo;
+	s.mat = mat;
+	box0 = sphere_box_at(&path->start, s.radius);
+	box1 = sphere_box_at(&path->end, s.radius);
+	s.bbox = aabb_merge(&box0, &box1);
+	return (s);
 }

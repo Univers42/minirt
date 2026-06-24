@@ -50,8 +50,16 @@ typedef struct s_root_set
 	t_interval	rayt;
 }	t_root_set;
 
+/* Major / minor radii pair, packed so the constructor stays within the
+   42-norm 4-argument cap. */
+typedef struct s_torus_radii
+{
+	real_t	major;
+	real_t	minor;
+}	t_torus_radii;
+
 t_torus	torus_create(const t_point3 *center, const t_vec3 *axis,
-			real_t major, real_t minor, t_material *mat);
+			const t_torus_radii *rad, t_material *mat);
 bool	torus_hit(const t_torus *to, const t_ray *r,
 			t_interval rayt, t_hit_record *rec);
 void	set_current_torus(const void *obj);

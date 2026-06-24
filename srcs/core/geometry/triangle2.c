@@ -75,14 +75,13 @@ bool	mesh_add_to_list(const t_mesh *mesh, t_hittable_list *list)
 	return (true);
 }
 
-void	mesh_add_quad(t_mesh *mesh, const t_point3 *a, const t_point3 *b,
-		const t_point3 *c, const t_point3 *d, t_material *mat)
+void	mesh_add_quad(t_mesh *mesh, const t_quad_pts *pts, t_material *mat)
 {
 	t_triangle	t1;
 	t_triangle	t2;
 
-	t1 = triangle_create(a, b, c, mat);
-	t2 = triangle_create(a, c, d, mat);
+	t1 = triangle_create(&pts->a, &pts->b, &pts->c, mat);
+	t2 = triangle_create(&pts->a, &pts->c, &pts->d, mat);
 	mesh_add_triangle(mesh, &t1);
 	mesh_add_triangle(mesh, &t2);
 }

@@ -51,11 +51,40 @@ typedef struct s_mesh
 	t_aabb		bbox;
 }	t_mesh;
 
+/* Barycentric (u, v) plus ray distance t, packed so the Moller-Trumbore
+   solver can hand results back within the 42-norm variable budget. */
+typedef struct s_tri_uvt
+{
+	real_t	u;
+	real_t	v;
+	real_t	t;
+}	t_tri_uvt;
+
+/* Four corner points of a quad (two triangles), packed so mesh_add_quad
+   stays within the 42-norm 4-argument cap. */
+typedef struct s_quad_pts
+{
+	t_point3	a;
+	t_point3	b;
+	t_point3	c;
+	t_point3	d;
+}	t_quad_pts;
+
+/* Three corner vertices and three matching vertex normals, packed so the
+   smooth-triangle constructor stays within the 42-norm 4-argument cap. */
+typedef struct s_tri_smooth
+{
+	t_point3	v0;
+	t_point3	v1;
+	t_point3	v2;
+	t_vec3		n0;
+	t_vec3		n1;
+	t_vec3		n2;
+}	t_tri_smooth;
+
 t_triangle	triangle_create(const t_point3 *v0, const t_point3 *v1,
 				const t_point3 *v2, t_material *mat);
-t_triangle	triangle_create_smooth(const t_point3 *v0, const t_point3 *v1,
-				const t_point3 *v2, const t_vec3 *n0, const t_vec3 *n1,
-				const t_vec3 *n2, t_material *mat);
+t_triangle	triangle_create_smooth(const t_tri_smooth *s, t_material *mat);
 bool		triangle_hit(const t_triangle *tri, const t_ray *r,
 				t_interval rayt, t_hit_record *rec);
 void		set_current_triangle(const void *obj);
@@ -67,12 +96,12 @@ void		mesh_init(t_mesh *mesh);
 bool		mesh_add_triangle(t_mesh *mesh, const t_triangle *tri);
 void		mesh_clear(t_mesh *mesh);
 bool		mesh_add_to_list(const t_mesh *mesh, t_hittable_list *list);
-void		mesh_add_quad(t_mesh *mesh, const t_point3 *a, const t_point3 *b,
-				const t_point3 *c, const t_point3 *d, t_material *mat);
+void		mesh_add_quad(t_mesh *mesh, const t_quad_pts *pts,
+				t_material *mat);
 void		mesh_add_box(t_mesh *mesh, const t_point3 *min_pt,
 				const t_point3 *max_pt, t_material *mat);
 void		mesh_add_pyramid(t_mesh *mesh, const t_point3 *base_center,
-				real_t base_size, real_t height, t_material *mat);
+				const t_shape_dims *dims, t_material *mat);
 void		mesh_add_icosahedron(t_mesh *mesh, const t_point3 *center,
 				real_t radius, t_material *mat);
 

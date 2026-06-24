@@ -59,35 +59,3 @@ t_sphere	create_sphere(const t_point3 *center, real_t radius,
 	sphere_init_bbox_stationary(&s, center);
 	return (s);
 }
-
-t_sphere	create_sphere_moving(const t_point3 *center1,
-		const t_point3 *center2, real_t radius, t_vec3 albedo,
-		t_material *mat)
-{
-	t_sphere	s;
-	t_vec3		c2;
-	t_aabb		box0;
-	t_aabb		box1;
-
-	s.center.center1 = vec3_create(center1->x, center1->y, center1->z);
-	c2 = vec3_create(center2->x, center2->y, center2->z);
-	s.center.center_velocity = vec3_sub(&c2, &s.center.center1);
-	if (radius > 0.0)
-		s.radius = radius;
-	else
-		s.radius = 0.0;
-	s.albedo = albedo;
-	s.mat = mat;
-	box0 = aabb_from_points(
-			&(t_point3){center1->x - s.radius, center1->y - s.radius,
-			center1->z - s.radius},
-			&(t_point3){center1->x + s.radius, center1->y + s.radius,
-			center1->z + s.radius});
-	box1 = aabb_from_points(
-			&(t_point3){center2->x - s.radius, center2->y - s.radius,
-			center2->z - s.radius},
-			&(t_point3){center2->x + s.radius, center2->y + s.radius,
-			center2->z + s.radius});
-	s.bbox = aabb_merge(&box0, &box1);
-	return (s);
-}

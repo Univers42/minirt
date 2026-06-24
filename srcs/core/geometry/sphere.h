@@ -40,12 +40,19 @@ typedef struct s_sphere
 	t_material		*mat;
 }	t_sphere;
 
+/* Start / end center pair for a motion-blurred sphere, packed so the
+   constructor stays within the 42-norm 4-argument cap. */
+typedef struct s_sphere_motion
+{
+	t_point3	start;
+	t_point3	end;
+}	t_sphere_motion;
+
 t_vec3		sphere_center_at(const t_sphere *s, real_t time);
 void		sphere_get_uv(const t_vec3 *p, real_t *u, real_t *v);
 t_sphere	create_sphere(const t_point3 *center, real_t radius,
 				t_vec3 albedo, t_material *mat);
-t_sphere	create_sphere_moving(const t_point3 *center1,
-				const t_point3 *center2, real_t radius,
+t_sphere	create_sphere_moving(const t_sphere_motion *path, real_t radius,
 				t_vec3 albedo, t_material *mat);
 t_sphere	create_sphere_default(const t_point3 *center, real_t radius);
 real_t		hit_sphere(const t_vec3 *center, real_t radius, const t_ray *r);

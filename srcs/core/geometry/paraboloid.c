@@ -43,18 +43,18 @@ static void	paraboloid_init_bbox(t_paraboloid *pb)
 }
 
 t_paraboloid	paraboloid_create(const t_point3 *vertex, const t_vec3 *axis,
-		real_t diameter, real_t height, t_material *mat)
+		const t_shape_dims *dims, t_material *mat)
 {
 	t_paraboloid	pb;
 	real_t			radius;
 
 	pb.vertex = *vertex;
 	pb.axis = unit_vector(axis);
-	if (height > (real_t)0.0)
-		pb.height = height;
+	if (dims->height > (real_t)0.0)
+		pb.height = dims->height;
 	else
 		pb.height = (real_t)1.0;
-	radius = diameter / (real_t)2.0;
+	radius = dims->size / (real_t)2.0;
 	pb.k = (radius * radius) / pb.height;
 	pb.mat = mat;
 	paraboloid_init_bbox(&pb);
