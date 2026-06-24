@@ -20,6 +20,7 @@
 #include "texture.h"
 #include "bvh.h"
 #include "bvh_flat.h"
+#include "mesh_accel.h"
 #include "shading.h"
 #include "mlx.h"
 #include <stdio.h>
@@ -267,11 +268,36 @@ static t_material	*obj_make_material(void)
 	return (lambertian_create(clr));
 }
 
+/* Parse the OBJ into one accelerated mesh primitive (contiguous triangle
+   soup + mesh-local flat BVH) and register it in the scene as a SINGLE
+   wrapper. Returns the accel (caller frees with mesh_accel_free) or NULL. */
+static t_mesh_accel	*obj_load_accel(const char *path, t_scene *scene,
+						t_material *mat)
+{
+	t_mesh				mesh;
+	t_mesh_accel		*ma;
+	t_hittable_wrapper	w;
+
+	if (!obj_parse_to_mesh_at(path, &mesh, mat, RT_OBJ_TARGET_SIZE,
+			0.0f, 0.0f, 0.0f))
+		return (fprintf(stderr, "Error\nFailed to load OBJ: %s\n", path), NULL);
+	fprintf(stderr, "OBJ loaded: %zu triangles\n", mesh.count);
+	ma = mesh_accel_build(&mesh);
+	mesh_clear(&mesh);
+	if (!ma)
+		return (NULL);
+	w = mesh_accel_wrapper(ma);
+	if (!hittable_list_add_wrapper(&scene->world, &w))
+		return (mesh_accel_free(ma), NULL);
+	return (ma);
+}
+
 static int	run_obj(const char *filepath)
 {
-	t_scene		scene;
-	t_material	*mat;
-	int			ret;
+	t_scene			scene;
+	t_material		*mat;
+	t_mesh_accel	*ma;
+	int				ret;
 
 	scene_init(&scene);
 	obj_default_camera(&scene);
@@ -279,21 +305,11 @@ static int	run_obj(const char *filepath)
 	if (!mat)
 		return (fprintf(stderr, "Error\nMaterial alloc failed\n"), 1);
 	mat_registry_add(mat);
-	if (!obj_parse_to_list(filepath, &scene.world, mat,
-			RT_OBJ_TARGET_SIZE, 0.0f, 0.0f, 0.0f))
-	{
-		fprintf(stderr, "Error\nFailed to load OBJ: %s\n", filepath);
-		scene_cleanup(&scene);
-		return (1);
-	}
-	fprintf(stderr, "OBJ loaded: %zu triangles\n",
-		scene.world.count);
-	if (!add_scene_lights(&scene.world, &scene))
-	{
-		scene_cleanup(&scene);
-		return (1);
-	}
+	ma = obj_load_accel(filepath, &scene, mat);
+	if (!ma || !add_scene_lights(&scene.world, &scene))
+		return (mesh_accel_free(ma), scene_cleanup(&scene), 1);
 	ret = display_scene(&scene);
+	mesh_accel_free(ma);
 	scene_cleanup(&scene);
 	return (ret);
 }
