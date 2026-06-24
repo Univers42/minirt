@@ -16,25 +16,23 @@
 t_color	checker_texture_value(const t_texture *tex, real_t u, real_t v,
 			const t_point3 *p)
 {
-	const t_checker_texture	*checker;
-	int						xi;
-	int						yi;
-	int						zi;
-	t_texture				*sample;
+	const t_checker_texture	*ck;
+	t_color					ec;
+	t_color					oc;
+	t_color					avg;
+	real_t					bl;
 
-	(void)u;
-	(void)v;
-	checker = (const t_checker_texture *)tex->data;
-	if (!checker || !checker->even || !checker->odd)
+	ck = (const t_checker_texture *)tex->data;
+	if (!ck || !ck->even || !ck->odd)
 		return (vec3_create(0.0, 0.0, 0.0));
-	xi = (int)floor((double)(checker->inv_scale * p->x));
-	yi = (int)floor((double)(checker->inv_scale * p->y));
-	zi = (int)floor((double)(checker->inv_scale * p->z));
-	if (((xi + yi + zi) % 2) == 0)
-		sample = checker->even;
-	else
-		sample = checker->odd;
-	return (sample->value(sample, u, v, p));
+	ec = ck->even->value(ck->even, u, v, p);
+	oc = ck->odd->value(ck->odd, u, v, p);
+	bl = checker_blend(ck, p);
+	avg = vec3_add(&ec, &oc);
+	avg = vec3_mul_scalar(&avg, (real_t)0.5);
+	if (checker_parity(ck, p))
+		return (vec3_lerp(&ec, &avg, bl));
+	return (vec3_lerp(&oc, &avg, bl));
 }
 
 void	checker_texture_destroy(t_texture *tex)

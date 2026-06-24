@@ -377,6 +377,13 @@
 #  define RT_AO_MIN				0.4
 # endif
 
+/* Checker texture distance-fade strength (footprint anti-aliasing).        */
+/* Distant checker blends to its average grey to kill grazing-angle moire.  */
+/* Larger = fades nearer the camera.  0 disables.  DEFAULT 0.03.            */
+# ifndef RT_CHECKER_FILTER
+#  define RT_CHECKER_FILTER		0.06
+# endif
+
 /* Light distance attenuation model.                                  */
 /*  0 = artistic / linear  (NdotL / distance) — smoother falloff      */
 /*  1 = physically correct (NdotL / distance²) — realistic inverse    */

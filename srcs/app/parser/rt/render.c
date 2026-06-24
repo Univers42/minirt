@@ -15,6 +15,7 @@
 #include "interval.h"
 #include "studio_config.h"
 #include "shading.h"
+#include "texture.h"
 #ifdef _OPENMP
 # include <omp.h>
 #endif
@@ -122,6 +123,7 @@ unsigned char	*render_to_buffer(const t_camera *cam,
 		free(pixels);
 		return (NULL);
 	}
+	checker_set_view(&cam->center);
 	if (render_get_engine_mode() == ENGINE_DIRECT)
 		fprintf(stderr, "Rendering %dx%d (direct engine + AA, depth %d)...\n",
 			w, h, cam->max_depth);
