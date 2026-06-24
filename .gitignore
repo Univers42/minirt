@@ -96,7 +96,14 @@ compile_commands.json
 example_rt/
 rt_in_one_week/raytracing.github.io-release/
 
-# unzipped models (from studio/assets/zips/*.zip)
+# unzipped / downloaded model assets (from studio/assets/zips/*.zip or the web)
 studio/assets/obj_files/*.obj
 studio/assets/obj_files/*.mtl
+studio/assets/obj_files/*.jpg
+studio/assets/obj_files/*.png
+studio/assets/obj_files/*.txt
+studio/assets/obj_files/*.Any
 !studio/assets/obj_files/head.OBJ
+
+# cinematic hero variants (path-traced, large/noisy — regenerate on demand)
+studio/assets/jsons/*_cine.json
