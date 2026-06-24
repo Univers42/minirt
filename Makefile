@@ -6,7 +6,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME        := miniRT
+NAME        := rt
 
 # ──────────────────────────────────────────────────────────────────────────── #
 #  Directories                                                                 #
@@ -83,6 +83,7 @@ INC_ENGINE  := -I $(SRC_ENGINE)/accelerators \
                -I $(SRC_ENGINE)/camera \
                -I $(SRC_ENGINE)/materials \
                -I $(SRC_ENGINE)/sampling \
+               -I $(SRC_ENGINE)/shading \
                -I $(SRC_ENGINE)/textures
 
 INC_APP     := -I $(SRC_APP)
@@ -143,9 +144,14 @@ SDL_BIN     := $(SDL_SRC:$(SRC_SDL)/%.c=$(BIN_DIR)/sdl/%)
 #  TARGETS                                                                     #
 # ══════════════════════════════════════════════════════════════════════════════#
 
-.PHONY: all clean fclean re libs miniRT ppms libx sdl studio cie test tests
+.PHONY: all bonus clean fclean re libs miniRT ppms libx sdl studio cie test tests
 
 all: $(MINIRT_BIN)
+
+# Bonus build: re-invoke with -DBONUS enabled. Bonus features are additive;
+# object dirs get profile-tagged once #ifdef BONUS code lands (Phase 4).
+bonus:
+	@$(MAKE) BONUS=1 all --no-print-directory
 
 studio: ppms libx sdl
 
