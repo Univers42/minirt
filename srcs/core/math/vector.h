@@ -52,12 +52,14 @@ t_vec3	vec3_reflect(const t_vec3 *v, const t_vec3 *n);
 t_vec3	vec3_refract(const t_vec3 *uv, const t_vec3 *n, real_t etai_over_etat);
 t_vec3	vec3_random(void);
 t_vec3	vec3_random_interval(real_t min, real_t max);
-t_vec3	random_in_unit_sphere(void);
 
 /* vector5.c */
 t_vec3	random_unit_vector(void);
 t_vec3	random_on_hemisphere(const t_vec3 *normal);
-t_vec3	random_in_unit_disk(void);
 t_vec3	random_cosine_direction(const t_vec3 *normal);
+
+/* vector6.c */
+t_vec3	random_in_unit_sphere(void);
+t_vec3	random_in_unit_disk(void);
 
 #endif

@@ -20,8 +20,17 @@
    routine writes the distinct real roots into out[] and returns how many
    were found (0..n).  These are pure helpers — no allocation, no globals. */
 
+/* Coefficients of a*x^3 + b*x^2 + c*x + d = 0 (a != 0). */
+typedef struct s_cubic
+{
+	real_t	a;
+	real_t	b;
+	real_t	c;
+	real_t	d;
+}	t_cubic;
+
 /* a*x^3 + b*x^2 + c*x + d = 0 (a != 0).  Returns 1..3 real roots. */
-int		solve_cubic(real_t a, real_t b, real_t c, real_t d, real_t out[3]);
+int		solve_cubic(const t_cubic *cub, real_t out[3]);
 
 /* coef[] = {c4, c3, c2, c1, c0} of c4*x^4+...+c0 = 0, c4 != 0.
    Returns 0..4 real roots in out[] (unordered). */

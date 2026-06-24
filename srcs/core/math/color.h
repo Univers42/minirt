@@ -33,4 +33,11 @@ t_vec3	ray_color_depth(const t_ray *r, const t_hittable_list *world,
 			int depth);
 t_vec3	ray_color_world(const t_ray *r, const t_hittable_list *world);
 
+/* Internal post-process pipeline stages (color2.c/color3.c). */
+real_t	aces_tonemap(real_t v);
+real_t	apply_contrast(real_t v, real_t c);
+void	apply_tonemap(real_t *r, real_t *g, real_t *b);
+void	apply_gamma(real_t *r, real_t *g, real_t *b);
+void	apply_grade(real_t *r, real_t *g, real_t *b);
+
 #endif

@@ -61,23 +61,20 @@ static int	depressed_cubic(real_t p, real_t q, real_t out[3])
 }
 
 /* a*x^3 + b*x^2 + c*x + d = 0.  Depress with x = t - b/(3a), then shift. */
-int	solve_cubic(real_t a, real_t b, real_t c, real_t d, real_t out[3])
+int	solve_cubic(const t_cubic *cub, real_t out[3])
 {
+	real_t	b;
 	real_t	p;
 	real_t	q;
-	real_t	shift;
 	int		n;
 	int		i;
 
-	b /= a;
-	c /= a;
-	d /= a;
-	p = c - b * b / 3.0;
-	q = 2.0 * b * b * b / 27.0 - b * c / 3.0 + d;
+	b = cub->b / cub->a;
+	p = cub->c / cub->a - b * b / 3.0;
+	q = 2.0 * b * b * b / 27.0 - b * (cub->c / cub->a) / 3.0 + cub->d / cub->a;
 	n = depressed_cubic(p, q, out);
-	shift = b / 3.0;
 	i = -1;
 	while (++i < n)
-		out[i] -= shift;
+		out[i] -= b / 3.0;
 	return (n);
 }

@@ -22,12 +22,12 @@
 # endif
 # include "settings.h"
 # include "types.h"
-# define random_double random_real
 
 uint64_t	random_seed(uint64_t seed);
 uint64_t	random_u64(void);
 real_t		random_real(void);
 real_t		random_real_interval(real_t min, real_t max);
 int			random_int(int min, int max);
+real_t		random_double(void);
 
 #endif

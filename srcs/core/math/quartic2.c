@@ -36,12 +36,17 @@ static void	add_quadratic(real_t b, real_t c, real_t out[4], int *n)
    exists; the largest one gives the most stable quadratic split. */
 static real_t	resolvent_w(real_t p, real_t q, real_t r)
 {
+	t_cubic	cub;
 	real_t	roots[3];
 	real_t	w;
 	int		n;
 	int		i;
 
-	n = solve_cubic(1.0, 2.0 * p, p * p - 4.0 * r, -q * q, roots);
+	cub.a = 1.0;
+	cub.b = 2.0 * p;
+	cub.c = p * p - 4.0 * r;
+	cub.d = -q * q;
+	n = solve_cubic(&cub, roots);
 	w = roots[0];
 	i = 0;
 	while (++i < n)

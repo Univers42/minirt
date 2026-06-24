@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   random.c                                           :+:      :+:    :+:   */
+/*   random2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dlesieur <dlesieur@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,45 +12,25 @@
 
 #include "random.h"
 
-uint64_t	random_seed(uint64_t seed)
+real_t	random_real(void)
 {
-	if (seed == 0)
-		seed = (uint64_t)time(NULL) ^ 0x9e3779b97f4a7c15ULL;
-	return (seed);
+	const uint64_t	rnd = random_u64();
+	const uint64_t	mantissa = rnd >> 11;
+
+	return ((real_t)(mantissa * (1.0 / 9007199254740992.0)));
 }
 
-#ifdef _OPENMP
-
-static uint64_t	omp_tid(void)
+real_t	random_real_interval(real_t min, real_t max)
 {
-	return ((uint64_t)omp_get_thread_num());
+	return (min + (max - min) * random_real());
 }
 
-#else
-
-static uint64_t	omp_tid(void)
+int	random_int(int min, int max)
 {
-	return (0);
+	return (min + (int)(random_real() * (real_t)(max - min + 1)));
 }
 
-#endif
-
-uint64_t	random_u64(void)
+real_t	random_double(void)
 {
-	static __thread uint64_t	state = 0;
-	uint64_t					t;
-	uint64_t					addr;
-	uint64_t					tid;
-
-	if (state == 0)
-	{
-		t = (uint64_t)time(NULL);
-		addr = (uint64_t)(uintptr_t)(&state);
-		tid = omp_tid();
-		state = random_seed(t ^ addr ^ (tid * 0x9e3779b97f4a7c15ULL));
-	}
-	state ^= state >> 12;
-	state ^= state << 25;
-	state ^= state >> 27;
-	return (state * 0x2545F4914F6CDD1DULL);
+	return (random_real());
 }

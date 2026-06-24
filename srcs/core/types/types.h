@@ -17,17 +17,21 @@
 
 /* Define real_t before any header that needs it */
 # ifndef FLOAT_TYPE
-typedef double	real_t;
+
+typedef double			real_t;
+
 # else
-typedef float	real_t;
+
+typedef float			real_t;
+
 # endif
 
 /* Forward declare t_vec3 for aliases below */
 typedef struct s_vec3	t_vec3;
 
 /* Simple aliases - semantic distinctions, same underlying type */
-typedef bool	t_hittable;
-typedef t_vec3	t_color;
-typedef t_vec3	t_point3;
+typedef bool			t_hittable;
+typedef t_vec3			t_color;
+typedef t_vec3			t_point3;
 
 #endif /* RT_TESTS_TYPES_H */

@@ -17,19 +17,36 @@
 # include "vector.h"
 # include "cie_table.h"
 
-/* XYZ ↔ linear sRGB conversion (CIE 1931 → Rec.709 primaries) */
-void	cie_xyz_to_linear_srgb(float x, float y, float z,
-			float *r, float *g, float *b);
+/* Tristimulus / linear-RGB triple (same shape, reused for both). */
+typedef struct s_xyz
+{
+	float	x;
+	float	y;
+	float	z;
+}	t_xyz;
 
-/* Integrate a sampled spectrum against CIE matching functions.       */
-/* `spectrum` has one value per nm from lambda_min to lambda_min+count */
-/* Returns XYZ tristimulus values.                                     */
-void	spectrum_to_xyz(const float *spectrum, int count,
-			int lambda_min, float *x, float *y, float *z);
+/* A sampled spectrum: one value per nm from lambda_min upward.  */
+typedef struct s_spectrum
+{
+	const float	*samples;
+	int			count;
+	int			lambda_min;
+}	t_spectrum;
+
+/* XYZ → linear sRGB conversion (CIE 1931 → Rec.709 primaries). */
+t_xyz	cie_xyz_to_linear_srgb(t_xyz xyz);
+
+/* Integrate a sampled spectrum against CIE matching functions.  */
+/* Returns XYZ tristimulus values.                               */
+t_xyz	spectrum_to_xyz(t_spectrum spec);
 
 /* Convert a sampled spectrum directly to engine t_color (linear sRGB) */
 t_color	spectrum_to_color(const float *spectrum, int count,
 			int lambda_min);
+
+/* Shared post-conversion helpers (spectrum.c). */
+float	spectrum_clamp_f(float v, float lo, float hi);
+t_color	rgb_to_color(t_xyz rgb);
 
 /* Planck's black-body radiance at wavelength (nm) for temperature (K) */
 float	planck_radiance(float lambda_nm, float temperature_k);
