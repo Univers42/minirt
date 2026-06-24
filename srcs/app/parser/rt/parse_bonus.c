@@ -13,7 +13,9 @@
 #include "rt_parser.h"
 #include "rt_lexer.h"
 #include "rt_error.h"
+#include <string.h>
 
+void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat);
 bool	validate_color(const t_file_buf *fb, const t_token *tok);
 bool	validate_normalized(const t_file_buf *fb, const t_token *tok,
 				const char *name);
@@ -52,12 +54,13 @@ bool	parse_triangle(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}
+	memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_TRIANGLE;
 	obj.data.triangle.v0 = vec3_from_tok(&lex->tokens[1]);
 	obj.data.triangle.v1 = vec3_from_tok(&lex->tokens[2]);
 	obj.data.triangle.v2 = vec3_from_tok(&lex->tokens[3]);
 	obj.data.triangle.color = color_from_tok(&lex->tokens[4]);
-	obj.mat.type = MAT_LAMBERTIAN;
+	rt_parse_material_kw(lex, 5, &obj.mat);
 	sc->objects[sc->object_count] = obj;
 	sc->object_count++;
 	return (true);
@@ -85,12 +88,14 @@ bool	parse_cone(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 			"too many objects (max %d)", RT_MAX_OBJECTS);
 		return (false);
 	}
+	memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_CONE;
 	obj.data.cone.apex = vec3_from_tok(&lex->tokens[1]);
 	obj.data.cone.axis = vec3_from_tok(&lex->tokens[2]);
 	obj.data.cone.diameter = lex->tokens[3].val.f;
 	obj.data.cone.height = lex->tokens[4].val.f;
 	obj.data.cone.color = color_from_tok(&lex->tokens[5]);
+	rt_parse_material_kw(lex, 6, &obj.mat);
 	sc->objects[sc->object_count] = obj;
 	sc->object_count++;
 	return (true);

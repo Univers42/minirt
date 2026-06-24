@@ -13,7 +13,9 @@
 #include "rt_parser.h"
 #include "rt_lexer.h"
 #include "rt_error.h"
+#include <string.h>
 
+void	rt_parse_material_kw(t_lexer *lex, int idx, t_mat_spec *mat);
 bool	validate_range_f(const t_file_buf *fb, const t_token *tok,
 				double lo, double hi, const char *name);
 bool	validate_color(const t_file_buf *fb, const t_token *tok);
@@ -68,10 +70,12 @@ bool	parse_sphere(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (!validate_color(fb, &lex->tokens[3]))
 		return (false);
+	memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_SPHERE;
 	obj.data.sphere.center = vec3_from_tok(&lex->tokens[1]);
 	obj.data.sphere.diameter = lex->tokens[2].val.f;
 	obj.data.sphere.color = color_from_tok(&lex->tokens[3]);
+	rt_parse_material_kw(lex, 4, &obj.mat);
 	return (add_object(sc, lex, fb, &obj));
 }
 
@@ -89,10 +93,12 @@ bool	parse_plane(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (!validate_color(fb, &lex->tokens[3]))
 		return (false);
+	memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_PLANE;
 	obj.data.plane.point = vec3_from_tok(&lex->tokens[1]);
 	obj.data.plane.normal = vec3_from_tok(&lex->tokens[2]);
 	obj.data.plane.color = color_from_tok(&lex->tokens[3]);
+	rt_parse_material_kw(lex, 4, &obj.mat);
 	return (add_object(sc, lex, fb, &obj));
 }
 
@@ -114,11 +120,13 @@ bool	parse_cylinder(t_scene *sc, t_lexer *lex, t_file_buf *fb)
 		return (false);
 	if (!validate_color(fb, &lex->tokens[5]))
 		return (false);
+	memset(&obj, 0, sizeof(obj));
 	obj.type = OBJ_CYLINDER;
 	obj.data.cylinder.center = vec3_from_tok(&lex->tokens[1]);
 	obj.data.cylinder.axis = vec3_from_tok(&lex->tokens[2]);
 	obj.data.cylinder.diameter = lex->tokens[3].val.f;
 	obj.data.cylinder.height = lex->tokens[4].val.f;
 	obj.data.cylinder.color = color_from_tok(&lex->tokens[5]);
+	rt_parse_material_kw(lex, 6, &obj.mat);
 	return (add_object(sc, lex, fb, &obj));
 }
